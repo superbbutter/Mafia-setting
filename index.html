@@ -69,29 +69,30 @@ h1 span { color: var(--red-main); text-shadow: 0 0 15px var(--red-glow); }
 .nav-item { padding: 10px 30px; color: var(--text-muted); font-size: 13px; cursor: pointer; border-radius: 35px; transition: var(--transition); }
 .nav-item.active { background: var(--red-main); color: var(--white); box-shadow: 0 8px 20px var(--red-glow); }
 
+/* 🌟 Container & Page */
 .container { width: 100%; max-width: 650px; padding: 40px 15px 100px; }
 .page { display: none; animation: fadeIn 0.6s ease; }
 .page.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* 🌟 Hero Slogan */
+/* 🌟 Hero Slogan (หน้าหลัก) - แก้เรื่องข้อความล้น */
 .hero-slogan {
-    font-size: clamp(1.3rem, 6vw, 1.8rem);
+    font-size: clamp(1.4rem, 6.5vw, 1.9rem);
     font-weight: 600;
-    line-height: 1.5;
-    margin-bottom: 25px;
+    line-height: 1.4;
+    margin-bottom: 30px;
     background: linear-gradient(180deg, #ffffff 0%, #999999 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-align: center;
+    white-space: normal; /* ป้องกันการตัดบรรทัดแปลกๆ */
 }
 
-/* 🌟 Directory List Distance */
+/* 🌟 Directory Spacing */
 .directory-section {
     margin-top: 50px;
-    text-align: left;
-    border-top: 1px solid rgba(255,255,255,0.05);
     padding-top: 35px;
+    border-top: 1px solid rgba(255,255,255,0.05);
 }
 .warp-btn { 
     background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); 
@@ -101,75 +102,62 @@ h1 span { color: var(--red-main); text-shadow: 0 0 15px var(--red-glow); }
 }
 .warp-btn:hover { border-color: var(--red-main); background: rgba(229, 9, 20, 0.1); transform: translateX(8px); }
 
-/* 🌟 Gang Cards & Spacing */
-.gang-card { border-radius: 30px; padding: 35px; margin-bottom: 45px; position: relative; }
-.btn-add-faction { 
-    width: 100%; margin-bottom: 30px; 
-    background: transparent; border: 1px dashed rgba(255,255,255,0.2); 
-    color: #fff; padding: 18px; border-radius: 20px; cursor: pointer;
-}
-
+/* 🌟 Gang Cards & Member Grid */
+.gang-card { border-radius: 30px; padding: 35px; margin-bottom: 50px; position: relative; }
 .gang-header { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 25px; margin-bottom: 30px; position: relative; padding-right: 110px; }
 .gang-name { font-size: 26px; font-weight: 600; color: var(--white); margin-bottom: 10px; }
 
-/* 🌟 Control Buttons */
-.btn-control { 
-    position: absolute; z-index: 40; background: rgba(255,255,255,0.1); 
-    color: var(--white); border-radius: 50%; width: 34px; height: 34px; 
-    border: 1px solid rgba(255,255,255,0.2); cursor: pointer; display: flex; 
-    align-items: center; justify-content: center; backdrop-filter: blur(10px); transition: 0.2s;
-}
-.btn-control:hover { background: var(--white); color: #000; transform: scale(1.1); }
-.btn-delete { top: -12px; left: -12px; background: var(--red-main); border-color: var(--red-main); }
-.btn-move-l { bottom: 45px; left: 10px; }
-.btn-move-r { bottom: 45px; right: 10px; }
-.btn-move-u { top: 20px; right: 20px; }
-.btn-move-d { top: 20px; right: 65px; }
-
-/* 🌟 Grid & Image Rendering */
 .members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 25px; }
-.member-item { position: relative; text-align: center; cursor: pointer; }
+.member-item { position: relative; text-align: center; cursor: pointer; transition: 0.3s; }
 .member-img-wrapper { 
     width: 100%; aspect-ratio: 1/1; border-radius: 22px; background: #000; 
     position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
 }
 .member-img-wrapper img { 
     width: 100%; height: 100%; object-fit: cover; 
-    transition: transform 0.3s ease, object-position 0s; /* object-position ต้อง 0s เพื่อให้ขยับแกน X/Y ทันที */
+    min-width: 100.1%; /* เทคนิคให้แกน X ขยับได้เสมอ */
+    transition: transform 0.3s, object-position 0s; 
 }
-.member-badge { position: absolute; top: 12px; right: 12px; background: var(--red-main); color: white; font-size: 9px; padding: 4px 10px; border-radius: 8px; z-index: 5; font-weight: 600; }
-.member-name { font-size: 14px; color: var(--text-main); margin-top: 12px; }
+
+/* 🌟 Buttons & Controls */
+.btn-control { 
+    position: absolute; z-index: 40; background: rgba(255,255,255,0.1); 
+    color: var(--white); border-radius: 50%; width: 34px; height: 34px; 
+    border: 1px solid rgba(255,255,255,0.2); cursor: pointer; display: flex; 
+    align-items: center; justify-content: center; backdrop-filter: blur(10px);
+}
+.btn-delete { top: -12px; left: -12px; background: var(--red-main); border: none; }
+.btn-move-l { bottom: 45px; left: 10px; }
+.btn-move-r { bottom: 45px; right: 10px; }
+.btn-move-u { top: 20px; right: 20px; }
+.btn-move-d { top: 20px; right: 65px; }
 
 /* 🌟 Modals */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(25px); }
 .modal-content { background: #0e0e0e; width: 100%; max-width: 480px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.1); position: relative; max-height: 90vh; overflow-y: auto; padding: 35px; }
 .modal-content.profile { padding: 0; overflow: hidden; }
-.modal-close { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 38px; cursor: pointer; z-index: 110; opacity: 0.5; transition: 0.3s; }
-.modal-close:hover { opacity: 1; color: var(--red-main); }
+.modal-close { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 35px; cursor: pointer; z-index: 110; opacity: 0.5; }
 
-/* 🌟 Adjustment Panel UI */
+/* 🌟 Adjustment Control Panel */
 .avatar-preview-box { width: 140px; height: 140px; border-radius: 30px; border: 3px solid var(--red-main); background: #000; margin: 0 auto 15px; position: relative; overflow: hidden; box-shadow: 0 0 20px var(--red-glow); }
 .avatar-preview-box img { width: 100%; height: 100%; object-fit: cover; transition: none !important; }
+.preview-status { font-size: 11px; color: #888; background: rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 30px; margin-bottom: 20px; display: inline-block; }
+
 .range-group { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 25px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
 .range-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 15px; font-size: 11px; color: #aaa; }
 input[type="range"] { accent-color: var(--red-main); flex: 1; cursor: pointer; }
 
-/* 🌟 Inputs & Buttons */
-.form-input { width: 100%; padding: 15px 20px; margin-bottom: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 15px; font-size: 14px; outline: none; }
+/* 🌟 Profile View Elements */
+.modal-header-img { width: 100%; height: 220px; background: #000; position: relative; overflow: hidden; }
+.modal-header-img img { width: 120%; height: 120%; object-fit: cover; opacity: 0.4; filter: blur(30px); position: absolute; top: -10%; left: -10%; }
+.modal-body { padding: 35px; margin-top: -85px; position: relative; z-index: 2; }
+.profile-avatar-wrap { width: 120px; height: 120px; border-radius: 25px; border: 4px solid #1a1a1a; margin-bottom: 25px; position: relative; overflow: hidden; background: #111; }
+.profile-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Form Elements */
+.form-input { width: 100%; padding: 15px 20px; margin-bottom: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 15px; outline: none; }
 .btn-submit { width: 100%; background: var(--red-main); color: #fff; padding: 18px; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; }
 
-/* 🌟 Profile View (Blur BG) */
-.modal-header-img { width: 100%; height: 220px; background: #000; position: relative; overflow: hidden; }
-.modal-header-img img { width: 120%; height: 120%; object-fit: cover; opacity: 0.5; filter: blur(30px) saturate(1.5); position: absolute; top: -10%; left: -10%; }
-.modal-body { padding: 35px; margin-top: -85px; position: relative; z-index: 2; }
-.profile-avatar-wrap { width: 120px; height: 120px; border-radius: 25px; border: 4px solid #1a1a1a; margin-bottom: 25px; position: relative; overflow: hidden; background: #111; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
-.profile-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
-.info-row { display: flex; gap: 18px; margin-bottom: 22px; }
-.info-icon { width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--red-main); flex-shrink: 0; }
-.info-content .label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; }
-.info-content .val { font-size: 15px; color: var(--text-main); margin-top: 4px; }
-
-/* Watermark Overlay */
 .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background-size: cover; background-position: center; mix-blend-mode: screen; opacity: 0.7; }
 </style>
 </head>
@@ -203,7 +191,7 @@ input[type="range"] { accent-color: var(--red-main); flex: 1; cursor: pointer; }
     </div>
 
     <div id="gangs" class="page">
-        <button class="btn-add-faction edit-only glass-panel" onclick="openModal('addGangModal')">+ Establish New Faction</button>
+        <button class="btn-submit edit-only glass-panel" style="margin-bottom:30px; background:transparent; border:1px dashed rgba(255,255,255,0.2);" onclick="openModal('addGangModal')">+ Establish New Faction</button>
         <div id="gangs-container"></div>
     </div>
   </div>
@@ -211,42 +199,44 @@ input[type="range"] { accent-color: var(--red-main); flex: 1; cursor: pointer; }
   <div class="modal-overlay" id="editMemberModal" onclick="closeModal(event, 'editMemberModal')">
     <div class="modal-content glass-panel" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'editMemberModal', true)">&times;</span>
-        <h2 style="margin-bottom: 25px; font-size: 18px; text-align: center; letter-spacing: 2px;">ADJUST ARCHIVE</h2>
+        <h2 style="margin-bottom: 25px; font-size: 18px; text-align: center; letter-spacing: 2px;">ARCHIVE ADJUSTMENT</h2>
+        
         <div class="avatar-preview-container" style="text-align: center;">
             <div class="avatar-preview-box"><img id="e-preview-img" src="" alt="preview"><div id="e-preview-watermark" class="watermark-overlay"></div></div>
-            <div class="preview-status" style="font-size: 11px; color: #888; background: rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 30px; margin-bottom: 20px; display: inline-block;">ZOOM: <b id="st-zoom" style="color:var(--red-main)">1.00</b> | X: <b id="st-x" style="color:var(--red-main)">50</b>% | Y: <b id="st-y" style="color:var(--red-main)">50</b>%</div>
+            <div class="preview-status">ZOOM: <b id="st-zoom" style="color:var(--red-main)">1.00</b> | X: <b id="st-x" style="color:var(--red-main)">50</b>% | Y: <b id="st-y" style="color:var(--red-main)">50</b>%</div>
         </div>
+
         <div class="range-group">
             <div class="range-row"><span>🔍 Zoom</span><input type="range" id="e-zoom-slider" min="0.5" max="5" step="0.05" value="1" oninput="updatePreviewImageStyle('e')"></div>
             <div class="range-row"><span>↔️ Pos X</span><input type="range" id="e-pos-x-slider" min="0" max="100" value="50" oninput="updatePreviewImageStyle('e')"></div>
             <div class="range-row"><span>↕️ Pos Y</span><input type="range" id="e-pos-y-slider" min="0" max="100" value="50" oninput="updatePreviewImageStyle('e')"></div>
         </div>
+
         <input type="hidden" id="e-old-name">
         <input type="text" id="e-name-input" class="form-input" placeholder="Name">
-        <div style="display: flex; gap: 10px;"><input type="text" id="e-new-role" class="form-input" placeholder="Role"><input type="text" id="e-new-badge" class="form-input" placeholder="Rank/Badge"></div>
+        <div style="display: flex; gap: 10px;"><input type="text" id="e-new-role" class="form-input" placeholder="Role"><input type="text" id="e-new-badge" class="form-input" placeholder="Badge"></div>
         <input type="text" id="e-new-img" class="form-input" placeholder="Image URL" oninput="updatePreviewImageStyle('e')">
         <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px; font-size:12px; cursor:pointer;"><input type="checkbox" id="e-new-watermark" onchange="updatePreviewWatermark('e')"> Apply Seal (Watermark)</label>
+        
         <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
             <div style="display: flex; gap: 10px;"><input type="text" id="e-new-credit" class="form-input" placeholder="Artist"><input type="text" id="e-new-credit-link" class="form-input" placeholder="Artist Link"></div>
-            <input type="text" id="e-new-weapon" class="form-input" placeholder="Primary Weapon">
+            <input type="text" id="e-new-weapon" class="form-input" placeholder="Weapon">
             <input type="text" id="e-new-flaw" class="form-input" placeholder="Weakness">
             <textarea id="e-new-bio" class="form-input" placeholder="Biography archive..." rows="3"></textarea>
         </div>
-        <button class="btn-submit" onclick="submitEditMember()">UPDATE DATABASE</button>
+        <button class="btn-submit" onclick="submitEditMember()">UPDATE RECORD</button>
     </div>
   </div>
 
   <div class="modal-overlay" id="profileModal" onclick="closeModal(event, 'profileModal')">
     <div class="modal-content profile glass-panel" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'profileModal', true)">&times;</span>
-        <div class="modal-header-img"><img id="p-bg-img" src="" alt="blur-bg"></div>
+        <div class="modal-header-img"><img id="p-bg-img" src=""></div>
         <div class="modal-body">
-            <div class="profile-avatar-wrap"><img id="p-avatar" src="" alt="avatar"><div id="p-watermark" class="watermark-overlay" style="display: none;"></div></div>
-            <h2 id="p-name" style="font-size: 30px; font-weight: 600; color:#fff;"></h2><div id="p-role" style="color:var(--red-main); font-size:14px; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:25px;"></div>
-            <div class="info-row"><div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2L12 4.5M10 6.5L3 13.5l2.5 2.5 7-7M21 15.5l-2.5 2.5-4-4 2.5-2.5 4 4z"/></svg></div><div class="info-content"><div class="label">Weapon</div><div id="p-weapon" class="val"></div></div></div>
-            <div class="info-row"><div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="info-content"><div class="label">Weakness</div><div id="p-flaw" class="val"></div></div></div>
-            <div class="info-row"><div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="info-content"><div class="label">Record</div><div id="p-bio" class="val"></div></div></div>
-            <div id="p-credit" style="margin-top:25px; font-size:10px; color:#555; text-align:right;"></div>
+            <div class="profile-avatar-wrap"><img id="p-avatar" src=""><div id="p-watermark" class="watermark-overlay" style="display: none;"></div></div>
+            <h2 id="p-name" style="font-size: 28px; font-weight: 600;"></h2>
+            <div id="p-role" style="color:var(--red-main); font-size:13px; text-transform:uppercase; margin-bottom:20px;"></div>
+            <div id="p-details-container"></div> <div id="p-credit" style="margin-top:20px; font-size:10px; opacity:0.5; text-align:right;"></div>
         </div>
     </div>
   </div>
@@ -254,21 +244,21 @@ input[type="range"] { accent-color: var(--red-main); flex: 1; cursor: pointer; }
   <div class="modal-overlay" id="addMemberModal" onclick="closeModal(event, 'addMemberModal')">
     <div class="modal-content glass-panel" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'addMemberModal', true)">&times;</span>
-        <h2 style="margin-bottom:20px; font-size:18px;">Recruit Personnel</h2>
-        <input type="text" id="m-name-input" class="form-input" placeholder="Search Character..." oninput="filterCharacters('m')">
-        <div id="autocomplete-list-m" style="position:relative; top:-10px;"></div>
+        <h2 style="margin-bottom:20px; font-size:18px;">Personnel Recruitment</h2>
+        <input type="text" id="m-name-input" class="form-input" placeholder="Character Name..." oninput="filterCharacters('m')">
+        <div id="autocomplete-list-m"></div>
         <input type="text" id="m-new-img" class="form-input" placeholder="Image URL">
-        <button class="btn-submit" onclick="submitNewMember()">ESTABLISH ENTRY</button>
+        <button class="btn-submit" onclick="submitNewMember()">ESTABLISH</button>
     </div>
   </div>
 
   <div class="modal-overlay" id="addGangModal" onclick="closeModal(event, 'addGangModal')">
     <div class="modal-content glass-panel" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'addGangModal', true)">&times;</span>
-        <h2 style="margin-bottom:15px; font-size:18px;">Establishing New Faction</h2>
+        <h2 style="margin-bottom:15px;">New Faction</h2>
         <input type="text" id="g-name" class="form-input" placeholder="Faction Name">
-        <textarea id="g-desc" class="form-input" placeholder="Description" rows="3"></textarea>
-        <button class="btn-submit" onclick="submitNewGang()">ESTABLISH</button>
+        <textarea id="g-desc" class="form-input" placeholder="Faction Description" rows="3"></textarea>
+        <button class="btn-submit" onclick="submitNewGang()">CREATE</button>
     </div>
   </div>
 
@@ -286,10 +276,10 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchBakeryData();
 });
 
-// ดึงข้อมูลหลักจากชีต Mafia
+// --- CORE FUNCTIONS ---
 async function loadMafiaData() {
     const container = document.getElementById('gangs-container');
-    container.innerHTML = '<div style="text-align:center; padding:50px; opacity:0.5; font-size:12px; letter-spacing:2px;">SYNCHRONIZING ARCHIVE...</div>';
+    container.innerHTML = '<div style="text-align:center; padding:50px; opacity:0.5;">SYNCHRONIZING...</div>';
     try {
         const res = await fetch(API_URL + "?sheet=Mafia");
         const data = await res.json();
@@ -297,7 +287,6 @@ async function loadMafiaData() {
     } catch (e) { container.innerHTML = "CONNECTION FAILED"; }
 }
 
-// ดึงข้อมูลขนมจากชีต Bakery เพื่อใช้ทำ Autocomplete
 async function fetchBakeryData() {
     try {
         const res = await fetch(API_URL + "?sheet=Bakery");
@@ -313,7 +302,7 @@ function renderGangs(data) {
     const gangs = [...new Set(data.filter(i => i && i.Category === 'Gangs').map(i => i.GroupName))];
     
     gangs.forEach((gn, idx) => {
-        warpList.innerHTML += `<a href="#" class="warp-btn glass-panel" onclick="warpToGang(${idx}); return false;">${gn} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>`;
+        warpList.innerHTML += `<a href="#" class="warp-btn glass-panel" onclick="warpToGang(${idx}); return false;">${gn} <span>→</span></a>`;
         
         const rows = data.filter(i => i.GroupName === gn);
         const mems = rows.filter(i => i.NameMafia !== "[GANG_INFO]");
@@ -321,31 +310,29 @@ function renderGangs(data) {
 
         let memsHTML = mems.map(i => {
             const name = i.NameMafia.replace(/'/g,"\\'");
-            const rawImg = i.ImageURL || "";
             const isWM = String(i.UseWatermark).toUpperCase() === "TRUE";
-            // รวบรวมข้อมูลทั้งหมดส่งไปที่ handleMemberClick
-            const args = `'${formatImageUrl(rawImg)}','${name}','${String(i.Role||"").replace(/'/g,"\\'")}','${String(i.Badge||"").replace(/'/g,"\\'")}','${String(i.Weapon||"").replace(/'/g,"\\'")}','${String(i.Flaw||"").replace(/'/g,"\\'")}','${String(i.Bio||"").replace(/'/g,"\\'").replace(/\n/g,"<br>")}','${String(i.Credit||"").replace(/'/g,"\\'")}','${String(i.CreditLink||"").replace(/'/g,"\\'")}',${isWM},${i.ZoomLevel||1},${i.PosX||50},${i.PosY||50},'${gn.replace(/'/g,"\\'")}','${i.ImageURL}'`;
+            const args = `'${formatImageUrl(i.ImageURL)}','${name}','${(i.Role||"").replace(/'/g,"\\'")}','${(i.Badge||"").replace(/'/g,"\\'")}','${(i.Weapon||"").replace(/'/g,"\\'")}','${(i.Flaw||"").replace(/'/g,"\\'")}','${(i.Bio||"").replace(/'/g,"\\'").replace(/\n/g,"<br>")}','${(i.Credit||"").replace(/'/g,"\\'")}','${(i.CreditLink||"").replace(/'/g,"\\'")}',${isWM},${i.ZoomLevel||1},${i.PosX||50},${i.PosY||50},'${gn.replace(/'/g,"\\'")}','${i.ImageURL}'`;
 
             return `<div class="member-item" onclick="handleMemberClick(event, ${args})">
                 <button class="btn-control edit-only btn-delete" onclick="event.stopPropagation(); deleteMember('${name}')">✖</button>
-                <button class="btn-control edit-only btn-move-l" onclick="event.stopPropagation(); moveItem('${name}', -1)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
-                <button class="btn-control edit-only btn-move-r" onclick="event.stopPropagation(); moveItem('${name}', 1)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+                <button class="btn-control edit-only btn-move-l" onclick="event.stopPropagation(); moveItem('${name}', -1)">←</button>
+                <button class="btn-control edit-only btn-move-r" onclick="event.stopPropagation(); moveItem('${name}', 1)">→</button>
                 <div class="member-img-wrapper">
-                    ${i.Badge ? `<span class="member-badge">${i.Badge}</span>` : ""}
-                    <img src="${formatImageUrl(rawImg)}" style="object-position: ${i.PosX||50}% ${i.PosY||50}%; transform: scale(${i.ZoomLevel||1});" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
+                    ${i.Badge ? `<span style="position:absolute; top:10px; right:10px; background:var(--red-main); color:white; font-size:9px; padding:3px 8px; border-radius:5px; z-index:5;">${i.Badge}</span>` : ""}
+                    <img src="${formatImageUrl(i.ImageURL)}" style="object-position: ${i.PosX||50}% ${i.PosY||50}%; transform: scale(${i.ZoomLevel||1});">
                     ${isWM ? `<div class="watermark-overlay" style="background-image: url('${WATERMARK_URL}')"></div>` : ""}
                 </div>
-                <div class="member-name">${i.NameMafia}</div>
+                <div style="font-size:13px; margin-top:10px;">${i.NameMafia}</div>
             </div>`;
         }).join('');
 
         container.innerHTML += `
             <div class="gang-card glass-panel" id="gang-${idx}">
-                <button class="btn-control edit-only btn-move-u" onclick="moveItem('[GANG_INFO]', -1, '${gn.replace(/'/g,"\\'")}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg></button>
-                <button class="btn-control edit-only btn-move-d" onclick="moveItem('[GANG_INFO]', 1, '${gn.replace(/'/g,"\\'")}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></button>
-                <div class="gang-header"><h2 class="gang-name">${gn}</h2><p class="gang-desc" style="font-size:13px; color:var(--text-muted); opacity:0.8;">${info?.GangDesc || ""}</p></div>
+                <button class="btn-control edit-only btn-move-u" onclick="moveItem('[GANG_INFO]', -1, '${gn.replace(/'/g,"\\'")}')">↑</button>
+                <button class="btn-control edit-only btn-move-d" onclick="moveItem('[GANG_INFO]', 1, '${gn.replace(/'/g,"\\'")}')">↓</button>
+                <div class="gang-header"><h2 class="gang-name">${gn}</h2><p style="font-size:13px; color:var(--text-muted);">${info?.GangDesc || ""}</p></div>
                 <div class="members-grid">${memsHTML}</div>
-                <button class="btn-submit edit-only glass-panel" style="margin-top:30px; background:transparent; border:1px dashed rgba(255,255,255,0.2);" onclick="prepAddMember('${gn.replace(/'/g,"\\'")}')">+ Recruit Personnel</button>
+                <button class="btn-submit edit-only" style="margin-top:25px; background:transparent; border:1px dashed rgba(255,255,255,0.1);" onclick="prepAddMember('${gn.replace(/'/g,"\\'")}')">+ RECRUIT</button>
             </div>`;
     });
 }
@@ -375,18 +362,23 @@ function handleMemberClick(e, img, name, role, badge, weapon, flaw, bio, cr, crL
     }
 }
 
+// 🎯 ฟังก์ชันปรับแต่งรูป (แก้เรื่องแกน X โดยเฉพาะ)
 function updatePreviewImageStyle(prefix) {
     const url = document.getElementById(`${prefix}-new-img`).value;
     const zoom = document.getElementById(`${prefix}-zoom-slider`).value;
     const x = document.getElementById(`${prefix}-pos-x-slider`).value;
     const y = document.getElementById(`${prefix}-pos-y-slider`).value;
+
     if(prefix === 'e') {
         document.getElementById('st-zoom').innerText = parseFloat(zoom).toFixed(2);
         document.getElementById('st-x').innerText = x;
         document.getElementById('st-y').innerText = y;
     }
+
     const img = document.getElementById(`${prefix}-preview-img`);
     img.src = formatImageUrl(url) || "https://via.placeholder.com/150/111/C91818?text=?";
+    
+    // สำคัญ: ต้องใส่ทั้งสองอย่างนี้เพื่อให้เลื่อนได้ทุกแกน
     img.style.objectPosition = `${x}% ${y}%`;
     img.style.transform = `scale(${zoom})`; 
 }
@@ -397,13 +389,28 @@ function openProfileModal(img, n, r, w, f, b, cr, crL, wm, z, x, y) {
     av.src = img; av.style.objectPosition = `${x}% ${y}%`; av.style.transform = `scale(${z})`;
     const wmk = document.getElementById('p-watermark'); wmk.style.backgroundImage = `url('${WATERMARK_URL}')`; wmk.style.display = wm ? 'block' : 'none';
     document.getElementById('p-name').innerText = n; document.getElementById('p-role').innerText = r;
-    document.getElementById('p-weapon').innerText = w || "-"; document.getElementById('p-flaw').innerText = f || "-";
-    document.getElementById('p-bio').innerHTML = b || "-";
-    document.getElementById('p-credit').innerHTML = `Artist: ${crL && crL !== "-" ? `<a href="${crL}" target="_blank" style="color:var(--red-main)">${cr}</a>` : cr}`;
+    
+    // จัดการเนื้อหาโปรไฟล์
+    const details = [
+        { label: 'Weapon', val: w, icon: '⚔️' },
+        { label: 'Weakness', val: f, icon: '⚠️' },
+        { label: 'Biography', val: b, icon: '📜' }
+    ];
+    document.getElementById('p-details-container').innerHTML = details.map(d => `
+        <div style="display:flex; gap:15px; margin-bottom:15px;">
+            <div style="width:40px; height:40px; background:rgba(255,255,255,0.03); border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--red-main);">${d.icon}</div>
+            <div>
+                <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">${d.label}</div>
+                <div style="font-size:14px; color:#ddd;">${d.val || "-"}</div>
+            </div>
+        </div>
+    `).join('');
+
+    document.getElementById('p-credit').innerHTML = `Artist: ${crL ? `<a href="${crL}" target="_blank" style="color:var(--red-main)">${cr}</a>` : cr}`;
     openModal('profileModal');
 }
 
-// Global UI Logic
+// --- LOGIC & API ---
 function switchTab(t, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(t).classList.add('active');
@@ -419,7 +426,6 @@ function closeModal(e, id, force = false) {
     if (force || e.target.id === id) { document.getElementById(id).style.display = 'none'; }
 }
 
-// API Interactions
 async function submitEditMember() {
     const old = document.getElementById('e-old-name').value;
     const data = {
@@ -427,53 +433,35 @@ async function submitEditMember() {
         Role: document.getElementById('e-new-role').value, Badge: document.getElementById('e-new-badge').value,
         ImageURL: document.getElementById('e-new-img').value, UseWatermark: document.getElementById('e-new-watermark').checked ? "TRUE" : "FALSE",
         ZoomLevel: document.getElementById('e-zoom-slider').value, PosX: document.getElementById('e-pos-x-slider').value, PosY: document.getElementById('e-pos-y-slider').value,
-        Credit: document.getElementById('e-new-credit').value || "-", 
-        CreditLink: document.getElementById('e-new-credit-link').value || "-",
-        Weapon: document.getElementById('e-new-weapon').value || "-", 
-        Flaw: document.getElementById('e-new-flaw').value || "-", 
-        Bio: document.getElementById('e-new-bio').value || "-"
+        Credit: document.getElementById('e-new-credit').value || "-", CreditLink: document.getElementById('e-new-credit-link').value || "-",
+        Weapon: document.getElementById('e-new-weapon').value || "-", Flaw: document.getElementById('e-new-flaw').value || "-", Bio: document.getElementById('e-new-bio').value || "-"
     };
     closeModal(null, 'editMemberModal', true);
     await sendRequest({ action: "edit", sheet: "Mafia", oldName: old, data });
 }
 
 async function submitNewMember() {
-    const name = document.getElementById('m-name-input').value;
-    const img = document.getElementById('m-new-img').value;
-    if(!name) return alert("Please enter name");
     const data = {
-        Category: "Gangs", GroupName: currentAddingGang, NameMafia: name,
-        ImageURL: img, UseWatermark: "TRUE", ZoomLevel: 1, PosX: 50, PosY: 50
+        Category: "Gangs", GroupName: currentAddingGang, NameMafia: document.getElementById('m-name-input').value,
+        ImageURL: document.getElementById('m-new-img').value, UseWatermark: "TRUE", ZoomLevel: 1, PosX: 50, PosY: 50
     };
     closeModal(null, 'addMemberModal', true);
     await sendRequest({ action: "add", sheet: "Mafia", data });
 }
 
 async function submitNewGang() {
-    const n = document.getElementById('g-name').value.trim();
-    if(!n) return alert("Please enter faction name");
-    const data = { Category: "Gangs", GroupName: n, GangDesc: document.getElementById('g-desc').value, NameMafia: "[GANG_INFO]" };
+    const data = { Category: "Gangs", GroupName: document.getElementById('g-name').value, GangDesc: document.getElementById('g-desc').value, NameMafia: "[GANG_INFO]" };
     closeModal(null, 'addGangModal', true);
     await sendRequest({ action: "add", sheet: "Mafia", data });
 }
 
 function prepAddMember(gn) { currentAddingGang = gn; openModal('addMemberModal'); }
-
-async function moveItem(n, d, gn = "") { 
-    // ถ้าเป็นแก๊งต้องส่งชื่อแก๊งมาด้วย
-    await sendRequest({ action: "move", sheet: "Mafia", name: n, direction: d, groupName: gn }); 
-}
-
-async function deleteMember(n) { 
-    if(confirm(`Erase all records of ${n}?`)) await sendRequest({ action: "delete", sheet: "Mafia", name: n }); 
-}
+async function moveItem(n, d, gn = "") { await sendRequest({ action: "move", sheet: "Mafia", name: n, direction: d, groupName: gn }); }
+async function deleteMember(n) { if(confirm(`Delete ${n}?`)) await sendRequest({ action: "delete", sheet: "Mafia", name: n }); }
 
 async function sendRequest(p) {
     document.body.style.opacity = "0.5";
-    try { 
-        await fetch(API_URL, { method: "POST", body: JSON.stringify(p) }); 
-        await loadMafiaData(); 
-    } catch(e) { alert("DATA SYNC ERROR"); }
+    try { await fetch(API_URL, { method: "POST", body: JSON.stringify(p) }); await loadMafiaData(); } catch(e) { alert("ERROR"); }
     document.body.style.opacity = "1";
 }
 
@@ -495,16 +483,14 @@ function updatePreviewWatermark(prefix) {
     document.getElementById(`${prefix}-preview-watermark`).style.display = document.getElementById(`${prefix}-new-watermark`).checked ? "block" : "none";
 }
 
-// ระบบ Autocomplete ดึงรูปจากชีต Bakery
 function filterCharacters(prefix) {
     const input = document.getElementById(`${prefix}-name-input`).value.toLowerCase();
     const list = document.getElementById(`autocomplete-list-${prefix}`);
     list.innerHTML = ""; if (!input) return;
-    const filtered = bakeryData.filter(i => String(i["ชื่อขนม"]).toLowerCase().includes(input));
-    filtered.forEach(i => {
+    bakeryData.filter(i => String(i["ชื่อขนม"]).toLowerCase().includes(input)).forEach(i => {
         const div = document.createElement("div"); 
         div.style = "padding:12px; cursor:pointer; background:rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.1); font-size:12px;";
-        div.innerHTML = i["ชื่อขนม"];
+        div.innerText = i["ชื่อขนม"];
         div.onclick = () => {
             document.getElementById(`${prefix}-name-input`).value = i["ชื่อขนม"];
             document.getElementById(`${prefix}-new-img`).value = i["Link รูปตัวละคร"];
