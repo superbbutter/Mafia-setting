@@ -27,6 +27,7 @@ body { background-color: var(--bg-base); background-image: radial-gradient(circl
 
 .btn-add-gang, .btn-add-member, .btn-delete { display: none !important; } 
 body.is-editing .btn-add-gang, body.is-editing .btn-add-member, body.is-editing .btn-delete { display: flex !important; } 
+body.is-editing .member-item { outline: 1px dashed rgba(201, 24, 24, 0.5); border-radius: 4px; } /* ไฮไลท์ตอนเปิดโหมดแก้ */
 
 .btn-delete { position: absolute; top: -5px; left: -5px; background: var(--red-main); color: var(--white); border: 2px solid var(--bg-card); border-radius: 50%; width: 24px; height: 24px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 20; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.8); transition: 0.2s; }
 .btn-delete:hover { background: #FF0000; transform: scale(1.1); }
@@ -61,7 +62,7 @@ h1 span { color: var(--red-main); }
 .member-item { text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
 .member-item:hover { transform: translateY(-5px); }
 .member-img-wrapper { width: 100%; padding-top: 100%; border-radius: 4px; background: #000; position: relative; overflow: hidden; border: 1px solid #444; }
-.member-img-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(30%); transition: 0.3s; }
+.member-img-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(30%); transition: 0.3s; transform-origin: center; }
 .member-item:hover .member-img-wrapper img { filter: grayscale(0%); }
 .member-badge { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.8); color: var(--red-main); font-size: 9px; padding: 2px 5px; border: 1px solid var(--red-main); border-radius: 2px; z-index: 2; font-weight: bold; }
 .member-name { font-size: 12px; color: var(--text-main); margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -88,11 +89,18 @@ h1 span { color: var(--red-main); }
 .autocomplete-thumb { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; background: #000; border: 1px solid #444; }
 .autocomplete-name { font-size: 13px; color: var(--white); }
 
+/* Avatar Preview UI in Form */
+.avatar-preview-box { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #444; background: #000; margin: 0 auto 15px; position: relative; overflow: hidden; }
+.avatar-preview-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.1s; transform-origin: center; }
+.zoom-slider-container { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-size: 12px; color: var(--text-muted); justify-content: center; }
+input[type="range"] { accent-color: var(--red-main); width: 150px; }
+
+/* Profile Modal */
 .modal-header-img { width: 100%; height: 150px; background-color: #000; position: relative; overflow: hidden; }
-.modal-header-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: blur(2px); }
+.modal-header-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: blur(2px); transform-origin: center; }
 .modal-body { padding: 20px; margin-top: -40px; position: relative; z-index: 2; }
 .modal-avatar-wrapper { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--red-main); box-shadow: 0 0 15px #000; margin-bottom: 10px; background: #111; position: relative; overflow: hidden; }
-.modal-avatar { width: 100%; height: 100%; object-fit: cover; }
+.modal-avatar { width: 100%; height: 100%; object-fit: cover; transform-origin: center; }
 .modal-name { font-size: 22px; color: var(--white); margin-bottom: 2px; }
 .modal-role { font-size: 13px; color: var(--red-main); font-weight: 500; margin-bottom: 15px; }
 .modal-info-group { margin-bottom: 12px; }
@@ -113,7 +121,7 @@ h1 span { color: var(--red-main); }
       const container = document.getElementById('gangs-container');
       if(container) {
           container.innerHTML = `<div class="error-box">
-              <strong>พบข้อผิดพลาดของระบบ:</strong><br>${message}<br><small>(บรรทัดที่ ${lineno})</small>
+              <strong>พบข้อผิดพลาด:</strong><br>${message}<br><small>(บรรทัดที่ ${lineno})</small>
           </div>`;
       }
       return false;
@@ -163,11 +171,18 @@ h1 span { color: var(--red-main); }
         <span class="modal-close" onclick="closeModal(event, 'addMemberModal', true)">&times;</span>
         <h2 style="margin-bottom: 15px; font-size: 18px; color: var(--white);">เพิ่มสมาชิก <span id="target-gang-name" style="color: var(--red-main);"></span></h2>
         
+        <div class="avatar-preview-box">
+            <img id="m-preview-img" src="https://via.placeholder.com/150/111/C91818?text=?" alt="preview">
+            <div id="m-preview-watermark" class="watermark-overlay" style="display: block;"></div>
+        </div>
+        <div class="zoom-slider-container">
+            🔍 <input type="range" id="m-zoom-slider" min="1" max="3" step="0.1" value="1" oninput="updatePreviewZoom('m')"> ➕
+        </div>
+
         <label style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px; display: block;">พิมพ์ค้นหาจากเบเกอรี่ หรือ พิมพ์ชื่อใหม่เลยก็ได้</label>
-        
         <div class="autocomplete-container">
-            <input type="text" id="m-name-input" class="form-input" placeholder="ชื่อตัวละคร..." style="margin-bottom:0;" autocomplete="off" oninput="filterCharacters()" onfocus="filterCharacters()">
-            <div id="autocomplete-list" class="autocomplete-list"></div>
+            <input type="text" id="m-name-input" class="form-input" placeholder="ชื่อตัวละคร..." style="margin-bottom:0;" autocomplete="off" oninput="filterCharacters('m')" onfocus="filterCharacters('m')">
+            <div id="autocomplete-list-m" class="autocomplete-list"></div>
         </div>
 
         <div style="display: flex; gap: 10px; margin-bottom: 12px; margin-top: 12px;">
@@ -175,11 +190,10 @@ h1 span { color: var(--red-main); }
             <input type="text" id="m-new-badge" class="form-input" placeholder="Badge (เช่น CAPO)" style="margin-bottom: 0;">
         </div>
         
-        <input type="text" id="m-new-img" class="form-input" placeholder="ลิงก์รูปภาพ (เว้นว่างได้ถ้าระบบดึงมาให้แล้ว)">
+        <input type="text" id="m-new-img" class="form-input" placeholder="ลิงก์รูปภาพ (เว้นว่างได้ถ้าระบบดึงมาให้แล้ว)" oninput="updatePreviewImage('m')">
         
         <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px; font-size: 13px; color: var(--text-main); cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 4px; border: 1px solid #333;">
-            <input type="checkbox" id="m-new-watermark" style="accent-color: var(--red-main);" checked>
-            เปิดใช้งานลายน้ำบนรูปโปรไฟล์
+            <input type="checkbox" id="m-new-watermark" style="accent-color: var(--red-main);" checked onchange="updatePreviewWatermark('m')"> เปิดใช้งานลายน้ำ
         </label>
         
         <div style="display: flex; gap: 10px; margin-bottom: 12px;">
@@ -187,11 +201,52 @@ h1 span { color: var(--red-main); }
             <input type="text" id="m-new-credit-link" class="form-input" placeholder="ลิงก์นักวาด (เว้นว่างได้)" style="margin-bottom: 0;">
         </div>
         
-        <input type="text" id="m-new-weapon" class="form-input" placeholder="อาวุดถนัด">
+        <input type="text" id="m-new-weapon" class="form-input" placeholder="อาวุธถนัด">
         <input type="text" id="m-new-flaw" class="form-input" placeholder="จุดอ่อน/ความลับ">
         <textarea id="m-new-bio" class="form-input" placeholder="ประวัติย่อฉบับโลกใต้ดิน..." rows="3"></textarea>
         
         <button class="btn-submit" onclick="submitNewMember()">เพิ่มสมาชิก</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="editMemberModal" onclick="closeModal(event, 'editMemberModal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="modal-close" onclick="closeModal(event, 'editMemberModal', true)">&times;</span>
+        <h2 style="margin-bottom: 15px; font-size: 18px; color: var(--white);">แก้ไขข้อมูล <span id="edit-target-gang" style="color: var(--text-muted); font-size:12px;"></span></h2>
+        
+        <div class="avatar-preview-box">
+            <img id="e-preview-img" src="" alt="preview">
+            <div id="e-preview-watermark" class="watermark-overlay" style="display: block;"></div>
+        </div>
+        <div class="zoom-slider-container">
+            🔍 <input type="range" id="e-zoom-slider" min="1" max="3" step="0.1" value="1" oninput="updatePreviewZoom('e')"> ➕
+        </div>
+
+        <input type="hidden" id="e-old-name">
+        <input type="text" id="e-name-input" class="form-input" placeholder="ชื่อตัวละคร (NameMafia)" oninput="filterCharacters('e')" onfocus="filterCharacters('e')">
+        <div id="autocomplete-list-e" class="autocomplete-list" style="position:relative; margin-top:-12px; margin-bottom:12px;"></div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+            <input type="text" id="e-new-role" class="form-input" placeholder="บทบาท" style="margin-bottom: 0;">
+            <input type="text" id="e-new-badge" class="form-input" placeholder="Badge" style="margin-bottom: 0;">
+        </div>
+        
+        <input type="text" id="e-new-img" class="form-input" placeholder="ลิงก์รูปภาพ" oninput="updatePreviewImage('e')">
+        
+        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px; font-size: 13px; cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 4px; border: 1px solid #333;">
+            <input type="checkbox" id="e-new-watermark" style="accent-color: var(--red-main);" onchange="updatePreviewWatermark('e')"> เปิดใช้งานลายน้ำ
+        </label>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+            <input type="text" id="e-new-credit" class="form-input" placeholder="นักวาด" style="margin-bottom: 0;">
+            <input type="text" id="e-new-credit-link" class="form-input" placeholder="ลิงก์นักวาด" style="margin-bottom: 0;">
+        </div>
+        
+        <input type="text" id="e-new-weapon" class="form-input" placeholder="อาวุธถนัด">
+        <input type="text" id="e-new-flaw" class="form-input" placeholder="จุดอ่อน/ความลับ">
+        <textarea id="e-new-bio" class="form-input" placeholder="ประวัติย่อฉบับโลกใต้ดิน..." rows="3"></textarea>
+        
+        <button class="btn-submit" onclick="submitEditMember()">บันทึกการแก้ไข</button>
     </div>
   </div>
 
@@ -219,12 +274,14 @@ h1 span { color: var(--red-main); }
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbz7_u5Xd9uXGiBswifeqw5Q0hefHI_ckMJVwHGEFL6SdJJ4FHViQBKNM0OhvT6EnA9DDA/exec";
 
-// 🚨 ใส่ลิงก์ลายน้ำของคุณตรงนี้ 🚨
-// แก้ไขให้นำ ID จากลิงก์ที่คุณให้มา แปลงเป็นลิงก์ตรงสำหรับ Thumbnail ความละเอียดสูง
+// รูปลายน้ำ
 const WATERMARK_ID = "1e3zyO1VT4FCB020UAEmq5fOThW2R38SL";
 const WATERMARK_URL = `https://drive.google.com/thumbnail?id=${WATERMARK_ID}&sz=w1000`; 
+// เซ็ตภาพลายน้ำให้ UI ในตอนแรก
+document.getElementById('m-preview-watermark').style.backgroundImage = `url('${WATERMARK_URL}')`;
+document.getElementById('e-preview-watermark').style.backgroundImage = `url('${WATERMARK_URL}')`;
 
-// เช็คชื่อคอลัมน์ฝั่งเบเกอรี่
+// คอลัมน์เบเกอรี่
 const BAKERY_COL_NAME = "ชื่อขนม"; 
 const BAKERY_COL_IMG = "Link รูปตัวละคร"; 
 const BAKERY_COL_CREDIT = "นักวาด"; 
@@ -232,6 +289,7 @@ const BAKERY_COL_CREDIT_LINK = "Link นักวาด";
 
 let bakeryDataList = [];
 let currentAddingGang = "";
+let currentEditingGang = "";
 
 function formatImageUrl(url) {
     if (!url) return "";
@@ -260,7 +318,7 @@ function sortBakeryData(data) {
     });
 }
 
-// ================= ฟังก์ชันตั้งต้น =================
+// ================= โหลดข้อมูล =================
 document.addEventListener("DOMContentLoaded", () => {
     loadMafiaData(); 
     fetchBakeryData(); 
@@ -281,28 +339,36 @@ async function loadMafiaData() {
     try {
         const response = await fetch(API_URL + "?sheet=Mafia");
         const text = await response.text();
-        
         let data;
-        try { data = JSON.parse(text); } 
-        catch(parseErr) { throw new Error("ข้อมูลที่ได้จาก Google Sheets ไม่ใช่ JSON"); }
-        
-        if(data.error) throw new Error(`Error จากฐานข้อมูล: ${data.error}`); 
+        try { data = JSON.parse(text); } catch(parseErr) { throw new Error("ข้อมูลที่ได้จาก Google Sheets ไม่ใช่ JSON"); }
+        if(data.error) throw new Error(`Error: ${data.error}`); 
         if(!Array.isArray(data)) throw new Error("รูปแบบข้อมูลผิดพลาด (ไม่ได้เป็น Array)");
 
         renderGangs(data);
     } catch (error) {
-        console.error(error);
-        container.innerHTML = `<div class="error-box">
-            <strong>ไม่สามารถเชื่อมต่อฐานข้อมูลได้</strong><br>${error.message}<br><br>
-            <button onclick="loadMafiaData()" style="padding:5px 10px; cursor:pointer; background:#fff; color:#000; border:none; border-radius:4px;">ลองใหม่อีกครั้ง</button>
-        </div>`;
+        container.innerHTML = `<div class="error-box"><strong>ไม่สามารถเชื่อมต่อฐานข้อมูลได้</strong><br>${error.message}<br><br><button onclick="loadMafiaData()" style="padding:5px 10px; cursor:pointer; border-radius:4px;">ลองใหม่อีกครั้ง</button></div>`;
     }
 }
 
+// ================= ระบบ Preview & Zoom (ใน Modal) =================
+function updatePreviewImage(prefix) {
+    let url = document.getElementById(`${prefix}-new-img`).value;
+    let imgEl = document.getElementById(`${prefix}-preview-img`);
+    imgEl.src = formatImageUrl(url) || "https://via.placeholder.com/150/111/C91818?text=?";
+}
+function updatePreviewZoom(prefix) {
+    let scale = document.getElementById(`${prefix}-zoom-slider`).value;
+    document.getElementById(`${prefix}-preview-img`).style.transform = `scale(${scale})`;
+}
+function updatePreviewWatermark(prefix) {
+    let isChecked = document.getElementById(`${prefix}-new-watermark`).checked;
+    document.getElementById(`${prefix}-preview-watermark`).style.display = isChecked ? "block" : "none";
+}
+
 // ================= ระบบ Autocomplete =================
-function filterCharacters() {
-    const inputVal = document.getElementById('m-name-input').value.toLowerCase();
-    const listContainer = document.getElementById('autocomplete-list');
+function filterCharacters(prefix) { // prefix คือ 'm' (add) หรือ 'e' (edit)
+    const inputVal = document.getElementById(`${prefix}-name-input`).value.toLowerCase();
+    const listContainer = document.getElementById(`autocomplete-list-${prefix}`);
     
     listContainer.innerHTML = '';
     if (!bakeryDataList || bakeryDataList.length === 0) { listContainer.style.display = 'none'; return; }
@@ -323,30 +389,24 @@ function filterCharacters() {
 
         const div = document.createElement('div');
         div.className = 'autocomplete-item';
-        div.innerHTML = `
-            <img src="${formattedImg}" class="autocomplete-thumb" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
-            <span class="autocomplete-name">${name}</span>
-            <span class="autocomplete-tag">Bakery</span>
-        `;
+        div.innerHTML = `<img src="${formattedImg}" class="autocomplete-thumb" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'"><span class="autocomplete-name">${name}</span><span class="autocomplete-tag">Bakery</span>`;
         
         div.onclick = function() {
-            document.getElementById('m-name-input').value = name;
-            document.getElementById('m-new-img').value = formattedImg;
-            document.getElementById('m-new-credit').value = credit;
-            document.getElementById('m-new-credit-link').value = creditLink;
+            document.getElementById(`${prefix}-name-input`).value = name;
+            document.getElementById(`${prefix}-new-img`).value = formattedImg;
+            document.getElementById(`${prefix}-new-credit`).value = credit;
+            document.getElementById(`${prefix}-new-credit-link`).value = creditLink;
+            updatePreviewImage(prefix);
             listContainer.style.display = 'none';
         };
         listContainer.appendChild(div);
     });
-    
     listContainer.style.display = 'block';
 }
 
 document.addEventListener('click', function(e) {
-    if (e.target.id !== 'm-name-input') {
-        const list = document.getElementById('autocomplete-list');
-        if(list) list.style.display = 'none';
-    }
+    if (e.target.id !== 'm-name-input') { let mList = document.getElementById('autocomplete-list-m'); if(mList) mList.style.display = 'none'; }
+    if (e.target.id !== 'e-name-input') { let eList = document.getElementById('autocomplete-list-e'); if(eList) eList.style.display = 'none'; }
 });
 
 // ================= เรนเดอร์หน้าจอ =================
@@ -357,10 +417,7 @@ function renderGangs(data) {
     const gangsData = data.filter(item => item && item.Category === 'Gangs' && item.GroupName);
     const gangNames = [...new Set(gangsData.map(item => String(item.GroupName)))];
     
-    if(gangNames.length === 0) {
-        container.innerHTML = '<div class="loading-text">ยังไม่มีข้อมูลแก๊งในระบบ</div>';
-        return;
-    }
+    if(gangNames.length === 0) { container.innerHTML = '<div class="loading-text">ยังไม่มีข้อมูลแก๊งในระบบ</div>'; return; }
 
     gangNames.forEach(gangName => {
         const gangRows = gangsData.filter(item => String(item.GroupName) === gangName);
@@ -379,24 +436,29 @@ function renderGangs(data) {
             let safeRole = item.Role ? String(item.Role) : "";
             let safeBadge = item.Badge ? String(item.Badge) : "MEMBER";
             
-            // ตรวจสอบการเปิดใช้งานลายน้ำ (ถ้าในชีตเป็นคำว่า TRUE ให้เปิดลายน้ำ)
             let isWatermarkOn = String(item.UseWatermark).toUpperCase() === "TRUE";
             let watermarkHTML = isWatermarkOn ? `<div class="watermark-overlay" style="background-image: url('${WATERMARK_URL}');"></div>` : "";
             
+            let zoomLvl = item.ZoomLevel ? parseFloat(item.ZoomLevel) : 1;
+            
+            // Clean values for JS string parameters
             let cleanWeapon = item.Weapon ? String(item.Weapon).replace(/'/g, "\\'") : "";
             let cleanFlaw = item.Flaw ? String(item.Flaw).replace(/'/g, "\\'") : "";
             let cleanBio = item.Bio ? String(item.Bio).replace(/'/g, "\\'").replace(/\n/g, "<br>") : "";
             let cleanCredit = item.Credit ? String(item.Credit).replace(/'/g, "\\'") : "";
             let cleanCreditLink = item.CreditLink ? String(item.CreditLink).replace(/'/g, "\\'") : "";
+            let gangNameEscaped = gangName.replace(/'/g, "\\'");
+            let nameEscaped = safeName.replace(/'/g, "\\'");
 
-            let modalArgs = `'${safeImg}', '${safeName.replace(/'/g, "\\'")}', '${safeRole.replace(/'/g, "\\'")}', '${cleanWeapon}', '${cleanFlaw}', '${cleanBio}', '${cleanCredit}', '${cleanCreditLink}', ${isWatermarkOn}`;
+            // รวบรวมข้อมูลเพื่อส่งไปให้ฟังก์ชันจัดการคลิก
+            let clickArgs = `'${safeImg}', '${nameEscaped}', '${safeRole.replace(/'/g, "\\'")}', '${cleanWeapon}', '${cleanFlaw}', '${cleanBio}', '${cleanCredit}', '${cleanCreditLink}', ${isWatermarkOn}, ${zoomLvl}, '${gangNameEscaped}', '${rawImg}'`;
 
             return `
-            <div class="member-item" onclick="openProfileModal(${modalArgs})">
-                <button class="btn-delete" onclick="event.stopPropagation(); deleteMember('${safeName.replace(/'/g, "\\'")}')">✖</button>
+            <div class="member-item" onclick="handleMemberClick(event, ${clickArgs})">
+                <button class="btn-delete" onclick="event.stopPropagation(); deleteMember('${nameEscaped}')">✖</button>
                 <div class="member-img-wrapper no-save">
                     <span class="member-badge">${safeBadge}</span>
-                    <img src="${safeImg}" alt="char" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
+                    <img src="${safeImg}" alt="char" style="transform: scale(${zoomLvl});" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
                     ${watermarkHTML}
                 </div>
                 <div class="member-name">${safeName}</div>
@@ -418,20 +480,94 @@ function renderGangs(data) {
     });
 }
 
-// ================= จัดการข้อมูล =================
+// ================= จัดการ Event การคลิกการ์ด (ดู VS แก้ไข) =================
+function handleMemberClick(event, imgSrc, name, role, weapon, flaw, bio, credit, creditLink, isWatermarkOn, zoomLvl, gangName, rawImgUrl) {
+    if (document.body.classList.contains('is-editing')) {
+        prepEditMember(name, role, weapon, flaw, bio, credit, creditLink, isWatermarkOn, zoomLvl, gangName, rawImgUrl);
+    } else {
+        openProfileModal(imgSrc, name, role, weapon, flaw, bio, credit, creditLink, isWatermarkOn, zoomLvl);
+    }
+}
+
+// ================= ฟอร์มแก้ไขตัวละคร =================
+function prepEditMember(name, role, weapon, flaw, bio, credit, creditLink, isWatermarkOn, zoomLvl, gangName, rawImgUrl) {
+    currentEditingGang = gangName;
+    document.getElementById('edit-target-gang').innerText = `(${gangName})`;
+    
+    // ยัดข้อมูลเก่าลงฟอร์ม
+    document.getElementById('e-old-name').value = name;
+    document.getElementById('e-name-input').value = name;
+    document.getElementById('e-new-role').value = role;
+    
+    // หาวิธีดึง Badge (เพราะตอนเรียกฟังก์ชันไม่ได้ส่ง Badge มาเต็มๆ ขอละไว้เป็นช่องว่างให้แก้ใหม่ หรือถ้าอยากเป๊ะต้องแก้พารามิเตอร์)
+    // ตรงนี้ผมให้เว้นว่างไว้ก่อน หรือจะดึงมาก็ได้ถ้าเพิ่มในพารามิเตอร์
+    document.getElementById('e-new-badge').value = ""; 
+    
+    document.getElementById('e-new-img').value = rawImgUrl || "";
+    document.getElementById('e-new-watermark').checked = isWatermarkOn;
+    document.getElementById('e-new-credit').value = credit !== "-" ? credit : "";
+    document.getElementById('e-new-credit-link').value = creditLink !== "-" ? creditLink : "";
+    document.getElementById('e-new-weapon').value = weapon !== "-" ? weapon : "";
+    document.getElementById('e-new-flaw').value = flaw !== "-" ? flaw : "";
+    document.getElementById('e-new-bio').value = bio !== "-" ? bio.replace(/<br>/g, "\n") : "";
+    
+    document.getElementById('e-zoom-slider').value = zoomLvl;
+
+    updatePreviewImage('e');
+    updatePreviewZoom('e');
+    updatePreviewWatermark('e');
+
+    openModal('editMemberModal');
+}
+
+async function submitEditMember() {
+    const oldName = document.getElementById('e-old-name').value;
+    const newName = document.getElementById('e-name-input').value.trim();
+    if(!newName) return alert("กรุณาพิมพ์ชื่อตัวละคร");
+
+    closeModal(null, 'editMemberModal', true);
+
+    await sendRequest({
+        action: "edit", sheet: "Mafia", oldName: oldName,
+        data: {
+            Category: "Gangs", GroupName: currentEditingGang,
+            NameMafia: newName,
+            Role: document.getElementById('e-new-role').value,
+            Badge: document.getElementById('e-new-badge').value,
+            ImageURL: document.getElementById('e-new-img').value,
+            Weapon: document.getElementById('e-new-weapon').value,
+            Flaw: document.getElementById('e-new-flaw').value,
+            Bio: document.getElementById('e-new-bio').value,
+            Credit: document.getElementById('e-new-credit').value || "-",
+            CreditLink: document.getElementById('e-new-credit-link').value || "",
+            UseWatermark: document.getElementById('e-new-watermark').checked ? "TRUE" : "FALSE",
+            ZoomLevel: document.getElementById('e-zoom-slider').value
+        }
+    }, "กำลังบันทึกข้อมูล...");
+}
+
+
+// ================= เพิ่มแก๊ง / สมาชิกใหม่ =================
 async function submitNewGang() {
     const gName = document.getElementById('g-name').value.trim();
     if(!gName) return alert("กรุณาใส่ชื่อแก๊ง");
     closeModal(null, 'addGangModal', true);
     await sendRequest({
         action: "add", sheet: "Mafia",
-        data: { Category: "Gangs", GroupName: gName, GangDesc: document.getElementById('g-desc').value, GangTags: document.getElementById('g-tags').value, NameMafia: "[GANG_INFO]", CreditLink: "", UseWatermark: "FALSE" }
+        data: { Category: "Gangs", GroupName: gName, GangDesc: document.getElementById('g-desc').value, GangTags: document.getElementById('g-tags').value, NameMafia: "[GANG_INFO]", ZoomLevel: 1 }
     }, "กำลังสร้างแก๊ง...");
 }
 
 function prepAddMember(gangName) {
     currentAddingGang = gangName;
     document.getElementById('target-gang-name').innerText = gangName;
+    
+    // ล้างค่าและเซ็ต Zoom เป็นค่าเริ่มต้น
+    document.getElementById('m-zoom-slider').value = 1;
+    updatePreviewImage('m');
+    updatePreviewZoom('m');
+    updatePreviewWatermark('m');
+
     openModal('addMemberModal');
 }
 
@@ -448,6 +584,7 @@ async function submitNewMember() {
     const creditVal = document.getElementById('m-new-credit').value || "-";
     const creditLinkVal = document.getElementById('m-new-credit-link').value || "";
     const useWatermarkVal = document.getElementById('m-new-watermark').checked ? "TRUE" : "FALSE";
+    const zoomVal = document.getElementById('m-zoom-slider').value;
 
     closeModal(null, 'addMemberModal', true);
 
@@ -456,15 +593,10 @@ async function submitNewMember() {
         data: {
             Category: "Gangs", GroupName: currentAddingGang,
             NameMafia: charName,
-            Role: roleVal,
-            Badge: badgeVal,
-            ImageURL: imgVal,
-            Weapon: weaponVal,
-            Flaw: flawVal,
-            Bio: bioVal,
-            Credit: creditVal,
-            CreditLink: creditLinkVal,
-            UseWatermark: useWatermarkVal
+            Role: roleVal, Badge: badgeVal, ImageURL: imgVal,
+            Weapon: weaponVal, Flaw: flawVal, Bio: bioVal,
+            Credit: creditVal, CreditLink: creditLinkVal,
+            UseWatermark: useWatermarkVal, ZoomLevel: zoomVal
         }
     }, "กำลังเพิ่มสมาชิก...");
 }
@@ -482,16 +614,12 @@ async function sendRequest(payload, loadingMsg) {
     const container = document.getElementById('gangs-container');
     const oldHtml = container.innerHTML;
     container.innerHTML = `<div class="loading-text">${loadingMsg}</div>`;
-    
     try {
         const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
         const result = await response.json();
-        if (result.status === "success") { loadMafiaData(); } 
-        else { throw new Error("API ส่งค่าตอบกลับมาล้มเหลว"); }
+        if (result.status === "success") { loadMafiaData(); } else { throw new Error(); }
     } catch (e) { 
-        alert("เกิดข้อผิดพลาดในการส่งข้อมูล"); 
-        console.error(e); 
-        container.innerHTML = oldHtml;
+        alert("เกิดข้อผิดพลาดในการส่งข้อมูล"); console.error(e); container.innerHTML = oldHtml;
     }
 }
 
@@ -510,23 +638,24 @@ function openModal(modalId) { document.getElementById(modalId).style.display = '
 function closeModal(event, modalId, force = false) {
     if (force || event.target.id === modalId) {
         document.getElementById(modalId).style.display = 'none';
-        // เมื่อปิดแล้ว คืนค่า checkbox เป็น checked เสมอ
         document.querySelectorAll(`#${modalId} input[type="text"], #${modalId} textarea`).forEach(el => el.value = '');
-        let wmCheckbox = document.getElementById('m-new-watermark');
-        if(wmCheckbox) wmCheckbox.checked = true; 
+        let wmCheckboxM = document.getElementById('m-new-watermark'); if(wmCheckboxM) wmCheckboxM.checked = true; 
+        let imgM = document.getElementById('m-preview-img'); if(imgM) imgM.src = "https://via.placeholder.com/150/111/C91818?text=?";
+        let imgE = document.getElementById('e-preview-img'); if(imgE) imgE.src = "";
     }
 }
 
-function openProfileModal(imgSrc, name, role, weapon, flaw, bio, credit, creditLink, isWatermarkOn) {
+function openProfileModal(imgSrc, name, role, weapon, flaw, bio, credit, creditLink, isWatermarkOn, zoomLvl) {
     let bgImgEl = document.getElementById('p-bg-img');
     let avatarEl = document.getElementById('p-avatar');
     let watermarkEl = document.getElementById('p-watermark');
     
     bgImgEl.src = imgSrc;
     bgImgEl.style.display = imgSrc ? 'block' : 'none';
+    
     avatarEl.src = imgSrc;
+    avatarEl.style.transform = `scale(${zoomLvl})`;
 
-    // เช็คว่าเปิดลายน้ำไหม ถ้าเปิดก็โชว์ใน Profile ด้วย
     if(isWatermarkOn) {
         watermarkEl.style.backgroundImage = `url('${WATERMARK_URL}')`;
         watermarkEl.style.display = 'block';
@@ -540,7 +669,6 @@ function openProfileModal(imgSrc, name, role, weapon, flaw, bio, credit, creditL
     document.getElementById('p-flaw').innerText = flaw || "-";
     document.getElementById('p-bio').innerHTML = bio || "-"; 
 
-    // ทำให้นักวาดเป็นลิงก์ที่คลิกได้ ถ้าระบุลิงก์มา
     let creditHtml = `เครดิตนักวาด: `;
     if(creditLink && creditLink !== "-" && creditLink.startsWith("http")) {
         creditHtml += `<a href="${creditLink}" target="_blank">${credit || "Link"}</a>`;
