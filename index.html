@@ -96,6 +96,8 @@ h1 span { color: var(--red-main); }
 .modal-info-label { font-size: 11px; color: #777; text-transform: uppercase; margin-bottom: 3px; }
 .modal-info-text { font-size: 13px; color: var(--text-main); line-height: 1.5; }
 .modal-credit { margin-top: 20px; border-top: 1px solid #333; padding-top: 10px; font-size: 10px; color: #666; text-align: right; }
+.modal-credit a { color: var(--red-main); text-decoration: none; transition: 0.3s; font-weight: 500; }
+.modal-credit a:hover { text-shadow: 0 0 8px var(--red-glow); }
 
 .loading-text { text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 20px; }
 .error-box { background: rgba(201,24,24,0.1); border: 1px solid var(--red-main); color: #ff6b6b; padding: 15px; border-radius: 8px; text-align: center; font-size: 13px; margin-top: 20px; }
@@ -171,7 +173,11 @@ h1 span { color: var(--red-main); }
         </div>
         
         <input type="text" id="m-new-img" class="form-input" placeholder="ลิงก์รูปภาพ (เว้นว่างได้ถ้าระบบดึงมาให้แล้ว)">
-        <input type="text" id="m-new-credit" class="form-input" placeholder="เครดิตนักวาด (เว้นว่างได้ถ้าระบบดึงมาให้แล้ว)">
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+            <input type="text" id="m-new-credit" class="form-input" placeholder="นักวาด" style="margin-bottom: 0;">
+            <input type="text" id="m-new-credit-link" class="form-input" placeholder="ลิงก์นักวาด (เว้นว่างได้)" style="margin-bottom: 0;">
+        </div>
         
         <input type="text" id="m-new-weapon" class="form-input" placeholder="อาวุธถนัด">
         <input type="text" id="m-new-flaw" class="form-input" placeholder="จุดอ่อน/ความลับ">
@@ -200,13 +206,24 @@ h1 span { color: var(--red-main); }
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbz7_u5Xd9uXGiBswifeqw5Q0hefHI_ckMJVwHGEFL6SdJJ4FHViQBKNM0OhvT6EnA9DDA/exec";
 
-// เช็คชื่อคอลัมน์จากฝั่งเบเกอรี่
+// 🚨 อัปเดตชื่อคอลัมน์ให้ตรงกับเบเกอรี่ตามที่คุณแจ้ง
 const BAKERY_COL_NAME = "ชื่อขนม"; 
-const BAKERY_COL_IMG = "รูปภาพ"; 
-const BAKERY_COL_CREDIT = "เครดิต"; 
+const BAKERY_COL_IMG = "Link รูปตัวละคร"; 
+const BAKERY_COL_CREDIT = "นักวาด"; 
+const BAKERY_COL_CREDIT_LINK = "Link นักวาด"; 
 
 let bakeryDataList = [];
 let currentAddingGang = "";
+
+// ฟังก์ชันแปลงลิงก์ Google Drive ให้อ่านรูปได้
+function formatImageUrl(url) {
+    if (!url) return "";
+    const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+    if (url.includes('drive.google.com') && driveMatch) {
+        return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`;
+    }
+    return url.trim();
+}
 
 function getLangPriority(str) {
     if (!str || str === "TBA") return 3;
@@ -229,7 +246,7 @@ function sortBakeryData(data) {
 // ================= ฟังก์ชันตั้งต้น =================
 document.addEventListener("DOMContentLoaded", () => {
     loadMafiaData(); 
-    fetchBakeryData(); // โหลดแยกกันเพื่อไม่ให้โหลดพังดึงกัน
+    fetchBakeryData(); 
 });
 
 async function fetchBakeryData() {
@@ -248,22 +265,14 @@ async function loadMafiaData() {
     
     try {
         const response = await fetch(API_URL + "?sheet=Mafia");
-        const text = await response.text(); // อ่านเป็น Text ก่อนเผื่อ API พ่น HTML ออกมา (บัค Apps script)
+        const text = await response.text();
         
         let data;
-        try {
-            data = JSON.parse(text);
-        } catch(parseErr) {
-            throw new Error("ข้อมูลที่ได้จาก Google Sheets ไม่ใช่ JSON (อาจจะลืมกด Deploy Version ใหม่ หรือตั้งสิทธิ์ผิด)");
-        }
+        try { data = JSON.parse(text); } 
+        catch(parseErr) { throw new Error("ข้อมูลที่ได้จาก Google Sheets ไม่ใช่ JSON"); }
         
-        if(data.error) { 
-            throw new Error(`Error จากฐานข้อมูล: ${data.error}`); 
-        }
-        
-        if(!Array.isArray(data)) {
-            throw new Error("รูปแบบข้อมูลผิดพลาด (ไม่ได้เป็น Array)");
-        }
+        if(data.error) throw new Error(`Error จากฐานข้อมูล: ${data.error}`); 
+        if(!Array.isArray(data)) throw new Error("รูปแบบข้อมูลผิดพลาด (ไม่ได้เป็น Array)");
 
         renderGangs(data);
     } catch (error) {
@@ -293,21 +302,24 @@ function filterCharacters() {
 
     filtered.forEach(item => {
         const name = String(item[BAKERY_COL_NAME] || "TBA");
-        const img = String(item[BAKERY_COL_IMG] || ""); 
+        const rawImg = String(item[BAKERY_COL_IMG] || "");
+        const formattedImg = formatImageUrl(rawImg); 
         const credit = String(item[BAKERY_COL_CREDIT] || "");
+        const creditLink = String(item[BAKERY_COL_CREDIT_LINK] || "");
 
         const div = document.createElement('div');
         div.className = 'autocomplete-item';
         div.innerHTML = `
-            <img src="${img}" class="autocomplete-thumb" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
+            <img src="${formattedImg}" class="autocomplete-thumb" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
             <span class="autocomplete-name">${name}</span>
             <span class="autocomplete-tag">Bakery</span>
         `;
         
         div.onclick = function() {
             document.getElementById('m-name-input').value = name;
-            document.getElementById('m-new-img').value = img;
+            document.getElementById('m-new-img').value = formattedImg;
             document.getElementById('m-new-credit').value = credit;
+            document.getElementById('m-new-credit-link').value = creditLink;
             listContainer.style.display = 'none';
         };
         listContainer.appendChild(div);
@@ -328,7 +340,6 @@ function renderGangs(data) {
     const container = document.getElementById('gangs-container');
     container.innerHTML = ''; 
 
-    // กรองและเช็คความปลอดภัยของข้อมูล
     const gangsData = data.filter(item => item && item.Category === 'Gangs' && item.GroupName);
     const gangNames = [...new Set(gangsData.map(item => String(item.GroupName)))];
     
@@ -349,17 +360,18 @@ function renderGangs(data) {
 
         let membersHTML = members.map(item => {
             let safeName = item.NameMafia ? String(item.NameMafia) : "ไม่ระบุชื่อ";
-            let safeImg = item.ImageURL ? String(item.ImageURL) : "https://via.placeholder.com/150/111/C91818?text=?";
+            let rawImg = item.ImageURL ? String(item.ImageURL) : "";
+            let safeImg = formatImageUrl(rawImg) || "https://via.placeholder.com/150/111/C91818?text=?";
             let safeRole = item.Role ? String(item.Role) : "";
             let safeBadge = item.Badge ? String(item.Badge) : "MEMBER";
             
-            // Clean strings for safe JS argument passing
             let cleanWeapon = item.Weapon ? String(item.Weapon).replace(/'/g, "\\'") : "";
             let cleanFlaw = item.Flaw ? String(item.Flaw).replace(/'/g, "\\'") : "";
             let cleanBio = item.Bio ? String(item.Bio).replace(/'/g, "\\'").replace(/\n/g, "<br>") : "";
             let cleanCredit = item.Credit ? String(item.Credit).replace(/'/g, "\\'") : "";
+            let cleanCreditLink = item.CreditLink ? String(item.CreditLink).replace(/'/g, "\\'") : "";
 
-            let modalArgs = `'${safeImg}', '${safeName.replace(/'/g, "\\'")}', '${safeRole.replace(/'/g, "\\'")}', '${cleanWeapon}', '${cleanFlaw}', '${cleanBio}', '${cleanCredit}'`;
+            let modalArgs = `'${safeImg}', '${safeName.replace(/'/g, "\\'")}', '${safeRole.replace(/'/g, "\\'")}', '${cleanWeapon}', '${cleanFlaw}', '${cleanBio}', '${cleanCredit}', '${cleanCreditLink}'`;
 
             return `
             <div class="member-item" onclick="openProfileModal(${modalArgs})">
@@ -394,7 +406,7 @@ async function submitNewGang() {
     closeModal(null, 'addGangModal', true);
     await sendRequest({
         action: "add", sheet: "Mafia",
-        data: { Category: "Gangs", GroupName: gName, GangDesc: document.getElementById('g-desc').value, GangTags: document.getElementById('g-tags').value, NameMafia: "[GANG_INFO]" }
+        data: { Category: "Gangs", GroupName: gName, GangDesc: document.getElementById('g-desc').value, GangTags: document.getElementById('g-tags').value, NameMafia: "[GANG_INFO]", CreditLink: "" }
     }, "กำลังสร้างแก๊ง...");
 }
 
@@ -420,7 +432,8 @@ async function submitNewMember() {
             Weapon: document.getElementById('m-new-weapon').value,
             Flaw: document.getElementById('m-new-flaw').value,
             Bio: document.getElementById('m-new-bio').value,
-            Credit: document.getElementById('m-new-credit').value || "-"
+            Credit: document.getElementById('m-new-credit').value || "-",
+            CreditLink: document.getElementById('m-new-credit-link').value || ""
         }
     }, "กำลังเพิ่มสมาชิก...");
 }
@@ -442,12 +455,8 @@ async function sendRequest(payload, loadingMsg) {
     try {
         const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
         const result = await response.json();
-        
-        if (result.status === "success") {
-            loadMafiaData();
-        } else {
-            throw new Error("API ส่งค่าตอบกลับมาล้มเหลว");
-        }
+        if (result.status === "success") { loadMafiaData(); } 
+        else { throw new Error("API ส่งค่าตอบกลับมาล้มเหลว"); }
     } catch (e) { 
         alert("เกิดข้อผิดพลาดในการส่งข้อมูล"); 
         console.error(e); 
@@ -473,7 +482,8 @@ function closeModal(event, modalId, force = false) {
         document.querySelectorAll(`#${modalId} input, #${modalId} textarea`).forEach(el => el.value = '');
     }
 }
-function openProfileModal(imgSrc, name, role, weapon, flaw, bio, credit) {
+
+function openProfileModal(imgSrc, name, role, weapon, flaw, bio, credit, creditLink) {
     let bgImgEl = document.getElementById('p-bg-img');
     let avatarEl = document.getElementById('p-avatar');
     
@@ -485,8 +495,17 @@ function openProfileModal(imgSrc, name, role, weapon, flaw, bio, credit) {
     document.getElementById('p-role').innerText = role;
     document.getElementById('p-weapon').innerText = weapon || "-";
     document.getElementById('p-flaw').innerText = flaw || "-";
-    document.getElementById('p-bio').innerHTML = bio || "-"; // เปลี่ยนเป็น innerHTML เพื่อรองรับ <br>
-    document.getElementById('p-credit').innerText = `เครดิตนักวาด: ${credit || "-"}`;
+    document.getElementById('p-bio').innerHTML = bio || "-"; 
+
+    // ทำให้นักวาดเป็นลิงก์ที่คลิกได้ ถ้าระบุลิงก์มา
+    let creditHtml = `เครดิตนักวาด: `;
+    if(creditLink && creditLink !== "-" && creditLink.startsWith("http")) {
+        creditHtml += `<a href="${creditLink}" target="_blank">${credit || "Link"}</a>`;
+    } else {
+        creditHtml += (credit || "-");
+    }
+    document.getElementById('p-credit').innerHTML = creditHtml;
+
     openModal('profileModal');
 }
 </script>
