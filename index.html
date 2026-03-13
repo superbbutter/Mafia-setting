@@ -61,16 +61,16 @@ h1 span { color: var(--red-main); text-shadow: 0 0 15px var(--red-glow); }
 
 /* 🌟 Hero Slogan (Fix: ภาษาไทยไม่ขาดบรรทัด) */
 .hero-slogan {
-    font-size: clamp(1.4rem, 6vw, 2.1rem);
+    font-size: clamp(1.4rem, 6vw, 1.9rem);
     font-weight: 600;
-    line-height: 1.4;
+    line-height: 1.5;
     margin-bottom: 25px;
     background: linear-gradient(180deg, #fff 0%, #999 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-align: center;
-    text-wrap: balance; /* ช่วยเกลี่ยคำไทยให้สมดุล */
-    display: block;
+    text-wrap: balance; 
+    width: 100%;
 }
 
 .directory-section { margin-top: 50px; padding-top: 35px; border-top: 1px solid rgba(255,255,255,0.05); }
@@ -82,15 +82,14 @@ h1 span { color: var(--red-main); text-shadow: 0 0 15px var(--red-glow); }
 }
 .warp-btn:hover { border-color: var(--red-main); background: rgba(229, 9, 20, 0.1); transform: translateX(8px); }
 
-/* 🌟 Modern Sliders (Syndicate Style) */
-input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; }
+/* 🌟 Modern Sliders */
+input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; height: 30px; }
 input[type="range"]::-webkit-slider-runnable-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; }
 input[type="range"]::-webkit-slider-thumb { 
     -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; 
     background: var(--red-main); border: 2px solid #fff; 
-    margin-top: -7px; box-shadow: 0 0 12px var(--red-glow); transition: 0.2s;
+    margin-top: -7px; box-shadow: 0 0 10px var(--red-glow); 
 }
-input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-shadow: 0 0 20px var(--red-main); }
 
 /* 🌟 Gang Cards & Grid */
 .gang-card { background: var(--bg-glass); border-radius: 30px; padding: 35px; margin-bottom: 45px; position: relative; border: 1px solid rgba(255,255,255,0.05); }
@@ -105,7 +104,7 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
 }
 .member-img-wrapper img { 
     width: 100%; height: 100%; object-fit: cover;
-    transition: transform 0.3s ease, object-position 0s; /* object-position ห้ามมี transition ไม่งั้นแกน X จะหน่วง */
+    transition: transform 0.3s ease, object-position 0s;
 }
 
 /* 🌟 Controls */
@@ -129,15 +128,15 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
 .modal-close { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 38px; cursor: pointer; z-index: 110; transition: 0.3s; }
 .modal-close:hover { color: var(--red-main); }
 
-/* 🌟 Adjustment Preview (Fix: แกน X/Y) */
+/* 🎯 FIX: แกน X/Y Preview */
 .preview-box { 
     width: 140px; height: 140px; border-radius: 30px; border: 3px solid var(--red-main); 
     background: #000; margin: 0 auto 15px; position: relative; overflow: hidden;
 }
 #e-preview-img { 
-    width: 100%; height: 100%; object-fit: cover; 
-    min-width: 110%; min-height: 110%; /* หลอกให้รูปใหญ่กว่ากรอบเพื่อให้เลื่อนได้ทุกแกน */
-    transition: none !important; /* ปิด transition ทุกอย่างในโหมดแก้ */
+    width: 101%; height: 101%; object-fit: cover; /* Force 101% เพื่อให้ X/Y ขยับได้เสมอ */
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    transition: none !important; 
 }
 
 .profile-avatar-wrap { width: 125px; height: 125px; border-radius: 25px; border: 4px solid #111; margin-bottom: 25px; position: relative; overflow: hidden; background: #000; }
@@ -203,25 +202,22 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
         </div>
 
         <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 25px; margin-bottom: 25px;">
-            <div class="info-row" style="margin-bottom:15px; gap:10px; align-items:center; font-size:11px; color:#aaa;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 15px; font-size: 11px; color: #aaa;">
                 <span>🔍 Zoom</span><input type="range" id="e-zoom-slider" min="0.5" max="5" step="0.01" value="1" oninput="updatePreviewImageStyle('e')">
             </div>
-            <div class="info-row" style="margin-bottom:15px; gap:10px; align-items:center; font-size:11px; color:#aaa;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 15px; font-size: 11px; color: #aaa;">
                 <span>↔️ Pos X</span><input type="range" id="e-pos-x-slider" min="0" max="100" value="50" oninput="updatePreviewImageStyle('e')">
             </div>
-            <div class="info-row" style="gap:10px; align-items:center; font-size:11px; color:#aaa;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 15px; font-size: 11px; color: #aaa;">
                 <span>↕️ Pos Y</span><input type="range" id="e-pos-y-slider" min="0" max="100" value="50" oninput="updatePreviewImageStyle('e')">
             </div>
         </div>
 
         <input type="hidden" id="e-old-name">
         <input type="text" id="e-name-input" class="form-input" placeholder="Name">
-        <div style="display: flex; gap: 10px;"><input type="text" id="e-new-role" class="form-input" placeholder="Role"><input type="text" id="e-new-badge" class="form-input" placeholder="Rank"></div>
+        <div style="display: flex; gap: 10px;"><input type="text" id="e-new-role" class="form-input" placeholder="Role"><input type="text" id="e-new-badge" class="form-input" placeholder="Badge"></div>
         <input type="text" id="e-new-img" class="form-input" placeholder="Image URL" oninput="updatePreviewImageStyle('e')">
-        
-        <label style="display:flex; align-items:center; gap:10px; margin: 10px 0 20px; font-size:12px; cursor:pointer; color:#888;">
-            <input type="checkbox" id="e-new-watermark" onchange="updatePreviewWatermark('e')"> Apply Seal (Watermark)
-        </label>
+        <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px; font-size:12px; cursor:pointer;"><input type="checkbox" id="e-new-watermark" onchange="updatePreviewWatermark('e')"> Apply Watermark</label>
         
         <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
             <input type="text" id="e-new-weapon" class="form-input" placeholder="Weapon">
@@ -236,7 +232,7 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
   <div class="modal-overlay" id="profileModal" onclick="closeModal(event, 'profileModal')">
     <div class="modal-content profile" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'profileModal', true)">&times;</span>
-        <div style="width:100%; height:220px; overflow:hidden; background:#000; position:relative;">
+        <div style="width:100%; height:220px; background:#000; position:relative; overflow:hidden;">
             <img id="p-bg-img" src="" style="width:120%; height:120%; object-fit:cover; opacity:0.4; filter:blur(30px); position:absolute; top:-10%; left:-10%;">
         </div>
         <div class="modal-body">
@@ -246,9 +242,7 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
             </div>
             <h2 id="p-name" style="font-size: 30px; font-weight: 600; color:#fff;"></h2>
             <div id="p-role" style="color:var(--red-main); font-size:14px; text-transform:uppercase; letter-spacing:2px; margin-bottom:30px;"></div>
-            
             <div id="profile-details"></div>
-            
             <div id="p-credit" style="margin-top:25px; font-size:10px; color:#444; text-align:right;"></div>
         </div>
     </div>
@@ -282,13 +276,13 @@ let currentAddingGang = "";
 let currentEditingGang = "";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const wm = document.getElementById('e-preview-watermark');
-    if(wm) wm.style.backgroundImage = `url('${WATERMARK_URL}')`;
+    const previewWM = document.getElementById('e-preview-watermark');
+    if(previewWM) previewWM.style.backgroundImage = `url('${WATERMARK_URL}')`;
     loadMafiaData();
     fetchBakeryData();
 });
 
-// --- API FETCH ---
+// --- CORE ---
 async function loadMafiaData() {
     const container = document.getElementById('gangs-container');
     container.innerHTML = '<div style="text-align:center; padding:50px; opacity:0.3; font-size:12px;">SYNCHRONIZING...</div>';
@@ -310,12 +304,10 @@ function renderGangs(data) {
     const container = document.getElementById('gangs-container');
     const warpList = document.getElementById('warp-list');
     container.innerHTML = ''; warpList.innerHTML = '';
-
     const gangs = [...new Set(data.filter(i => i && i.Category === 'Gangs').map(i => i.GroupName))];
     
     gangs.forEach((gn, idx) => {
         warpList.innerHTML += `<a href="#" class="warp-btn" onclick="warpToGang(${idx}); return false;">${gn} <span>→</span></a>`;
-        
         const rows = data.filter(i => i.GroupName === gn);
         const mems = rows.filter(i => i.NameMafia !== "[GANG_INFO]");
         const info = rows.find(i => i.NameMafia === "[GANG_INFO]");
@@ -374,24 +366,21 @@ function handleMemberClick(e, img, name, role, badge, weapon, flaw, bio, cr, crL
     }
 }
 
-// 🎯 FIX: ฟังก์ชันปรับตำแหน่งรูป (แกน X/Y ต้องขยับ)
+// 🎯 FIX: แกน X/Y ต้องขยับ
 function updatePreviewImageStyle(prefix) {
     const url = document.getElementById(`${prefix}-new-img`).value;
     const zoom = document.getElementById(`${prefix}-zoom-slider`).value;
     const x = document.getElementById(`${prefix}-pos-x-slider`).value;
     const y = document.getElementById(`${prefix}-pos-y-slider`).value;
-
     if(prefix === 'e') {
         document.getElementById('st-zoom').innerText = parseFloat(zoom).toFixed(2);
         document.getElementById('st-x').innerText = x;
         document.getElementById('st-y').innerText = y;
     }
-
     const img = document.getElementById(`${prefix}-preview-img`);
     img.src = formatImageUrl(url) || "https://via.placeholder.com/150/111/C91818?text=?";
-    // ใช้ object-position สำหรับเลื่อน X/Y และ transform สำหรับซูม
     img.style.objectPosition = `${x}% ${y}%`;
-    img.style.transform = `scale(${zoom})`; 
+    img.style.transform = `translate(-50%, -50%) scale(${zoom})`; 
 }
 
 function updatePreviewWatermark(prefix) {
@@ -406,10 +395,7 @@ function openProfileModal(img, n, r, w, f, b, cr, crL, wm, z, x, y) {
     const wmk = document.getElementById('p-watermark');
     wmk.style.backgroundImage = `url('${WATERMARK_URL}')`;
     wmk.style.display = wm ? 'block' : 'none';
-
-    document.getElementById('p-name').innerText = n;
-    document.getElementById('p-role').innerText = r;
-    
+    document.getElementById('p-name').innerText = n; document.getElementById('p-role').innerText = r;
     const items = [
         { label: 'Weapon', val: w, icon: '⚔️' },
         { label: 'Weakness', val: f, icon: '⚠️' },
@@ -421,12 +407,11 @@ function openProfileModal(img, n, r, w, f, b, cr, crL, wm, z, x, y) {
             <div class="info-content"><div class="label">${it.label}</div><div class="val">${it.val || "-"}</div></div>
         </div>
     `).join('');
-
     document.getElementById('p-credit').innerHTML = `Artist: ${crL ? `<a href="${crL}" target="_blank" style="color:var(--red-main)">${cr}</a>` : cr}`;
     openModal('profileModal');
 }
 
-// --- CORE ---
+// --- LOGIC ---
 function switchTab(t, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(t).classList.add('active');
@@ -454,38 +439,29 @@ async function submitEditMember() {
     closeModal(null, 'editMemberModal', true);
     await sendRequest({ action: "edit", sheet: "Mafia", oldName: document.getElementById('e-old-name').value, data });
 }
-
 async function submitNewMember() {
-    const data = {
-        Category: "Gangs", GroupName: currentAddingGang, NameMafia: document.getElementById('m-name-input').value,
-        ImageURL: document.getElementById('m-new-img').value, UseWatermark: "TRUE", ZoomLevel: 1, PosX: 50, PosY: 50
-    };
+    const data = { Category: "Gangs", GroupName: currentAddingGang, NameMafia: document.getElementById('m-name-input').value, ImageURL: document.getElementById('m-new-img').value, UseWatermark: "TRUE", ZoomLevel: 1, PosX: 50, PosY: 50 };
     closeModal(null, 'addMemberModal', true);
     await sendRequest({ action: "add", sheet: "Mafia", data });
 }
-
 async function submitNewGang() {
     const data = { Category: "Gangs", GroupName: document.getElementById('g-name').value, GangDesc: document.getElementById('g-desc').value, NameMafia: "[GANG_INFO]" };
     closeModal(null, 'addGangModal', true);
     await sendRequest({ action: "add", sheet: "Mafia", data });
 }
-
 function prepAddMember(gn) { currentAddingGang = gn; openModal('addMemberModal'); }
 async function moveItem(n, d, gn = "") { await sendRequest({ action: "move", sheet: "Mafia", name: n, direction: d, groupName: gn }); }
-async function deleteMember(n) { if(confirm(`Erase records for ${n}?`)) await sendRequest({ action: "delete", sheet: "Mafia", name: n }); }
-
+async function deleteMember(n) { if(confirm(`Erase ${n}?`)) await sendRequest({ action: "delete", sheet: "Mafia", name: n }); }
 async function sendRequest(p) {
     document.body.style.opacity = "0.5";
     try { await fetch(API_URL, { method: "POST", body: JSON.stringify(p) }); await loadMafiaData(); } catch(e) { alert("ERROR"); }
     document.body.style.opacity = "1";
 }
-
 function formatImageUrl(url) {
     if (!url) return "";
     const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
     return driveMatch ? `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000` : url;
 }
-
 function warpToGang(id) {
     switchTab('gangs', document.getElementById('tab-gangs'));
     setTimeout(() => { 
@@ -493,7 +469,6 @@ function warpToGang(id) {
         if(el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
     }, 200);
 }
-
 function filterCharacters(prefix) {
     const input = document.getElementById(`${prefix}-name-input`).value.toLowerCase();
     const list = document.getElementById(`autocomplete-list-${prefix}`);
