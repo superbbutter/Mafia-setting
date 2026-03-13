@@ -31,6 +31,30 @@ body {
 
 .no-save { -webkit-touch-callout: none; user-select: none; -webkit-user-drag: none; }
 
+/* 🌟 ปุ่มกลับไปเบเกอรี่ 🌟 */
+.back-to-bakery {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: var(--transition);
+    background: rgba(255,255,255,0.05);
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #333;
+    z-index: 50;
+}
+.back-to-bakery:hover {
+    color: var(--white);
+    border-color: var(--white);
+    background: rgba(255,255,255,0.1);
+}
+
 /* 🌟 ควบคุมโหมดแก้ไข 🌟 */
 .edit-mode-toggle {
     position: absolute; top: 15px; right: 15px;
@@ -42,6 +66,30 @@ body {
 /* ปุ่มที่แสดงเฉพาะตอนเปิดโหมดแก้ไข */
 .edit-only-btn { display: none; }
 body.is-editing .edit-only-btn { display: inline-flex; }
+
+/* 🌟 ปุ่มลบตัวละคร 🌟 */
+.btn-delete {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    background: var(--red-main);
+    color: var(--white);
+    border: 2px solid var(--bg-card);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 20;
+    display: none; 
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.8);
+    transition: 0.2s;
+}
+.btn-delete:hover { background: #FF0000; transform: scale(1.1); }
+body.is-editing .btn-delete { display: flex; }
 
 /* Header & Navigation */
 header { width: 100%; text-align: center; padding: 60px 15px 20px; border-bottom: 1px solid rgba(201, 24, 24, 0.2); background: linear-gradient(180deg, rgba(18,18,18,0.9) 0%, rgba(5,5,5,0) 100%); position: relative; }
@@ -67,13 +115,11 @@ h1 span { color: var(--red-main); }
 .gang-header { border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
 .gang-name { font-size: 20px; color: var(--white); margin-bottom: 5px; }
 .gang-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
-.gang-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-.tag { font-size: 10px; background: rgba(255,255,255,0.1); color: #ccc; padding: 3px 8px; border-radius: 12px; border: 1px solid #555; }
 
 /* ปุ่มเพิ่มข้อมูล (Edit Mode) */
-.btn-add-gang { width: 100%; background: transparent; border: 1px dashed var(--text-muted); color: var(--text-muted); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; margin-bottom: 20px; transition: 0.3s; }
+.btn-add-gang { width: 100%; background: transparent; border: 1px dashed var(--text-muted); color: var(--text-muted); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; margin-bottom: 20px; transition: 0.3s; justify-content: center; }
 .btn-add-gang:hover { border-color: var(--white); color: var(--white); }
-.btn-add-member { background: rgba(201, 24, 24, 0.1); border: 1px dashed var(--red-main); color: var(--red-main); padding: 8px; border-radius: 4px; font-size: 12px; cursor: pointer; width: 100%; text-align: center; margin-top: 15px; transition: 0.3s; }
+.btn-add-member { background: rgba(201, 24, 24, 0.1); border: 1px dashed var(--red-main); color: var(--red-main); padding: 8px; border-radius: 4px; font-size: 12px; cursor: pointer; width: 100%; text-align: center; margin-top: 15px; transition: 0.3s; justify-content: center; }
 .btn-add-member:hover { background: var(--red-main); color: var(--white); }
 
 /* Members Grid */
@@ -85,6 +131,9 @@ h1 span { color: var(--red-main); }
 .member-item:hover .member-img-wrapper img { filter: grayscale(0%); }
 .member-badge { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.8); color: var(--red-main); font-size: 9px; padding: 2px 5px; border: 1px solid var(--red-main); border-radius: 2px; z-index: 2; font-weight: bold; }
 .member-name { font-size: 12px; color: var(--text-main); margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Loading State */
+.loading-text { text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 20px; }
 
 /* 🌟 Modal (Popup ประวัติตัวละคร) 🌟 */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; padding: 15px; backdrop-filter: blur(5px); }
@@ -106,11 +155,15 @@ h1 span { color: var(--red-main); }
 </head>
 <body>
 
+  <a href="index.html" class="back-to-bakery">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      กลับเบเกอรี่
+  </a>
+
   <button class="edit-mode-toggle" id="editToggleBtn" onclick="toggleEditMode()">โหมดแก้ไข</button>
 
   <header>
     <h1>Underground <span>Syndicate</span></h1>
-    
     <nav class="nav-bar">
       <div class="nav-item active" onclick="switchTab('setting', this)">📜 Lore & Setting</div>
       <div class="nav-item" onclick="switchTab('gangs', this)">🔪 Factions</div>
@@ -118,7 +171,6 @@ h1 span { color: var(--red-main); }
   </header>
 
   <div class="container">
-
     <div id="setting" class="page active">
       <div class="lore-box">
         <div class="lore-quote">"เบื้องหน้าคือความหอมหวาน เบื้องหลังคือการนองเลือด"</div>
@@ -130,82 +182,244 @@ h1 span { color: var(--red-main); }
     </div>
 
     <div id="gangs" class="page">
+      <button class="edit-only-btn btn-add-gang" onclick="addGang()">+ เพิ่มแก๊งใหม่</button>
       
-      <button class="edit-only-btn btn-add-gang" onclick="alert('สร้างกลุ่ม/แก๊งใหม่')">+ เพิ่มแก๊งใหม่</button>
-
-      <div class="gang-card">
-        <div class="gang-header">
-            <h2 class="gang-name">Black Velvet Cartel</h2>
-            <div class="gang-desc">แก๊งคุมโซนใต้ดินที่เชี่ยวชาญด้านการลอบสังหารและการข่าวกรอง เน้นทำงานเงียบและไร้ร่องรอย</div>
-            <div class="gang-tags">
-                <span class="tag">สายข่าวกรอง</span>
-                <span class="tag">ลอบสังหาร</span>
-                <span class="tag">เขตใต้</span>
-            </div>
-        </div>
-
-        <h3 style="font-size: 14px; color: var(--white); margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px;">รายชื่อสมาชิก</h3>
-        
-        <div class="members-grid">
-            <div class="member-item" onclick="openModal('https://via.placeholder.com/150', 'อัลเบอร์โต', 'หัวหน้าแก๊ง (BOSS)', 'ปืนพกลูกโม่ .357', 'แพ้ขนมแมวเลีย / ใจอ่อนกับหมาจรจัด', 'ผู้ก่อตั้งแก๊งที่เบื้องหน้าเป็นนักอบขนมปังฝรั่งเศสผู้ใจดี แต่เบื้องหลังคือผู้สั่งการเด็ดขาดที่ไม่มีใครกล้าขัดคำสั่ง', 'วาดโดย: @ArtistName1')">
-                <div class="member-img-wrapper no-save">
-                    <span class="member-badge">BOSS</span>
-                    <img src="https://via.placeholder.com/150/111/C91818?text=Image" alt="Char">
-                </div>
-                <div class="member-name">อัลเบอร์โต</div>
-            </div>
-
-            <div class="member-item" onclick="openModal('https://via.placeholder.com/150', 'นีน่า', 'นักฆ่า / พนักงานเสิร์ฟ', 'มีดสั้นอาบยาพิษ', 'สายตาสั้นมากถ้าถอดแว่น', 'สาวเสิร์ฟหน้านิ่งที่รับหน้าที่จัดการเป้าหมายที่เข้ามาก่อกวนในร้าน', 'วาดโดย: @ArtistName2')">
-                <div class="member-img-wrapper no-save">
-                    <span class="member-badge">HITMAN</span>
-                    <img src="https://via.placeholder.com/150/111/C91818?text=Image" alt="Char">
-                </div>
-                <div class="member-name">นีน่า</div>
-            </div>
-        </div>
-
-        <button class="edit-only-btn btn-add-member" onclick="alert('ดึงรายชื่อจากร้านเบเกอรี่มาเข้าแก๊งนี้')">+ ดึงพนักงานมาเพิ่มในแก๊ง</button>
+      <div id="gangs-container">
+          <div class="loading-text">กำลังซิงค์ข้อมูลจากฐานข้อมูลใต้ดิน...</div>
       </div>
-
     </div>
-
   </div>
 
   <div class="modal-overlay" id="charModal" onclick="closeModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, true)">&times;</span>
-        
-        <div class="modal-header-img">
-            <img id="m-bg-img" src="" alt="bg">
-        </div>
-        
+        <div class="modal-header-img"><img id="m-bg-img" src="" alt="bg"></div>
         <div class="modal-body">
             <img id="m-avatar" class="modal-avatar" src="" alt="avatar">
             <h2 id="m-name" class="modal-name">ชื่อตัวละคร</h2>
             <div id="m-role" class="modal-role">บทบาทในแก๊ง</div>
-            
             <div class="modal-info-group">
                 <div class="modal-info-label">🔪 อาวุธถนัด</div>
-                <div id="m-weapon" class="modal-info-text">ข้อมูล...</div>
+                <div id="m-weapon" class="modal-info-text">-</div>
             </div>
-            
             <div class="modal-info-group">
                 <div class="modal-info-label">⚠️ จุดอ่อน / ความลับ</div>
-                <div id="m-flaw" class="modal-info-text">ข้อมูล...</div>
+                <div id="m-flaw" class="modal-info-text">-</div>
             </div>
-
             <div class="modal-info-group">
                 <div class="modal-info-label">📜 ประวัติย่อ</div>
-                <div id="m-bio" class="modal-info-text">ข้อมูล...</div>
+                <div id="m-bio" class="modal-info-text">-</div>
             </div>
-
             <div id="m-credit" class="modal-credit">เครดิตนักวาด: -</div>
         </div>
     </div>
   </div>
 
 <script>
-// ฟังก์ชันสลับหน้า (Lore <-> Gangs)
+// 🔴 URL API ของคุณที่เชื่อมต่อแล้ว
+const API_URL = "https://script.google.com/macros/s/AKfycbz7_u5Xd9uXGiBswifeqw5Q0hefHI_ckMJVwHGEFL6SdJJ4FHViQBKNM0OhvT6EnA9DDA/exec";
+
+// ================= ฟังก์ชันโหลดข้อมูล =================
+async function loadMafiaData() {
+    const container = document.getElementById('gangs-container');
+    container.innerHTML = '<div class="loading-text">กำลังซิงค์ข้อมูลจากฐานข้อมูลใต้ดิน...</div>';
+    
+    try {
+        const response = await fetch(API_URL + "?sheet=Mafia");
+        const data = await response.json();
+        
+        if(data.error) {
+            container.innerHTML = `<div class="loading-text" style="color:red;">Error: ${data.error}</div>`;
+            return;
+        }
+
+        renderGangs(data);
+    } catch (error) {
+        console.error("เชื่อมต่อข้อมูลไม่สำเร็จ:", error);
+        container.innerHTML = `<div class="loading-text" style="color:red;">การเชื่อมต่อล้มเหลว โปรดลองรีเฟรช</div>`;
+    }
+}
+
+// ================= ฟังก์ชันเรนเดอร์หน้าจอ =================
+function renderGangs(data) {
+    const container = document.getElementById('gangs-container');
+    container.innerHTML = ''; 
+
+    // กรองเฉพาะหมวดหมู่ Gangs
+    const gangsData = data.filter(item => item.Category === 'Gangs' && item.GroupName);
+    
+    // หาชื่อแก๊งทั้งหมดที่ไม่ซ้ำกัน
+    const gangNames = [...new Set(gangsData.map(item => item.GroupName))];
+    
+    if(gangNames.length === 0) {
+        container.innerHTML = '<div class="loading-text">ยังไม่มีข้อมูลแก๊งในระบบ</div>';
+        return;
+    }
+
+    gangNames.forEach(gangName => {
+        const members = gangsData.filter(item => item.GroupName === gangName);
+        
+        // สร้าง HTML สำหรับสมาชิกในแก๊ง
+        let membersHTML = members.map(item => {
+            // ป้องกัน Error หากข้อมูลในช่องว่างเปล่า
+            let safeName = item.NameMafia || "ไม่ระบุชื่อ";
+            let safeImg = item.ImageURL || "https://via.placeholder.com/150/111/C91818?text=?";
+            let safeRole = item.Role || "";
+            let safeBadge = item.Badge || "MEMBER";
+            
+            // ข้อมูลสำหรับส่งเข้า Modal
+            let modalArgs = `
+                '${safeImg}', 
+                '${safeName}', 
+                '${safeRole}', 
+                '${item.Weapon || "-"}', 
+                '${item.Flaw || "-"}', 
+                '${item.Bio || "-"}', 
+                '${item.Credit || "-"}'
+            `;
+
+            return `
+            <div class="member-item" onclick="openModal(${modalArgs})">
+                <button class="btn-delete" onclick="event.stopPropagation(); deleteMember('${safeName}')">✖</button>
+                <div class="member-img-wrapper no-save">
+                    <span class="member-badge">${safeBadge}</span>
+                    <img src="${safeImg}" alt="${safeName}">
+                </div>
+                <div class="member-name">${safeName}</div>
+            </div>`;
+        }).join('');
+
+        // นำสมาชิกไปใส่ในการ์ดของแก๊งนั้นๆ
+        container.innerHTML += `
+            <div class="gang-card">
+                <div class="gang-header">
+                    <h2 class="gang-name">${gangName}</h2>
+                </div>
+                <h3 style="font-size: 14px; color: var(--white); margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px;">รายชื่อสมาชิก</h3>
+                
+                <div class="members-grid">
+                    ${membersHTML}
+                </div>
+
+                <button class="edit-only-btn btn-add-member" onclick="addMember('${gangName}')">+ ดึงพนักงานมาเพิ่มในแก๊ง</button>
+            </div>
+        `;
+    });
+}
+
+// ================= ฟังก์ชันลบตัวละคร =================
+async function deleteMember(characterName) {
+    if (!confirm(`คุณแน่ใจหรือไม่ที่จะลบรายชื่อของ "${characterName}" ออกจากระบบ?`)) return;
+
+    // ส่งชื่อไปให้ Apps Script (ตัวแปร name จะตรงกับ params.name ในโค้ด)
+    const requestData = {
+        action: "delete",
+        sheet: "Mafia",
+        name: characterName 
+    };
+
+    try {
+        document.body.style.cursor = 'wait';
+        const response = await fetch(API_URL, {
+            method: "POST",
+            body: JSON.stringify(requestData)
+        });
+        const result = await response.json();
+        
+        if(result.status === "success") {
+            loadMafiaData(); // โหลดใหม่
+        }
+    } catch (error) {
+        alert("ลบข้อมูลไม่สำเร็จ");
+        console.error(error);
+    } finally {
+        document.body.style.cursor = 'default';
+    }
+}
+
+// ================= ฟังก์ชันเพิ่มตัวละครเข้าแก๊ง =================
+async function addMember(gangName) {
+    let charName = prompt(`เพิ่มสมาชิกลงในแก๊ง ${gangName}\n\nกรุณาใส่ชื่อตัวละคร (NameMafia):`);
+    if (!charName) return;
+
+    const requestData = {
+        action: "add",
+        sheet: "Mafia",
+        data: {
+            Category: "Gangs",
+            GroupName: gangName,
+            NameMafia: charName,
+            Role: "ลูกน้อง",
+            Badge: "NEW",
+            ImageURL: "https://via.placeholder.com/150/111/C91818?text=New",
+            Weapon: "ยังไม่ระบุ",
+            Flaw: "ยังไม่ระบุ",
+            Bio: "ข้อมูลเบื้องต้นจากเบเกอรี่...",
+            Credit: "-"
+        }
+    };
+
+    try {
+        document.body.style.cursor = 'wait';
+        const response = await fetch(API_URL, {
+            method: "POST",
+            body: JSON.stringify(requestData)
+        });
+        const result = await response.json();
+        
+        if(result.status === "success") {
+            loadMafiaData();
+        }
+    } catch (error) {
+        alert("เพิ่มข้อมูลไม่สำเร็จ");
+        console.error(error);
+    } finally {
+        document.body.style.cursor = 'default';
+    }
+}
+
+// ================= ฟังก์ชันเพิ่มแก๊งใหม่ =================
+async function addGang() {
+    let newGangName = prompt("ใส่ชื่อแก๊งใหม่ที่คุณต้องการสร้าง:");
+    if (!newGangName) return;
+    
+    let firstMember = prompt(`สร้างแก๊ง ${newGangName} สำเร็จ!\nกรุณาใส่ชื่อสมาชิกระดับหัวหน้าคนแรก (NameMafia):`);
+    if (!firstMember) return;
+
+    // สร้างแก๊งใหม่โดยการเพิ่มสมาชิกคนแรกเข้าไป
+    const requestData = {
+        action: "add",
+        sheet: "Mafia",
+        data: {
+            Category: "Gangs",
+            GroupName: newGangName,
+            NameMafia: firstMember,
+            Role: "ผู้ก่อตั้ง",
+            Badge: "BOSS",
+            ImageURL: "https://via.placeholder.com/150/111/C91818?text=Boss",
+            Weapon: "ยังไม่ระบุ",
+            Flaw: "ยังไม่ระบุ",
+            Bio: "ผู้ก่อตั้งแก๊งนี้...",
+            Credit: "-"
+        }
+    };
+
+    try {
+        document.body.style.cursor = 'wait';
+        const response = await fetch(API_URL, {
+            method: "POST",
+            body: JSON.stringify(requestData)
+        });
+        await response.json();
+        loadMafiaData();
+    } catch (error) {
+        alert("เพิ่มแก๊งไม่สำเร็จ");
+    } finally {
+        document.body.style.cursor = 'default';
+    }
+}
+
+// ================= UI Functions =================
 function switchTab(tabId, element) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
@@ -213,7 +427,6 @@ function switchTab(tabId, element) {
     element.classList.add('active');
 }
 
-// ฟังก์ชันเปิด-ปิดโหมดแก้ไข
 function toggleEditMode() {
     const body = document.body;
     const btn = document.getElementById('editToggleBtn');
@@ -228,9 +441,7 @@ function toggleEditMode() {
     }
 }
 
-// ฟังก์ชันเปิด Modal ประวัติตัวละคร
 function openModal(imgSrc, name, role, weapon, flaw, bio, credit) {
-    // นำข้อมูลที่ส่งมา ไปใส่ในโครงสร้าง Modal
     document.getElementById('m-bg-img').src = imgSrc;
     document.getElementById('m-avatar').src = imgSrc;
     document.getElementById('m-name').innerText = name;
@@ -239,18 +450,17 @@ function openModal(imgSrc, name, role, weapon, flaw, bio, credit) {
     document.getElementById('m-flaw').innerText = flaw;
     document.getElementById('m-bio').innerText = bio;
     document.getElementById('m-credit').innerText = credit;
-
-    // แสดง Modal
     document.getElementById('charModal').style.display = 'flex';
 }
 
-// ฟังก์ชันปิด Modal
 function closeModal(event, forceClose = false) {
-    // ปิดเมื่อคลิกที่พื้นหลังสีดำ หรือคลิกปุ่มกากบาท
     if (forceClose || event.target.id === 'charModal') {
         document.getElementById('charModal').style.display = 'none';
     }
 }
+
+// เริ่มต้นดึงข้อมูลทันทีเมื่อโหลดเว็บ
+window.onload = loadMafiaData;
 </script>
 </body>
 </html>
