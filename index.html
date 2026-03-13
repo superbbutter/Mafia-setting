@@ -35,10 +35,15 @@ body {
 .edit-only { display: none !important; }
 body.is-editing .edit-only { display: flex !important; }
 
-/* Glass Panel */
-.glass-panel { background: var(--bg-glass); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+/* 🌟 Glass Elements */
+.glass-panel {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
 
-/* Top Navigation */
+/* 🌟 Navigation Buttons */
 .top-btn { 
     position: absolute; top: 20px; padding: 10px 22px; border-radius: 40px; 
     font-size: 12px; transition: var(--transition); z-index: 50; cursor: pointer; 
@@ -51,101 +56,117 @@ body.is-editing .edit-only { display: flex !important; }
 .edit-mode-toggle { right: 20px; color: var(--red-main); border-color: rgba(229, 9, 20, 0.3); }
 .edit-mode-toggle.active { background: var(--red-main); color: var(--white); box-shadow: 0 0 25px var(--red-glow); }
 
-header { width: 100%; text-align: center; padding: 80px 20px 30px; }
-h1 { font-size: 28px; font-weight: 600; text-transform: uppercase; letter-spacing: 4px; }
+header { width: 100%; text-align: center; padding: 100px 20px 40px; }
+h1 { font-size: clamp(24px, 6vw, 32px); font-weight: 600; text-transform: uppercase; letter-spacing: 6px; }
 h1 span { color: var(--red-main); text-shadow: 0 0 15px var(--red-glow); }
 
 .nav-bar { 
-    width: 90%; max-width: 500px; display: flex; justify-content: center; gap: 10px; 
-    margin: 25px auto 0; background: rgba(255,255,255,0.03); padding: 6px; 
+    width: 90%; max-width: 450px; display: flex; justify-content: center; gap: 8px; 
+    margin: 30px auto 0; background: rgba(255,255,255,0.03); padding: 6px; 
     border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(25px);
 }
-.nav-item { padding: 10px 25px; color: var(--text-muted); font-size: 13px; cursor: pointer; border-radius: 35px; transition: var(--transition); }
+.nav-item { 
+    padding: 10px 30px; color: var(--text-muted); font-size: 13px; cursor: pointer; 
+    border-radius: 35px; transition: var(--transition); display: flex; align-items: center; gap: 8px;
+}
 .nav-item.active { background: var(--red-main); color: var(--white); box-shadow: 0 8px 20px var(--red-glow); }
 
-.container { width: 100%; max-width: 600px; padding: 20px 15px 50px; }
-.page { display: none; animation: fadeIn 0.5s ease; }
+.container { width: 100%; max-width: 650px; padding: 40px 15px 100px; }
+.page { display: none; animation: fadeIn 0.6s ease; }
 .page.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Hero Section */
+/* 🌟 Hero Slogan (Fix wrapping) */
 .hero-slogan {
-    font-size: 26px; font-weight: 600; line-height: 1.4; margin-bottom: 20px;
+    font-size: clamp(1.4rem, 7vw, 1.9rem);
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 25px;
     background: linear-gradient(180deg, #ffffff 0%, #a3a3a3 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+    text-align: center;
 }
 
-/* Directory Section Spacing Fix */
-.directory-section { margin-top: 45px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px; text-align: left; }
+/* 🌟 Directory Section (Fix Spacing) */
+.directory-section {
+    margin-top: 50px;
+    text-align: left;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 35px;
+}
 .warp-btn { 
     background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); 
     color: var(--text-main); padding: 18px 25px; border-radius: 20px; 
     text-decoration: none; display: flex; align-items: center; justify-content: space-between; 
-    transition: var(--transition); margin-bottom: 12px;
+    transition: var(--transition); margin-bottom: 12px; backdrop-filter: blur(10px);
 }
 .warp-btn:hover { border-color: var(--red-main); background: rgba(229, 9, 20, 0.1); transform: translateX(10px); }
 
-/* Gang Cards */
-.gang-card { border-radius: 25px; padding: 30px; margin-bottom: 40px; position: relative; }
-.gang-header { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; margin-bottom: 25px; position: relative; padding-right: 100px; }
-.gang-name { font-size: 24px; color: var(--white); margin-bottom: 8px; }
+/* 🌟 Gang Cards */
+.gang-card { border-radius: 30px; padding: 35px; margin-bottom: 45px; position: relative; }
+.gang-header { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 25px; margin-bottom: 30px; position: relative; padding-right: 110px; }
+.gang-name { font-size: 26px; font-weight: 600; color: var(--white); margin-bottom: 10px; }
 
-/* 🌟 Modern Controls (Bakery Style Arrows) 🌟 */
+/* 🌟 Modern Controls (Bakery Style) */
 .btn-control { 
-    position: absolute; z-index: 40; background: rgba(255,255,255,0.9); 
-    color: #000; border-radius: 50%; width: 32px; height: 32px; 
-    border: none; cursor: pointer; display: flex; align-items: center; 
-    justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.2s;
+    position: absolute; z-index: 40; background: rgba(255,255,255,0.1); 
+    color: var(--white); border-radius: 50%; width: 34px; height: 34px; 
+    border: 1px solid rgba(255,255,255,0.2); cursor: pointer; display: flex; 
+    align-items: center; justify-content: center; backdrop-filter: blur(10px); transition: 0.2s;
 }
-.btn-control:hover { transform: scale(1.1); background: var(--red-main); color: white; }
-.btn-delete { top: -10px; left: -10px; background: var(--red-main); color: white; }
-.btn-move-l { bottom: 45px; left: -12px; }
-.btn-move-r { bottom: 45px; right: -12px; }
-.btn-move-u { top: 15px; right: 15px; }
-.btn-move-d { top: 15px; right: 55px; }
+.btn-control:hover { background: var(--white); color: #000; transform: scale(1.1); }
+.btn-delete { top: -12px; left: -12px; background: var(--red-main); border-color: var(--red-main); }
+.btn-move-l { bottom: 50px; left: -15px; }
+.btn-move-r { bottom: 50px; right: -15px; }
+.btn-move-u { top: 20px; right: 20px; }
+.btn-move-d { top: 20px; right: 65px; }
 
+/* Spacing Fix for Add Faction Button */
 .btn-add-action {
     background: transparent; border: 1px dashed rgba(255,255,255,0.2); 
-    color: var(--text-muted); padding: 18px; border-radius: 20px; width: 100%; margin-bottom: 20px;
+    color: var(--white); padding: 18px; border-radius: 20px; width: 100%; margin-bottom: 30px;
     cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px;
 }
-.btn-add-action:hover { border-color: var(--red-main); color: var(--red-main); background: rgba(229, 9, 20, 0.05); border-style: solid; }
+.btn-add-action:hover { border-color: var(--red-main); background: rgba(229, 9, 20, 0.05); color: var(--red-main); border-style: solid; }
 
-.members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 20px; }
-.member-item { text-align: center; cursor: pointer; transition: var(--transition); position: relative; }
+.members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 25px; }
+.member-item { text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
 .member-img-wrapper { 
-    width: 100%; aspect-ratio: 1/1; border-radius: 20px; background: #000; 
+    width: 100%; aspect-ratio: 1/1; border-radius: 22px; background: #000; 
     position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
 }
 .member-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s ease; }
-.member-badge { position: absolute; top: 10px; right: 10px; background: var(--red-main); color: white; font-size: 9px; padding: 3px 8px; border-radius: 6px; z-index: 5; font-weight: 600; }
-.member-name { font-size: 13px; color: var(--text-main); margin-top: 10px; font-weight: 400; }
+.member-badge { position: absolute; top: 12px; right: 12px; background: var(--red-main); color: white; font-size: 9px; padding: 4px 10px; border-radius: 8px; z-index: 5; font-weight: 600; }
+.member-name { font-size: 14px; color: var(--text-main); margin-top: 12px; font-weight: 400; }
 
-/* Modals */
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 100; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(15px); }
-.modal-content { background: #121212; width: 100%; max-width: 440px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); position: relative; max-height: 90vh; overflow-y: auto; padding: 35px; }
-.modal-content.profile { padding: 0; overflow: hidden; }
+/* 🌟 Modals & Adjustment UI */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(25px); }
+.modal-content { background: #0e0e0e; width: 100%; max-width: 460px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.1); position: relative; max-height: 90vh; overflow-y: auto; padding: 35px; }
+.modal-content.profile { padding: 0; overflow: hidden; border-color: rgba(229, 9, 20, 0.3); }
 
-/* Big Close Button */
-.modal-close { position: absolute; top: 15px; right: 20px; color: #fff; font-size: 32px; cursor: pointer; z-index: 110; transition: 0.2s; opacity: 0.6; }
-.modal-close:hover { opacity: 1; color: var(--red-main); transform: scale(1.1); }
+.modal-close { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 38px; cursor: pointer; z-index: 110; opacity: 0.5; transition: 0.3s; line-height: 1; }
+.modal-close:hover { opacity: 1; color: var(--red-main); }
 
-.form-input { width: 100%; padding: 14px; margin-bottom: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #fff; border-radius: 12px; font-size: 14px; outline: none; }
-.btn-submit { width: 100%; background: var(--red-main); color: #fff; padding: 16px; border: none; border-radius: 18px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+.form-input { width: 100%; padding: 15px 20px; margin-bottom: 15px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 15px; font-size: 14px; outline: none; }
+.btn-submit { width: 100%; background: var(--red-main); color: #fff; padding: 18px; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px var(--red-glow); }
 
-/* Adjustment UI */
-.avatar-preview-box { width: 120px; height: 120px; border-radius: 30px; border: 3px solid var(--red-main); background: #000; margin: 0 auto 15px; position: relative; overflow: hidden; }
+/* Edit Profile Preview Logic */
+.avatar-preview-box { width: 140px; height: 140px; border-radius: 30px; border: 3px solid var(--red-main); background: #000; margin: 0 auto 15px; position: relative; overflow: hidden; box-shadow: 0 0 20px var(--red-glow); }
 .avatar-preview-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.1s; }
-.preview-status { font-size: 11px; color: var(--text-muted); background: rgba(0,0,0,0.4); padding: 6px 15px; border-radius: 20px; display: inline-block; margin-bottom: 15px; }
-.range-group { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
-.range-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 12px; font-size: 11px; color: #888; }
-input[type="range"] { accent-color: var(--red-main); flex: 1; }
+.preview-status { font-size: 11px; color: #888; background: rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 30px; margin-bottom: 20px; display: inline-block; }
+.preview-status b { color: var(--red-main); }
 
-/* Profile Detail Blur BG */
+.range-group { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 25px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
+.range-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 12px; font-size: 11px; color: #aaa; }
+input[type="range"] { accent-color: var(--red-main); flex: 1; cursor: pointer; }
+
+/* Profile View Elements (Blur BG) */
 .modal-header-img { width: 100%; height: 220px; background: #000; position: relative; overflow: hidden; }
 .modal-header-img img { width: 120%; height: 120%; object-fit: cover; opacity: 0.5; filter: blur(30px) saturate(1.5); position: absolute; top: -10%; left: -10%; }
 .modal-body { padding: 35px; margin-top: -85px; position: relative; z-index: 2; }
-.profile-avatar-wrap { width: 115px; height: 115px; border-radius: 25px; border: 4px solid #1a1a1a; margin-bottom: 25px; position: relative; overflow: hidden; background: #111; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+.profile-avatar-wrap { width: 120px; height: 120px; border-radius: 25px; border: 4px solid #1a1a1a; margin-bottom: 25px; position: relative; overflow: hidden; background: #111; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
 .profile-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
 .info-row { display: flex; gap: 18px; margin-bottom: 22px; }
 .info-icon { width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--red-main); flex-shrink: 0; }
@@ -158,10 +179,10 @@ input[type="range"] { accent-color: var(--red-main); flex: 1; }
 <body>
 
   <a href="index.html" class="top-btn back-to-bakery glass-panel">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Bakery
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Bakery
   </a>
   <button class="top-btn edit-mode-toggle glass-panel" id="editToggleBtn" onclick="toggleEditMode()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit Database
   </button>
 
   <header>
@@ -174,18 +195,21 @@ input[type="range"] { accent-color: var(--red-main); flex: 1; }
 
   <div class="container">
     <div id="setting" class="page active">
-        <div class="gang-card glass-panel" style="border-left: 4px solid var(--red-main); text-align: center;">
+        <div class="gang-card glass-panel" style="border-left: 5px solid var(--red-main); text-align: center;">
             <div class="hero-slogan">เบื้องหน้าคือความหอมหวาน<br>เบื้องหลังคือการนองเลือด</div>
-            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.8; margin-bottom: 25px;">Database authorized access only. Personnel profiles are confidential.</p>
+            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.8;">Secure protocol in effect. Accessing confidential faction directories and personnel files.</p>
+            
             <div class="directory-section">
-                <div style="font-size: 10px; color: var(--red-main); letter-spacing: 2px; margin-bottom: 15px; font-weight: 600; text-transform: uppercase;">Syndicate Directory</div>
+                <div style="font-size: 11px; color: var(--red-main); letter-spacing: 2px; margin-bottom: 20px; font-weight: 600; text-transform: uppercase;">Syndicate Directory</div>
                 <div id="warp-list"></div>
             </div>
         </div>
     </div>
 
     <div id="gangs" class="page">
-        <button class="btn-add-action edit-only glass-panel" onclick="openModal('addGangModal')">+ Create New Faction</button>
+        <button class="btn-add-action edit-only glass-panel" onclick="openModal('addGangModal')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Establish New Faction
+        </button>
         <div id="gangs-container"></div>
     </div>
   </div>
@@ -193,7 +217,7 @@ input[type="range"] { accent-color: var(--red-main); flex: 1; }
   <div class="modal-overlay" id="editMemberModal" onclick="closeModal(event, 'editMemberModal')">
     <div class="modal-content glass-panel" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'editMemberModal', true)">&times;</span>
-        <h2 style="margin-bottom: 25px; font-size: 18px; text-align: center;">Archive Adjustment</h2>
+        <h2 style="margin-bottom: 25px; font-size: 18px; text-align: center;">Record Adjustment</h2>
         <div class="avatar-preview-container">
             <div class="avatar-preview-box"><img id="e-preview-img" src="" alt="preview"><div id="e-preview-watermark" class="watermark-overlay"></div></div>
             <div class="preview-status">ZOOM: <b id="st-zoom">1.00</b> | X: <b id="st-x">50</b>% | Y: <b id="st-y">50</b>%</div>
@@ -205,10 +229,13 @@ input[type="range"] { accent-color: var(--red-main); flex: 1; }
         </div>
         <input type="hidden" id="e-old-name">
         <input type="text" id="e-name-input" class="form-input" placeholder="Name">
-        <div style="display: flex; gap: 10px;"><input type="text" id="e-new-role" class="form-input" placeholder="Role"><input type="text" id="e-new-badge" class="form-input" placeholder="Badge"></div>
-        <input type="text" id="e-new-img" class="form-input" placeholder="Image Link" oninput="updatePreviewImageStyle('e')">
-        <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px; font-size:12px;"><input type="checkbox" id="e-new-watermark" onchange="updatePreviewWatermark('e')"> Apply Protection Seal</label>
-        <button class="btn-submit" onclick="submitEditMember()">Update Record</button>
+        <div style="display: flex; gap: 10px;"><input type="text" id="e-new-role" class="form-input" placeholder="Role"><input type="text" id="e-new-badge" class="form-input" placeholder="Rank"></div>
+        <input type="text" id="e-new-img" class="form-input" placeholder="Image URL" oninput="updatePreviewImageStyle('e')">
+        <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px; font-size:12px; cursor:pointer;"><input type="checkbox" id="e-new-watermark" onchange="updatePreviewWatermark('e')"> Apply Security Seal</label>
+        <div style="display: flex; gap: 10px;"><input type="text" id="e-new-credit" class="form-input" placeholder="Artist"><input type="text" id="e-new-credit-link" class="form-input" placeholder="Artist Link"></div>
+        <input type="text" id="e-new-weapon" class="form-input" placeholder="Weapon"><input type="text" id="e-new-flaw" class="form-input" placeholder="Weakness">
+        <textarea id="e-new-bio" class="form-input" placeholder="Archive description..." rows="3"></textarea>
+        <button class="btn-submit" onclick="submitEditMember()">Save Archive</button>
     </div>
   </div>
 
@@ -216,10 +243,10 @@ input[type="range"] { accent-color: var(--red-main); flex: 1; }
     <div class="modal-content glass-panel" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'addMemberModal', true)">&times;</span>
         <h2 style="margin-bottom:20px; font-size:18px;">Recruit Personnel</h2>
-        <input type="text" id="m-name-input" class="form-input" placeholder="Search..." oninput="filterCharacters('m')">
+        <input type="text" id="m-name-input" class="form-input" placeholder="Searchพนักงาน..." oninput="filterCharacters('m')">
         <div id="autocomplete-list-m" style="position:relative; top:-10px;"></div>
         <input type="text" id="m-new-img" class="form-input" placeholder="Image URL">
-        <button class="btn-submit" onclick="submitNewMember()">Establish Entry</button>
+        <button class="btn-submit" onclick="submitNewMember()">Add Member</button>
     </div>
   </div>
 
@@ -229,10 +256,10 @@ input[type="range"] { accent-color: var(--red-main); flex: 1; }
         <div class="modal-header-img"><img id="p-bg-img" src="" alt="blur-bg"></div>
         <div class="modal-body">
             <div class="profile-avatar-wrap"><img id="p-avatar" src="" alt="avatar"><div id="p-watermark" class="watermark-overlay" style="display: none;"></div></div>
-            <h2 id="p-name" class="modal-name" style="font-size: 28px;"></h2><div id="p-role" style="color:var(--red-main); font-size:14px; text-transform:uppercase; margin-bottom:25px;"></div>
-            <div class="info-row"><div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2L12 4.5M10 6.5L3 13.5l2.5 2.5 7-7M21 15.5l-2.5 2.5-4-4 2.5-2.5 4 4z"/></svg></div><div class="info-content"><div class="label">Weapon</div><div id="p-weapon" class="val"></div></div></div>
+            <h2 id="p-name" style="font-size: 30px; font-weight: 600; color:#fff;"></h2><div id="p-role" style="color:var(--red-main); font-size:14px; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:30px;"></div>
+            <div class="info-row"><div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2L12 4.5M10 6.5L3 13.5l2.5 2.5 7-7M21 15.5l-2.5 2.5-4-4 2.5-2.5 4 4z"/></svg></div><div class="info-content"><div class="label">Primary Weapon</div><div id="p-weapon" class="val"></div></div></div>
             <div class="info-row"><div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="info-content"><div class="label">Weakness</div><div id="p-flaw" class="val"></div></div></div>
-            <div class="info-row"><div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="info-content"><div class="label">Record</div><div id="p-bio" class="val"></div></div></div>
+            <div class="info-row"><div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="info-content"><div class="label">Personal Bio</div><div id="p-bio" class="val"></div></div></div>
             <div id="p-credit" style="margin-top:25px; font-size:10px; color:#555; text-align:right;"></div>
         </div>
     </div>
@@ -241,10 +268,10 @@ input[type="range"] { accent-color: var(--red-main); flex: 1; }
   <div class="modal-overlay" id="addGangModal" onclick="closeModal(event, 'addGangModal')">
     <div class="modal-content glass-panel" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'addGangModal', true)">&times;</span>
-        <h2 style="margin-bottom:15px; font-size:18px;">Establishing New Faction</h2>
+        <h2 style="margin-bottom:15px; font-size:18px;">Create New Faction</h2>
         <input type="text" id="g-name" class="form-input" placeholder="Faction Name">
         <textarea id="g-desc" class="form-input" placeholder="Description" rows="3"></textarea>
-        <button class="btn-submit" onclick="submitNewGang()">Save Entry</button>
+        <button class="btn-submit" onclick="submitNewGang()">Save Archive</button>
     </div>
   </div>
 
@@ -264,7 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadMafiaData() {
     const container = document.getElementById('gangs-container');
-    container.innerHTML = '<div style="text-align:center; padding:50px; opacity:0.5; font-size:12px;">LOADING SECURE ARCHIVE...</div>';
+    container.innerHTML = '<div style="text-align:center; padding:50px; opacity:0.5; font-size:12px; letter-spacing:2px;">SYNCHRONIZING ARCHIVE...</div>';
     try {
         const res = await fetch(API_URL + "?sheet=Mafia");
         const data = await res.json();
@@ -287,25 +314,24 @@ function renderGangs(data) {
     const gangs = [...new Set(data.filter(i => i && i.Category === 'Gangs').map(i => i.GroupName))];
     
     gangs.forEach((gn, idx) => {
-        warpList.innerHTML += `<a href="#" class="warp-btn glass-panel" onclick="warpToGang(${idx}); return false;">${gn} <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>`;
+        warpList.innerHTML += `<a href="#" class="warp-btn glass-panel" onclick="warpToGang(${idx}); return false;">${gn} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>`;
         
         const rows = data.filter(i => i.GroupName === gn);
-        const info = rows.find(i => i.NameMafia === "[GANG_INFO]");
         const mems = rows.filter(i => i.NameMafia !== "[GANG_INFO]");
+        const info = rows.find(i => i.NameMafia === "[GANG_INFO]");
 
         let memsHTML = mems.map(i => {
             const name = i.NameMafia.replace(/'/g,"\\'");
-            const rawImg = i.ImageURL || "";
             const isWM = String(i.UseWatermark).toUpperCase() === "TRUE";
-            const args = `'${formatImageUrl(rawImg)}','${name}','${String(i.Role||"").replace(/'/g,"\\'")}','${String(i.Badge||"").replace(/'/g,"\\'")}','${String(i.Weapon||"").replace(/'/g,"\\'")}','${String(i.Flaw||"").replace(/'/g,"\\'")}','${String(i.Bio||"").replace(/'/g,"\\'").replace(/\n/g,"<br>")}','${String(i.Credit||"").replace(/'/g,"\\'")}','${String(i.CreditLink||"").replace(/'/g,"\\'")}',${isWM},${i.ZoomLevel||1},${i.PosX||50},${i.PosY||50},'${gn.replace(/'/g,"\\'")}','${i.ImageURL}'`;
+            const args = `'${formatImageUrl(i.ImageURL)}','${name}','${String(i.Role||"").replace(/'/g,"\\'")}','${String(i.Badge||"").replace(/'/g,"\\'")}','${String(i.Weapon||"").replace(/'/g,"\\'")}','${String(i.Flaw||"").replace(/'/g,"\\'")}','${String(i.Bio||"").replace(/'/g,"\\'").replace(/\n/g,"<br>")}','${String(i.Credit||"").replace(/'/g,"\\'")}','${String(i.CreditLink||"").replace(/'/g,"\\'")}',${isWM},${i.ZoomLevel||1},${i.PosX||50},${i.PosY||50},'${gn.replace(/'/g,"\\'")}','${i.ImageURL}'`;
 
             return `<div class="member-item" onclick="handleMemberClick(event, ${args})">
                 <button class="btn-control edit-only btn-delete" onclick="event.stopPropagation(); deleteMember('${name}')">✖</button>
-                <button class="btn-control edit-only btn-move-l" onclick="event.stopPropagation(); moveItem('${name}', -1)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
-                <button class="btn-control edit-only btn-move-r" onclick="event.stopPropagation(); moveItem('${name}', 1)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+                <button class="btn-control edit-only btn-move-l" onclick="event.stopPropagation(); moveItem('${name}', -1)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+                <button class="btn-control edit-only btn-move-r" onclick="event.stopPropagation(); moveItem('${name}', 1)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
                 <div class="member-img-wrapper">
                     ${i.Badge ? `<span class="member-badge">${i.Badge}</span>` : ""}
-                    <img src="${formatImageUrl(rawImg)}" style="object-position: ${i.PosX||50}% ${i.PosY||50}%; transform: scale(${i.ZoomLevel||1});" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
+                    <img src="${formatImageUrl(i.ImageURL)}" style="object-position: ${i.PosX||50}% ${i.PosY||50}%; transform: scale(${i.ZoomLevel||1});" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
                     ${isWM ? `<div class="watermark-overlay" style="background-image: url('${WATERMARK_URL}')"></div>` : ""}
                 </div>
                 <div class="member-name">${i.NameMafia}</div>
@@ -314,12 +340,9 @@ function renderGangs(data) {
 
         container.innerHTML += `
             <div class="gang-card glass-panel" id="gang-${idx}">
-                <button class="btn-control edit-only btn-move-u" onclick="moveItem('[GANG_INFO]', -1, '${gn.replace(/'/g,"\\'")}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg></button>
-                <button class="btn-control edit-only btn-move-d" onclick="moveItem('[GANG_INFO]', 1, '${gn.replace(/'/g,"\\'")}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>
-                <div class="gang-header">
-                    <h2 class="gang-name">${gn}</h2>
-                    <p class="gang-desc">${info?.GangDesc || ""}</p>
-                </div>
+                <button class="btn-control edit-only btn-move-u" onclick="moveItem('[GANG_INFO]', -1, '${gn.replace(/'/g,"\\'")}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg></button>
+                <button class="btn-control edit-only btn-move-d" onclick="moveItem('[GANG_INFO]', 1, '${gn.replace(/'/g,"\\'")}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></button>
+                <div class="gang-header"><h2 class="gang-name">${gn}</h2><p class="gang-desc">${info?.GangDesc || ""}</p></div>
                 <div class="members-grid">${memsHTML}</div>
                 <button class="btn-add-action edit-only glass-panel" onclick="prepAddMember('${gn.replace(/'/g,"\\'")}')">+ Recruit Personnel</button>
             </div>`;
@@ -358,6 +381,7 @@ function updatePreviewImageStyle(prefix) {
     }
     const img = document.getElementById(`${prefix}-preview-img`);
     img.src = formatImageUrl(url) || "https://via.placeholder.com/150/111/C91818?text=?";
+    // 🌟 ใช้อันดับการกำหนดค่าเพื่อปลดล็อกแกน X/Y 🌟
     img.style.objectPosition = `${x}% ${y}%`;
     img.style.transform = `scale(${zoom})`; 
 }
@@ -374,6 +398,7 @@ function openProfileModal(img, n, r, w, f, b, cr, crL, wm, z, x, y) {
     openModal('profileModal');
 }
 
+// Global Essentials
 function switchTab(t, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(t).classList.add('active');
