@@ -3,17 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SuperBButter - Underworld Syndicates</title>
+<title>SuperBButter - The Underground</title>
 <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 :root {
-    /* 🔴 โทนสี มาเฟีย ดำ-แดง-ขาว 🔴 */
     --bg-base: #050505;
     --bg-dark: #121212;
     --bg-card: #1a1a1a;
     --red-main: #C91818;
-    --red-dark: #8A0303;
     --red-glow: rgba(201, 24, 24, 0.4);
     --text-main: #F5F5F5;
     --text-muted: #A3A3A3;
@@ -25,293 +23,232 @@
 
 body { 
     background-color: var(--bg-base); 
-    background-image: radial-gradient(circle at 50% 0%, #1a0505 0%, #050505 70%);
+    background-image: radial-gradient(circle at 50% 0%, #1a0505 0%, #050505 80%);
     background-attachment: fixed;
     color: var(--text-main); 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    min-height: 100vh; 
+    display: flex; flex-direction: column; align-items: center; min-height: 100vh; 
 }
 
-/* ป้องกันการเซฟรูป */
-.no-save {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-user-drag: none;
-}
+.no-save { -webkit-touch-callout: none; user-select: none; -webkit-user-drag: none; }
 
-/* 🌟 ปุ่มกลับไปเบเกอรี่ 🌟 */
-.back-to-bakery {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: var(--transition);
-    background: rgba(255,255,255,0.05);
-    padding: 6px 12px;
-    border-radius: 4px;
-    border: 1px solid #333;
-}
-.back-to-bakery:hover {
-    color: var(--white);
-    border-color: var(--white);
-    background: rgba(255,255,255,0.1);
-}
-
-/* 🌟 โหมดแก้ไข (Edit Mode) 🌟 */
+/* 🌟 ควบคุมโหมดแก้ไข 🌟 */
 .edit-mode-toggle {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: transparent;
-    border: 1px solid var(--text-muted);
-    color: var(--text-muted);
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: var(--transition);
+    position: absolute; top: 15px; right: 15px;
+    background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted);
+    padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; transition: var(--transition); z-index: 50;
 }
-.edit-mode-toggle.active {
-    background: var(--red-main);
-    color: var(--white);
-    border-color: var(--red-main);
-    box-shadow: 0 0 10px var(--red-glow);
-}
+.edit-mode-toggle.active { background: var(--red-main); color: var(--white); border-color: var(--red-main); box-shadow: 0 0 10px var(--red-glow); }
 
-/* ปุ่ม Edit ที่ซ่อนอยู่ จะโชว์เมื่อเปิดโหมดแก้ไข */
-.edit-btn {
-    display: none;
-    background: rgba(0,0,0,0.8);
-    color: #FFD700;
-    border: 1px solid #FFD700;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 2px;
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    cursor: pointer;
-    z-index: 20;
-}
-body.is-editing .edit-btn { display: block; }
-body.is-editing .mafia-card { border: 1px dashed #FFD700; padding: 2px; }
+/* ปุ่มที่แสดงเฉพาะตอนเปิดโหมดแก้ไข */
+.edit-only-btn { display: none; }
+body.is-editing .edit-only-btn { display: inline-flex; }
 
-/* Header & Title */
-header { width: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 60px; margin-bottom: 20px; border-bottom: 1px solid rgba(201, 24, 24, 0.2); padding-bottom: 20px; background: linear-gradient(180deg, rgba(18,18,18,0.8) 0%, rgba(5,5,5,0) 100%); position: relative; }
-.logo-wrapper { position: relative; width: 100px; height: 100px; margin-bottom: 15px; }
-.logo { width: 100%; height: 100%; border-radius: 5px; overflow: hidden; box-shadow: 0 0 20px var(--red-glow); transition: var(--transition); border: 2px solid var(--red-main); transform: rotate(45deg); }
-.logo img { width: 150%; height: 150%; object-fit: cover; background-color: var(--bg-card); transform: rotate(-45deg) translate(-15%, -15%); }
-
-h1 { font-size: 24px; color: var(--white); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); text-align: center; }
+/* Header & Navigation */
+header { width: 100%; text-align: center; padding: 60px 15px 20px; border-bottom: 1px solid rgba(201, 24, 24, 0.2); background: linear-gradient(180deg, rgba(18,18,18,0.9) 0%, rgba(5,5,5,0) 100%); position: relative; }
+h1 { font-size: 26px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
 h1 span { color: var(--red-main); }
-.subtitle { font-size: 12px; color: var(--text-muted); letter-spacing: 4px; margin-top: 5px; text-align: center; }
-
-/* Navigation */
-.nav-bar { width: 95%; max-width: 600px; display: flex; justify-content: space-around; padding: 10px 5px; margin-top: 20px; background: var(--bg-dark); border: 1px solid #333; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.nav-item { text-decoration: none; color: var(--text-muted); font-size: 13px; font-weight: 500; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; transition: var(--transition); padding: 8px 10px; border-radius: 4px; width: 33%; }
-.nav-item:hover { color: var(--white); }
-.nav-item.active { background: rgba(201, 24, 24, 0.1); color: var(--red-main); border-bottom: 2px solid var(--red-main); }
+.nav-bar { width: 95%; max-width: 600px; display: flex; justify-content: center; gap: 10px; margin: 20px auto 0; background: var(--bg-dark); padding: 5px; border-radius: 8px; border: 1px solid #333; }
+.nav-item { padding: 10px 20px; color: var(--text-muted); font-size: 14px; cursor: pointer; border-radius: 4px; transition: var(--transition); width: 50%; text-align: center; }
+.nav-item.active { background: rgba(201, 24, 24, 0.1); color: var(--red-main); font-weight: 500; }
 
 /* Main Container */
-.container { width: 100%; max-width: 600px; padding: 10px 15px 50px; }
+.container { width: 100%; max-width: 600px; padding: 20px 15px 50px; }
 .page { display: none; animation: fadeIn 0.4s ease; }
 .page.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Section / Cards */
-.section { background: var(--bg-card); border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid #2a2a2a; border-left: 3px solid var(--red-main); position: relative; }
-.category-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-.category-title { display: flex; align-items: center; gap: 8px; }
-.category-title h2 { font-size: 18px; color: var(--white); font-weight: 500; letter-spacing: 1px; }
+/* หน้า Setting: บทนำ */
+.lore-box { background: var(--bg-card); padding: 30px 20px; border-radius: 8px; border-left: 4px solid var(--red-main); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+.lore-quote { font-size: 16px; font-style: italic; color: var(--white); margin-bottom: 15px; }
+.lore-desc { font-size: 13px; color: var(--text-muted); line-height: 1.8; text-align: justify; }
 
-/* 🌟 แก้ไขบัค Profile รูปภาพ 🌟 */
-.mafia-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; justify-items: center; margin-top: 15px; }
-.mafia-card { width: 100%; transition: 0.3s ease; text-align: center; position: relative; }
-.mafia-img-wrapper { 
-    width: 100%; 
-    padding-top: 100%; /* เทคนิค Aspect Ratio 1:1 ที่เสถียร */
-    border-radius: 4px; 
-    overflow: hidden; 
-    border: 1px solid #333; 
-    background-color: #000; 
-    position: relative;
-    transition: 0.3s;
-}
-.mafia-img-wrapper img { 
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%; 
-    object-fit: cover; 
-    filter: grayscale(20%) contrast(1.2); 
-    transition: 0.3s; 
-}
-.mafia-card:hover .mafia-img-wrapper { border-color: var(--red-main); box-shadow: 0 0 15px var(--red-glow); transform: scale(1.05); }
-.mafia-card:hover img { filter: grayscale(0%) contrast(1.1); }
-.mafia-name { font-size: 13px; color: var(--text-main); font-weight: 500; margin-top: 8px; letter-spacing: 0.5px; }
-.mafia-role { font-size: 11px; color: var(--text-muted); }
+/* หน้า Gangs */
+.gang-card { background: var(--bg-card); border-radius: 8px; padding: 20px; margin-bottom: 25px; border: 1px solid #333; position: relative; }
+.gang-header { border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
+.gang-name { font-size: 20px; color: var(--white); margin-bottom: 5px; }
+.gang-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
+.gang-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.tag { font-size: 10px; background: rgba(255,255,255,0.1); color: #ccc; padding: 3px 8px; border-radius: 12px; border: 1px solid #555; }
 
-/* Badge / Role */
-.role-badge { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.8); color: var(--red-main); font-size: 9px; padding: 2px 6px; border-radius: 2px; border: 1px solid var(--red-main); font-weight: bold; letter-spacing: 1px; z-index: 10; backdrop-filter: blur(2px); }
+/* ปุ่มเพิ่มข้อมูล (Edit Mode) */
+.btn-add-gang { width: 100%; background: transparent; border: 1px dashed var(--text-muted); color: var(--text-muted); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; margin-bottom: 20px; transition: 0.3s; }
+.btn-add-gang:hover { border-color: var(--white); color: var(--white); }
+.btn-add-member { background: rgba(201, 24, 24, 0.1); border: 1px dashed var(--red-main); color: var(--red-main); padding: 8px; border-radius: 4px; font-size: 12px; cursor: pointer; width: 100%; text-align: center; margin-top: 15px; transition: 0.3s; }
+.btn-add-member:hover { background: var(--red-main); color: var(--white); }
 
-/* Footer */
-.footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #222; font-size: 11px; color: #555; letter-spacing: 1px; }
+/* Members Grid */
+.members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px; margin-top: 15px; }
+.member-item { text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
+.member-item:hover { transform: translateY(-5px); }
+.member-img-wrapper { width: 100%; padding-top: 100%; border-radius: 4px; background: #000; position: relative; overflow: hidden; border: 1px solid #444; }
+.member-img-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(30%); transition: 0.3s; }
+.member-item:hover .member-img-wrapper img { filter: grayscale(0%); }
+.member-badge { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.8); color: var(--red-main); font-size: 9px; padding: 2px 5px; border: 1px solid var(--red-main); border-radius: 2px; z-index: 2; font-weight: bold; }
+.member-name { font-size: 12px; color: var(--text-main); margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* 🌟 Modal (Popup ประวัติตัวละคร) 🌟 */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; padding: 15px; backdrop-filter: blur(5px); }
+.modal-content { background: var(--bg-card); width: 100%; max-width: 400px; border-radius: 8px; border: 1px solid var(--red-main); position: relative; overflow: hidden; animation: fadeIn 0.3s ease; }
+.modal-close { position: absolute; top: 10px; right: 15px; color: var(--text-muted); font-size: 20px; cursor: pointer; z-index: 10; }
+.modal-close:hover { color: var(--white); }
+.modal-header-img { width: 100%; height: 150px; background: #000; position: relative; }
+.modal-header-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+.modal-body { padding: 20px; margin-top: -40px; position: relative; z-index: 2; }
+.modal-avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--red-main); box-shadow: 0 0 15px #000; object-fit: cover; margin-bottom: 10px; background: #111; }
+.modal-name { font-size: 22px; color: var(--white); margin-bottom: 2px; }
+.modal-role { font-size: 13px; color: var(--red-main); font-weight: 500; margin-bottom: 15px; }
+.modal-info-group { margin-bottom: 12px; }
+.modal-info-label { font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+.modal-info-text { font-size: 13px; color: var(--text-main); line-height: 1.5; }
+.modal-credit { margin-top: 20px; border-top: 1px solid #333; padding-top: 10px; font-size: 10px; color: #666; text-align: right; }
+
 </style>
 </head>
 <body>
 
+  <button class="edit-mode-toggle" id="editToggleBtn" onclick="toggleEditMode()">โหมดแก้ไข</button>
+
   <header>
-    <a href="index.html" class="back-to-bakery">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-        กลับเบเกอรี่
-    </a>
-
-    <button class="edit-mode-toggle" id="editToggleBtn" onclick="toggleEditMode()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-        โหมดแก้ไข
-    </button>
-
-    <div class="logo-wrapper">
-      <div class="logo">
-        <img src="https://drive.google.com/thumbnail?id=1aTumT9SN2pzCyOtInZyv85ksTcZyv5g1&sz=w1000" alt="Mafia Logo">
-      </div>
-    </div>
-    <h1>Underworld <span>Syndicates</span></h1>
-    <div class="subtitle">ALLIANCE & ENEMIES DATABASE</div>
-
+    <h1>Underground <span>Syndicate</span></h1>
+    
     <nav class="nav-bar">
-      <div class="nav-item active" onclick="showPage('gangs', this)">
-          <span>🏛️ Gangs</span>
-      </div>
-      <div class="nav-item" onclick="showPage('allies', this)">
-          <span>🤝 Allies</span>
-      </div>
-      <div class="nav-item" onclick="showPage('targets', this)">
-          <span>🎯 Targets</span>
-      </div>
+      <div class="nav-item active" onclick="switchTab('setting', this)">📜 Lore & Setting</div>
+      <div class="nav-item" onclick="switchTab('gangs', this)">🔪 Factions</div>
     </nav>
   </header>
 
   <div class="container">
 
-    <div id="gangs" class="page active">
+    <div id="setting" class="page active">
+      <div class="lore-box">
+        <div class="lore-quote">"เบื้องหน้าคือความหอมหวาน เบื้องหลังคือการนองเลือด"</div>
+        <div class="lore-desc">
+            ยินดีต้อนรับสู่โลกเบื้องหลังของเมืองที่ถูกฉาบหน้าไว้ด้วยกลิ่นหอมของเนยและขนมอบ ที่นี่... ร้านเบเกอรี่เป็นเพียงจุดบังหน้าสำหรับการฟอกเงินและเจรจาธุรกิจมืดของเหล่ามาเฟีย <br><br>
+            กติกามีเพียงข้อเดียว: <strong>อย่าทิ้งเศษขนมปังไว้ให้ตำรวจตามเจอ</strong> ข้อมูลในฐานข้อมูลนี้เป็นความลับสุดยอดที่รวบรวมรายชื่อผู้มีอิทธิพล เครือข่ายแก๊ง และประวัติส่วนตัวของเหล่าพนักงานที่ไม่ได้มีดีแค่จับตะกร้อมือ... แต่ถนัดจับปืนพกและมีดสั้นเช่นกัน
+        </div>
+      </div>
+    </div>
+
+    <div id="gangs" class="page">
       
-      <div class="section">
-        <div class="category-header">
-            <div class="category-title">
-                <h2>Cosa Nostra Famiglia</h2>
+      <button class="edit-only-btn btn-add-gang" onclick="alert('สร้างกลุ่ม/แก๊งใหม่')">+ เพิ่มแก๊งใหม่</button>
+
+      <div class="gang-card">
+        <div class="gang-header">
+            <h2 class="gang-name">Black Velvet Cartel</h2>
+            <div class="gang-desc">แก๊งคุมโซนใต้ดินที่เชี่ยวชาญด้านการลอบสังหารและการข่าวกรอง เน้นทำงานเงียบและไร้ร่องรอย</div>
+            <div class="gang-tags">
+                <span class="tag">สายข่าวกรอง</span>
+                <span class="tag">ลอบสังหาร</span>
+                <span class="tag">เขตใต้</span>
             </div>
-            <button class="edit-btn" onclick="alert('แก้ไขข้อมูลแก๊งนี้')">Edit Gang</button>
         </div>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">แก๊งอิตาลีคุมโซนตะวันตก ธุรกิจนำเข้าส่งออก</p>
+
+        <h3 style="font-size: 14px; color: var(--white); margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px;">รายชื่อสมาชิก</h3>
         
-        <div class="mafia-grid">
-            <div class="mafia-card">
-                <div class="mafia-img-wrapper no-save">
-                    <span class="role-badge">DON</span>
-                    <img src="https://drive.google.com/thumbnail?id=1aTumT9SN2pzCyOtInZyv85ksTcZyv5g1&sz=w1000" alt="Character">
-                    <button class="edit-btn" onclick="alert('แก้ไขตัวละคร')">Edit</button>
+        <div class="members-grid">
+            <div class="member-item" onclick="openModal('https://via.placeholder.com/150', 'อัลเบอร์โต', 'หัวหน้าแก๊ง (BOSS)', 'ปืนพกลูกโม่ .357', 'แพ้ขนมแมวเลีย / ใจอ่อนกับหมาจรจัด', 'ผู้ก่อตั้งแก๊งที่เบื้องหน้าเป็นนักอบขนมปังฝรั่งเศสผู้ใจดี แต่เบื้องหลังคือผู้สั่งการเด็ดขาดที่ไม่มีใครกล้าขัดคำสั่ง', 'วาดโดย: @ArtistName1')">
+                <div class="member-img-wrapper no-save">
+                    <span class="member-badge">BOSS</span>
+                    <img src="https://via.placeholder.com/150/111/C91818?text=Image" alt="Char">
                 </div>
-                <div class="mafia-name">อัลเบอร์โต</div>
-                <div class="mafia-role">บอสใหญ่</div>
+                <div class="member-name">อัลเบอร์โต</div>
             </div>
-            <div class="mafia-card">
-                <div class="mafia-img-wrapper no-save">
-                    <span class="role-badge">CAPO</span>
-                    <img src="https://drive.google.com/thumbnail?id=1e3zyO1VT4FCB020UAEmq5fOThW2R38SL&sz=w1600" alt="Character">
-                    <button class="edit-btn" onclick="alert('แก้ไขตัวละคร')">Edit</button>
+
+            <div class="member-item" onclick="openModal('https://via.placeholder.com/150', 'นีน่า', 'นักฆ่า / พนักงานเสิร์ฟ', 'มีดสั้นอาบยาพิษ', 'สายตาสั้นมากถ้าถอดแว่น', 'สาวเสิร์ฟหน้านิ่งที่รับหน้าที่จัดการเป้าหมายที่เข้ามาก่อกวนในร้าน', 'วาดโดย: @ArtistName2')">
+                <div class="member-img-wrapper no-save">
+                    <span class="member-badge">HITMAN</span>
+                    <img src="https://via.placeholder.com/150/111/C91818?text=Image" alt="Char">
                 </div>
-                <div class="mafia-name">ลูก้า</div>
-                <div class="mafia-role">มือขวา</div>
+                <div class="member-name">นีน่า</div>
             </div>
         </div>
+
+        <button class="edit-only-btn btn-add-member" onclick="alert('ดึงรายชื่อจากร้านเบเกอรี่มาเข้าแก๊งนี้')">+ ดึงพนักงานมาเพิ่มในแก๊ง</button>
       </div>
 
-      <div class="section">
-        <div class="category-header">
-            <div class="category-title">
-                <h2>Yakuza: Red Dragon</h2>
-            </div>
-            <button class="edit-btn" onclick="alert('แก้ไขข้อมูลแก๊งนี้')">Edit Gang</button>
-        </div>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">คุมโซนตะวันออก ธุรกิจเอนเตอร์เทนเมนต์</p>
+    </div>
+
+  </div>
+
+  <div class="modal-overlay" id="charModal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="modal-close" onclick="closeModal(event, true)">&times;</span>
         
-        <div class="mafia-grid">
-            <div class="mafia-card">
-                <div class="mafia-img-wrapper no-save">
-                    <span class="role-badge">OYABUN</span>
-                    <img src="https://via.placeholder.com/300x300/111/C91818?text=Image" alt="Character">
-                    <button class="edit-btn" onclick="alert('แก้ไขตัวละคร')">Edit</button>
-                </div>
-                <div class="mafia-name">ริวอิจิ</div>
-                <div class="mafia-role">นายใหญ่</div>
+        <div class="modal-header-img">
+            <img id="m-bg-img" src="" alt="bg">
+        </div>
+        
+        <div class="modal-body">
+            <img id="m-avatar" class="modal-avatar" src="" alt="avatar">
+            <h2 id="m-name" class="modal-name">ชื่อตัวละคร</h2>
+            <div id="m-role" class="modal-role">บทบาทในแก๊ง</div>
+            
+            <div class="modal-info-group">
+                <div class="modal-info-label">🔪 อาวุธถนัด</div>
+                <div id="m-weapon" class="modal-info-text">ข้อมูล...</div>
             </div>
-        </div>
-      </div>
+            
+            <div class="modal-info-group">
+                <div class="modal-info-label">⚠️ จุดอ่อน / ความลับ</div>
+                <div id="m-flaw" class="modal-info-text">ข้อมูล...</div>
+            </div>
 
+            <div class="modal-info-group">
+                <div class="modal-info-label">📜 ประวัติย่อ</div>
+                <div id="m-bio" class="modal-info-text">ข้อมูล...</div>
+            </div>
+
+            <div id="m-credit" class="modal-credit">เครดิตนักวาด: -</div>
+        </div>
     </div>
-
-    <div id="allies" class="page">
-      <div class="section">
-        <div class="category-header">
-            <div class="category-title"><h2>พันธมิตรทางธุรกิจ</h2></div>
-            <button class="edit-btn" onclick="alert('เพิ่ม/แก้ไข พันธมิตร')">Edit Allies</button>
-        </div>
-        <div id="ally-container" style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;">
-            ระบบกำลังรอการเชื่อมต่อข้อมูล...
-        </div>
-      </div>
-    </div>
-
-    <div id="targets" class="page">
-      <div class="section">
-        <div class="category-header">
-            <div class="category-title"><h2>เป้าหมายสังหาร / แบล็คลิสต์</h2></div>
-            <button class="edit-btn" onclick="alert('เพิ่ม/แก้ไข เป้าหมาย')">Edit Targets</button>
-        </div>
-        <div id="target-container" style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;">
-            ระบบกำลังรอการเชื่อมต่อข้อมูล...
-        </div>
-      </div>
-    </div>
-
-    <div class="footer">
-        PROPERTY OF UNDERWORLD SYNDICATE<br>
-        RESTRICTED ACCESS ONLY
-    </div>
-
-  </div> 
+  </div>
 
 <script>
-// ฟังก์ชันสลับหน้าเว็บ
-function showPage(pageId, element) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(pageId).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-  if(element) element.classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+// ฟังก์ชันสลับหน้า (Lore <-> Gangs)
+function switchTab(tabId, element) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    element.classList.add('active');
 }
 
 // ฟังก์ชันเปิด-ปิดโหมดแก้ไข
 function toggleEditMode() {
     const body = document.body;
     const btn = document.getElementById('editToggleBtn');
-    
     body.classList.toggle('is-editing');
     
     if (body.classList.contains('is-editing')) {
         btn.classList.add('active');
-        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> ปิดโหมดแก้ไข`;
+        btn.innerText = "ปิดโหมดแก้ไข";
     } else {
         btn.classList.remove('active');
-        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> โหมดแก้ไข`;
+        btn.innerText = "โหมดแก้ไข";
+    }
+}
+
+// ฟังก์ชันเปิด Modal ประวัติตัวละคร
+function openModal(imgSrc, name, role, weapon, flaw, bio, credit) {
+    // นำข้อมูลที่ส่งมา ไปใส่ในโครงสร้าง Modal
+    document.getElementById('m-bg-img').src = imgSrc;
+    document.getElementById('m-avatar').src = imgSrc;
+    document.getElementById('m-name').innerText = name;
+    document.getElementById('m-role').innerText = role;
+    document.getElementById('m-weapon').innerText = weapon;
+    document.getElementById('m-flaw').innerText = flaw;
+    document.getElementById('m-bio').innerText = bio;
+    document.getElementById('m-credit').innerText = credit;
+
+    // แสดง Modal
+    document.getElementById('charModal').style.display = 'flex';
+}
+
+// ฟังก์ชันปิด Modal
+function closeModal(event, forceClose = false) {
+    // ปิดเมื่อคลิกที่พื้นหลังสีดำ หรือคลิกปุ่มกากบาท
+    if (forceClose || event.target.id === 'charModal') {
+        document.getElementById('charModal').style.display = 'none';
     }
 }
 </script>
