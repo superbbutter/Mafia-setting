@@ -43,7 +43,7 @@ h1 span { color: var(--red-main); }
 .page.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Cards */
+/* Cards & Grid */
 .gang-card { background: var(--bg-card); border-radius: 8px; padding: 20px; margin-bottom: 25px; border: 1px solid #333; position: relative; }
 .gang-header { border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; position: relative; }
 .gang-name { font-size: 20px; color: var(--white); margin-bottom: 5px; }
@@ -66,7 +66,10 @@ h1 span { color: var(--red-main); }
 .member-badge { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.8); color: var(--red-main); font-size: 9px; padding: 2px 5px; border: 1px solid var(--red-main); border-radius: 2px; z-index: 2; font-weight: bold; }
 .member-name { font-size: 12px; color: var(--text-main); margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* 🌟 Modals & Forms 🌟 */
+/* Watermark CSS */
+.watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; pointer-events: none; z-index: 1; }
+
+/* Modals & Forms */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; padding: 15px; backdrop-filter: blur(5px); }
 .modal-content { background: var(--bg-card); width: 100%; max-width: 400px; border-radius: 8px; border: 1px solid #333; position: relative; max-height: 90vh; overflow-y: auto; animation: fadeIn 0.3s ease; padding: 20px; }
 .modal-content.profile { padding: 0; border-color: var(--red-main); }
@@ -84,12 +87,12 @@ h1 span { color: var(--red-main); }
 .autocomplete-item:hover { background: #2a2a2a; }
 .autocomplete-thumb { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; background: #000; border: 1px solid #444; }
 .autocomplete-name { font-size: 13px; color: var(--white); }
-.autocomplete-tag { font-size: 9px; padding: 2px 4px; border-radius: 2px; background: #333; color: #aaa; margin-left: auto; }
 
 .modal-header-img { width: 100%; height: 150px; background-color: #000; position: relative; overflow: hidden; }
 .modal-header-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: blur(2px); }
 .modal-body { padding: 20px; margin-top: -40px; position: relative; z-index: 2; }
-.modal-avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--red-main); box-shadow: 0 0 15px #000; object-fit: cover; margin-bottom: 10px; background: #111; }
+.modal-avatar-wrapper { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--red-main); box-shadow: 0 0 15px #000; margin-bottom: 10px; background: #111; position: relative; overflow: hidden; }
+.modal-avatar { width: 100%; height: 100%; object-fit: cover; }
 .modal-name { font-size: 22px; color: var(--white); margin-bottom: 2px; }
 .modal-role { font-size: 13px; color: var(--red-main); font-weight: 500; margin-bottom: 15px; }
 .modal-info-group { margin-bottom: 12px; }
@@ -149,8 +152,8 @@ h1 span { color: var(--red-main); }
         <span class="modal-close" onclick="closeModal(event, 'addGangModal', true)">&times;</span>
         <h2 style="margin-bottom: 15px; font-size: 18px; color: var(--white);">สร้างแก๊งใหม่</h2>
         <input type="text" id="g-name" class="form-input" placeholder="ชื่อแก๊ง">
-        <textarea id="g-desc" class="form-input" placeholder="คำบรรยายนิยามแก๊ง (เช่น คุมโซนใต้ดิน ทำงานเงียบ)" rows="3"></textarea>
-        <input type="text" id="g-tags" class="form-input" placeholder="คีย์เวิร์ด/แท็ก (คั่นด้วยลูกน้ำ เช่น สายข่าว,ลอบสังหาร)">
+        <textarea id="g-desc" class="form-input" placeholder="คำบรรยายนิยามแก๊ง" rows="3"></textarea>
+        <input type="text" id="g-tags" class="form-input" placeholder="คีย์เวิร์ด/แท็ก (คั่นด้วยลูกน้ำ)">
         <button class="btn-submit" onclick="submitNewGang()">บันทึกข้อมูลแก๊ง</button>
     </div>
   </div>
@@ -174,12 +177,17 @@ h1 span { color: var(--red-main); }
         
         <input type="text" id="m-new-img" class="form-input" placeholder="ลิงก์รูปภาพ (เว้นว่างได้ถ้าระบบดึงมาให้แล้ว)">
         
+        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px; font-size: 13px; color: var(--text-main); cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 4px; border: 1px solid #333;">
+            <input type="checkbox" id="m-new-watermark" style="accent-color: var(--red-main);" checked>
+            เปิดใช้งานลายน้ำบนรูปโปรไฟล์
+        </label>
+        
         <div style="display: flex; gap: 10px; margin-bottom: 12px;">
             <input type="text" id="m-new-credit" class="form-input" placeholder="นักวาด" style="margin-bottom: 0;">
             <input type="text" id="m-new-credit-link" class="form-input" placeholder="ลิงก์นักวาด (เว้นว่างได้)" style="margin-bottom: 0;">
         </div>
         
-        <input type="text" id="m-new-weapon" class="form-input" placeholder="อาวุธถนัด">
+        <input type="text" id="m-new-weapon" class="form-input" placeholder="อาวุดถนัด">
         <input type="text" id="m-new-flaw" class="form-input" placeholder="จุดอ่อน/ความลับ">
         <textarea id="m-new-bio" class="form-input" placeholder="ประวัติย่อฉบับโลกใต้ดิน..." rows="3"></textarea>
         
@@ -192,7 +200,12 @@ h1 span { color: var(--red-main); }
         <span class="modal-close" onclick="closeModal(event, 'profileModal', true)">&times;</span>
         <div class="modal-header-img"><img id="p-bg-img" src="" alt="bg" onerror="this.style.display='none'"></div>
         <div class="modal-body">
-            <img id="p-avatar" class="modal-avatar" src="" alt="avatar" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
+            
+            <div class="modal-avatar-wrapper">
+                <img id="p-avatar" class="modal-avatar" src="" alt="avatar" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
+                <div id="p-watermark" class="watermark-overlay" style="display: none;"></div>
+            </div>
+
             <h2 id="p-name" class="modal-name">ชื่อ</h2>
             <div id="p-role" class="modal-role">บทบาท</div>
             <div class="modal-info-group"><div class="modal-info-label">🔪 อาวุธถนัด</div><div id="p-weapon" class="modal-info-text">-</div></div>
@@ -206,7 +219,12 @@ h1 span { color: var(--red-main); }
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbz7_u5Xd9uXGiBswifeqw5Q0hefHI_ckMJVwHGEFL6SdJJ4FHViQBKNM0OhvT6EnA9DDA/exec";
 
-// 🚨 อัปเดตชื่อคอลัมน์ให้ตรงกับเบเกอรี่ตามที่คุณแจ้ง
+// 🚨 ใส่ลิงก์ลายน้ำของคุณตรงนี้ 🚨
+// แก้ไขให้นำ ID จากลิงก์ที่คุณให้มา แปลงเป็นลิงก์ตรงสำหรับ Thumbnail ความละเอียดสูง
+const WATERMARK_ID = "1e3zyO1VT4FCB020UAEmq5fOThW2R38SL";
+const WATERMARK_URL = `https://drive.google.com/thumbnail?id=${WATERMARK_ID}&sz=w1000`; 
+
+// เช็คชื่อคอลัมน์ฝั่งเบเกอรี่
 const BAKERY_COL_NAME = "ชื่อขนม"; 
 const BAKERY_COL_IMG = "Link รูปตัวละคร"; 
 const BAKERY_COL_CREDIT = "นักวาด"; 
@@ -215,7 +233,6 @@ const BAKERY_COL_CREDIT_LINK = "Link นักวาด";
 let bakeryDataList = [];
 let currentAddingGang = "";
 
-// ฟังก์ชันแปลงลิงก์ Google Drive ให้อ่านรูปได้
 function formatImageUrl(url) {
     if (!url) return "";
     const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
@@ -253,9 +270,7 @@ async function fetchBakeryData() {
     try {
         const res = await fetch(API_URL + "?sheet=Bakery");
         let rawData = await res.json();
-        if(Array.isArray(rawData)) {
-            bakeryDataList = sortBakeryData(rawData);
-        }
+        if(Array.isArray(rawData)) { bakeryDataList = sortBakeryData(rawData); }
     } catch(e) { console.error("โหลดข้อมูลเบเกอรี่ล้มเหลว", e); }
 }
 
@@ -278,8 +293,7 @@ async function loadMafiaData() {
     } catch (error) {
         console.error(error);
         container.innerHTML = `<div class="error-box">
-            <strong>ไม่สามารถเชื่อมต่อฐานข้อมูลได้</strong><br>
-            ${error.message}<br><br>
+            <strong>ไม่สามารถเชื่อมต่อฐานข้อมูลได้</strong><br>${error.message}<br><br>
             <button onclick="loadMafiaData()" style="padding:5px 10px; cursor:pointer; background:#fff; color:#000; border:none; border-radius:4px;">ลองใหม่อีกครั้ง</button>
         </div>`;
     }
@@ -365,13 +379,17 @@ function renderGangs(data) {
             let safeRole = item.Role ? String(item.Role) : "";
             let safeBadge = item.Badge ? String(item.Badge) : "MEMBER";
             
+            // ตรวจสอบการเปิดใช้งานลายน้ำ (ถ้าในชีตเป็นคำว่า TRUE ให้เปิดลายน้ำ)
+            let isWatermarkOn = String(item.UseWatermark).toUpperCase() === "TRUE";
+            let watermarkHTML = isWatermarkOn ? `<div class="watermark-overlay" style="background-image: url('${WATERMARK_URL}');"></div>` : "";
+            
             let cleanWeapon = item.Weapon ? String(item.Weapon).replace(/'/g, "\\'") : "";
             let cleanFlaw = item.Flaw ? String(item.Flaw).replace(/'/g, "\\'") : "";
             let cleanBio = item.Bio ? String(item.Bio).replace(/'/g, "\\'").replace(/\n/g, "<br>") : "";
             let cleanCredit = item.Credit ? String(item.Credit).replace(/'/g, "\\'") : "";
             let cleanCreditLink = item.CreditLink ? String(item.CreditLink).replace(/'/g, "\\'") : "";
 
-            let modalArgs = `'${safeImg}', '${safeName.replace(/'/g, "\\'")}', '${safeRole.replace(/'/g, "\\'")}', '${cleanWeapon}', '${cleanFlaw}', '${cleanBio}', '${cleanCredit}', '${cleanCreditLink}'`;
+            let modalArgs = `'${safeImg}', '${safeName.replace(/'/g, "\\'")}', '${safeRole.replace(/'/g, "\\'")}', '${cleanWeapon}', '${cleanFlaw}', '${cleanBio}', '${cleanCredit}', '${cleanCreditLink}', ${isWatermarkOn}`;
 
             return `
             <div class="member-item" onclick="openProfileModal(${modalArgs})">
@@ -379,6 +397,7 @@ function renderGangs(data) {
                 <div class="member-img-wrapper no-save">
                     <span class="member-badge">${safeBadge}</span>
                     <img src="${safeImg}" alt="char" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
+                    ${watermarkHTML}
                 </div>
                 <div class="member-name">${safeName}</div>
             </div>`;
@@ -406,7 +425,7 @@ async function submitNewGang() {
     closeModal(null, 'addGangModal', true);
     await sendRequest({
         action: "add", sheet: "Mafia",
-        data: { Category: "Gangs", GroupName: gName, GangDesc: document.getElementById('g-desc').value, GangTags: document.getElementById('g-tags').value, NameMafia: "[GANG_INFO]", CreditLink: "" }
+        data: { Category: "Gangs", GroupName: gName, GangDesc: document.getElementById('g-desc').value, GangTags: document.getElementById('g-tags').value, NameMafia: "[GANG_INFO]", CreditLink: "", UseWatermark: "FALSE" }
     }, "กำลังสร้างแก๊ง...");
 }
 
@@ -420,20 +439,32 @@ async function submitNewMember() {
     const charName = document.getElementById('m-name-input').value.trim();
     if(!charName) return alert("กรุณาพิมพ์ชื่อตัวละคร");
 
+    const roleVal = document.getElementById('m-new-role').value || "ลูกน้อง";
+    const badgeVal = document.getElementById('m-new-badge').value || "NEW";
+    const imgVal = document.getElementById('m-new-img').value;
+    const weaponVal = document.getElementById('m-new-weapon').value;
+    const flawVal = document.getElementById('m-new-flaw').value;
+    const bioVal = document.getElementById('m-new-bio').value;
+    const creditVal = document.getElementById('m-new-credit').value || "-";
+    const creditLinkVal = document.getElementById('m-new-credit-link').value || "";
+    const useWatermarkVal = document.getElementById('m-new-watermark').checked ? "TRUE" : "FALSE";
+
     closeModal(null, 'addMemberModal', true);
+
     await sendRequest({
         action: "add", sheet: "Mafia",
         data: {
             Category: "Gangs", GroupName: currentAddingGang,
             NameMafia: charName,
-            Role: document.getElementById('m-new-role').value || "ลูกน้อง",
-            Badge: document.getElementById('m-new-badge').value || "NEW",
-            ImageURL: document.getElementById('m-new-img').value,
-            Weapon: document.getElementById('m-new-weapon').value,
-            Flaw: document.getElementById('m-new-flaw').value,
-            Bio: document.getElementById('m-new-bio').value,
-            Credit: document.getElementById('m-new-credit').value || "-",
-            CreditLink: document.getElementById('m-new-credit-link').value || ""
+            Role: roleVal,
+            Badge: badgeVal,
+            ImageURL: imgVal,
+            Weapon: weaponVal,
+            Flaw: flawVal,
+            Bio: bioVal,
+            Credit: creditVal,
+            CreditLink: creditLinkVal,
+            UseWatermark: useWatermarkVal
         }
     }, "กำลังเพิ่มสมาชิก...");
 }
@@ -479,17 +510,29 @@ function openModal(modalId) { document.getElementById(modalId).style.display = '
 function closeModal(event, modalId, force = false) {
     if (force || event.target.id === modalId) {
         document.getElementById(modalId).style.display = 'none';
-        document.querySelectorAll(`#${modalId} input, #${modalId} textarea`).forEach(el => el.value = '');
+        // เมื่อปิดแล้ว คืนค่า checkbox เป็น checked เสมอ
+        document.querySelectorAll(`#${modalId} input[type="text"], #${modalId} textarea`).forEach(el => el.value = '');
+        let wmCheckbox = document.getElementById('m-new-watermark');
+        if(wmCheckbox) wmCheckbox.checked = true; 
     }
 }
 
-function openProfileModal(imgSrc, name, role, weapon, flaw, bio, credit, creditLink) {
+function openProfileModal(imgSrc, name, role, weapon, flaw, bio, credit, creditLink, isWatermarkOn) {
     let bgImgEl = document.getElementById('p-bg-img');
     let avatarEl = document.getElementById('p-avatar');
+    let watermarkEl = document.getElementById('p-watermark');
     
     bgImgEl.src = imgSrc;
     bgImgEl.style.display = imgSrc ? 'block' : 'none';
     avatarEl.src = imgSrc;
+
+    // เช็คว่าเปิดลายน้ำไหม ถ้าเปิดก็โชว์ใน Profile ด้วย
+    if(isWatermarkOn) {
+        watermarkEl.style.backgroundImage = `url('${WATERMARK_URL}')`;
+        watermarkEl.style.display = 'block';
+    } else {
+        watermarkEl.style.display = 'none';
+    }
 
     document.getElementById('p-name').innerText = name;
     document.getElementById('p-role').innerText = role;
