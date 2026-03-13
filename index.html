@@ -25,10 +25,8 @@ body { background-color: var(--bg-base); background-image: radial-gradient(circl
 .edit-mode-toggle { right: 15px; background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); }
 .edit-mode-toggle.active { background: var(--red-main); color: var(--white); border-color: var(--red-main); box-shadow: 0 0 10px var(--red-glow); }
 
-/* 🌟 แก้ไขบัคปุ่มหลุดโหมดแก้ไข 🌟 */
-.btn-add-gang, .btn-add-member, .btn-delete { display: none !important; } /* ซ่อนเป็นค่าเริ่มต้น */
-body.is-editing .btn-add-gang, body.is-editing .btn-add-member { display: flex !important; } /* โชว์แค่ตอน Edit */
-body.is-editing .btn-delete { display: flex !important; }
+.btn-add-gang, .btn-add-member, .btn-delete { display: none !important; } 
+body.is-editing .btn-add-gang, body.is-editing .btn-add-member, body.is-editing .btn-delete { display: flex !important; } 
 
 .btn-delete { position: absolute; top: -5px; left: -5px; background: var(--red-main); color: var(--white); border: 2px solid var(--bg-card); border-radius: 50%; width: 24px; height: 24px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 20; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.8); transition: 0.2s; }
 .btn-delete:hover { background: #FF0000; transform: scale(1.1); }
@@ -80,7 +78,6 @@ h1 span { color: var(--red-main); }
 .btn-submit { width: 100%; background: var(--red-main); color: var(--white); padding: 10px; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; transition: 0.3s; font-weight: 500; }
 .btn-submit:hover { background: var(--red-dark); box-shadow: 0 0 10px var(--red-glow); }
 
-/* 🌟 ระบบค้นหาตัวละคร (Autocomplete) 🌟 */
 .autocomplete-container { position: relative; margin-bottom: 12px; }
 .autocomplete-list { position: absolute; top: 100%; left: 0; right: 0; background: #1a1a1a; border: 1px solid #333; border-radius: 4px; max-height: 200px; overflow-y: auto; z-index: 99; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
 .autocomplete-item { padding: 8px 10px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222; cursor: pointer; transition: 0.2s; }
@@ -89,7 +86,6 @@ h1 span { color: var(--red-main); }
 .autocomplete-name { font-size: 13px; color: var(--white); }
 .autocomplete-tag { font-size: 9px; padding: 2px 4px; border-radius: 2px; background: #333; color: #aaa; margin-left: auto; }
 
-/* Profile Modal */
 .modal-header-img { width: 100%; height: 150px; background-color: #000; position: relative; overflow: hidden; }
 .modal-header-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: blur(2px); }
 .modal-body { padding: 20px; margin-top: -40px; position: relative; z-index: 2; }
@@ -102,9 +98,22 @@ h1 span { color: var(--red-main); }
 .modal-credit { margin-top: 20px; border-top: 1px solid #333; padding-top: 10px; font-size: 10px; color: #666; text-align: right; }
 
 .loading-text { text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 20px; }
+.error-box { background: rgba(201,24,24,0.1); border: 1px solid var(--red-main); color: #ff6b6b; padding: 15px; border-radius: 8px; text-align: center; font-size: 13px; margin-top: 20px; }
 </style>
 </head>
 <body>
+
+  <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      const container = document.getElementById('gangs-container');
+      if(container) {
+          container.innerHTML = `<div class="error-box">
+              <strong>พบข้อผิดพลาดของระบบ:</strong><br>${message}<br><small>(บรรทัดที่ ${lineno})</small>
+          </div>`;
+      }
+      return false;
+    };
+  </script>
 
   <a href="index.html" class="top-btn back-to-bakery">กลับเบเกอรี่</a>
   <button class="top-btn edit-mode-toggle" id="editToggleBtn" onclick="toggleEditMode()">โหมดแก้ไข</button>
@@ -191,7 +200,7 @@ h1 span { color: var(--red-main); }
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbz7_u5Xd9uXGiBswifeqw5Q0hefHI_ckMJVwHGEFL6SdJJ4FHViQBKNM0OhvT6EnA9DDA/exec";
 
-// เช็คชื่อให้ตรงกับชีตเบเกอรี่
+// เช็คชื่อคอลัมน์จากฝั่งเบเกอรี่
 const BAKERY_COL_NAME = "ชื่อขนม"; 
 const BAKERY_COL_IMG = "รูปภาพ"; 
 const BAKERY_COL_CREDIT = "เครดิต"; 
@@ -217,9 +226,13 @@ function sortBakeryData(data) {
     });
 }
 
-// โหลดข้อมูลแบบป้องกันบัคค้าง
-async function initializeData() {
+// ================= ฟังก์ชันตั้งต้น =================
+document.addEventListener("DOMContentLoaded", () => {
     loadMafiaData(); 
+    fetchBakeryData(); // โหลดแยกกันเพื่อไม่ให้โหลดพังดึงกัน
+});
+
+async function fetchBakeryData() {
     try {
         const res = await fetch(API_URL + "?sheet=Bakery");
         let rawData = await res.json();
@@ -235,31 +248,35 @@ async function loadMafiaData() {
     
     try {
         const response = await fetch(API_URL + "?sheet=Mafia");
-        const data = await response.json();
+        const text = await response.text(); // อ่านเป็น Text ก่อนเผื่อ API พ่น HTML ออกมา (บัค Apps script)
         
-        // เช็คเผื่อ API ส่ง Error มา
-        if(data.error) { 
-            container.innerHTML = `<div style="color:red; text-align:center; padding: 20px;">Error จากฐานข้อมูล: ${data.error}</div>`; 
-            return; 
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch(parseErr) {
+            throw new Error("ข้อมูลที่ได้จาก Google Sheets ไม่ใช่ JSON (อาจจะลืมกด Deploy Version ใหม่ หรือตั้งสิทธิ์ผิด)");
         }
         
-        // เช็คเผื่อข้อมูลที่ได้มาไม่ใช่ Array
+        if(data.error) { 
+            throw new Error(`Error จากฐานข้อมูล: ${data.error}`); 
+        }
+        
         if(!Array.isArray(data)) {
-            container.innerHTML = `<div style="color:red; text-align:center; padding: 20px;">รูปแบบข้อมูลไม่ถูกต้อง กรุณาเช็ค Google Sheets</div>`;
-            return;
+            throw new Error("รูปแบบข้อมูลผิดพลาด (ไม่ได้เป็น Array)");
         }
 
         renderGangs(data);
     } catch (error) {
         console.error(error);
-        container.innerHTML = `<div style="color:red; text-align:center; padding: 20px;">
-            การเชื่อมต่อล้มเหลว<br>
-            <small style="color:#888;">กรุณารีเฟรช หรือเช็คว่า Web App URL ถูกต้องหรือไม่</small>
+        container.innerHTML = `<div class="error-box">
+            <strong>ไม่สามารถเชื่อมต่อฐานข้อมูลได้</strong><br>
+            ${error.message}<br><br>
+            <button onclick="loadMafiaData()" style="padding:5px 10px; cursor:pointer; background:#fff; color:#000; border:none; border-radius:4px;">ลองใหม่อีกครั้ง</button>
         </div>`;
     }
 }
 
-// Autocomplete
+// ================= ระบบ Autocomplete =================
 function filterCharacters() {
     const inputVal = document.getElementById('m-name-input').value.toLowerCase();
     const listContainer = document.getElementById('autocomplete-list');
@@ -268,16 +285,16 @@ function filterCharacters() {
     if (!bakeryDataList || bakeryDataList.length === 0) { listContainer.style.display = 'none'; return; }
 
     const filtered = bakeryDataList.filter(item => {
-        const name = item[BAKERY_COL_NAME] || "TBA";
+        const name = String(item[BAKERY_COL_NAME] || "TBA");
         return name.toLowerCase().includes(inputVal);
     });
 
     if (filtered.length === 0) { listContainer.style.display = 'none'; return; }
 
     filtered.forEach(item => {
-        const name = item[BAKERY_COL_NAME] || "TBA";
-        const img = item[BAKERY_COL_IMG] || ""; 
-        const credit = item[BAKERY_COL_CREDIT] || "";
+        const name = String(item[BAKERY_COL_NAME] || "TBA");
+        const img = String(item[BAKERY_COL_IMG] || ""); 
+        const credit = String(item[BAKERY_COL_CREDIT] || "");
 
         const div = document.createElement('div');
         div.className = 'autocomplete-item';
@@ -301,17 +318,19 @@ function filterCharacters() {
 
 document.addEventListener('click', function(e) {
     if (e.target.id !== 'm-name-input') {
-        document.getElementById('autocomplete-list').style.display = 'none';
+        const list = document.getElementById('autocomplete-list');
+        if(list) list.style.display = 'none';
     }
 });
 
-// เรนเดอร์หน้าจอแบบป้องกันบัค String Split
+// ================= เรนเดอร์หน้าจอ =================
 function renderGangs(data) {
     const container = document.getElementById('gangs-container');
     container.innerHTML = ''; 
 
-    const gangsData = data.filter(item => item.Category === 'Gangs' && item.GroupName);
-    const gangNames = [...new Set(gangsData.map(item => item.GroupName))];
+    // กรองและเช็คความปลอดภัยของข้อมูล
+    const gangsData = data.filter(item => item && item.Category === 'Gangs' && item.GroupName);
+    const gangNames = [...new Set(gangsData.map(item => String(item.GroupName)))];
     
     if(gangNames.length === 0) {
         container.innerHTML = '<div class="loading-text">ยังไม่มีข้อมูลแก๊งในระบบ</div>';
@@ -319,30 +338,35 @@ function renderGangs(data) {
     }
 
     gangNames.forEach(gangName => {
-        const gangRows = gangsData.filter(item => item.GroupName === gangName);
-        const infoRow = gangRows.find(item => item.NameMafia === "[GANG_INFO]");
-        const members = gangRows.filter(item => item.NameMafia !== "[GANG_INFO]");
+        const gangRows = gangsData.filter(item => String(item.GroupName) === gangName);
+        const infoRow = gangRows.find(item => String(item.NameMafia) === "[GANG_INFO]");
+        const members = gangRows.filter(item => String(item.NameMafia) !== "[GANG_INFO]");
 
         let gDesc = infoRow && infoRow.GangDesc ? String(infoRow.GangDesc) : "";
-        
-        // 🌟 ป้องกันบัค Error หากข้อมูลในช่อง GangTags เป็นตัวเลขหรือค่าที่ split ไม่ได้ 🌟
-        let gTags = infoRow && infoRow.GangTags ? String(infoRow.GangTags).split(',') : [];
+        let gTagsRaw = infoRow && infoRow.GangTags ? String(infoRow.GangTags) : "";
+        let gTags = gTagsRaw ? gTagsRaw.split(',') : [];
         let tagsHTML = gTags.map(tag => `<span class="tag">${tag.trim()}</span>`).join('');
 
         let membersHTML = members.map(item => {
-            let safeName = item.NameMafia || "ไม่ระบุชื่อ";
-            let safeImg = item.ImageURL || "https://via.placeholder.com/150/111/C91818?text=?";
-            let safeRole = item.Role || "";
-            let safeBadge = item.Badge || "MEMBER";
+            let safeName = item.NameMafia ? String(item.NameMafia) : "ไม่ระบุชื่อ";
+            let safeImg = item.ImageURL ? String(item.ImageURL) : "https://via.placeholder.com/150/111/C91818?text=?";
+            let safeRole = item.Role ? String(item.Role) : "";
+            let safeBadge = item.Badge ? String(item.Badge) : "MEMBER";
             
-            let modalArgs = `'${safeImg}', '${safeName}', '${safeRole}', '${item.Weapon || ""}', '${item.Flaw || ""}', '${item.Bio || ""}', '${item.Credit || ""}'`;
+            // Clean strings for safe JS argument passing
+            let cleanWeapon = item.Weapon ? String(item.Weapon).replace(/'/g, "\\'") : "";
+            let cleanFlaw = item.Flaw ? String(item.Flaw).replace(/'/g, "\\'") : "";
+            let cleanBio = item.Bio ? String(item.Bio).replace(/'/g, "\\'").replace(/\n/g, "<br>") : "";
+            let cleanCredit = item.Credit ? String(item.Credit).replace(/'/g, "\\'") : "";
+
+            let modalArgs = `'${safeImg}', '${safeName.replace(/'/g, "\\'")}', '${safeRole.replace(/'/g, "\\'")}', '${cleanWeapon}', '${cleanFlaw}', '${cleanBio}', '${cleanCredit}'`;
 
             return `
             <div class="member-item" onclick="openProfileModal(${modalArgs})">
-                <button class="btn-delete" onclick="event.stopPropagation(); deleteMember('${safeName}')">✖</button>
+                <button class="btn-delete" onclick="event.stopPropagation(); deleteMember('${safeName.replace(/'/g, "\\'")}')">✖</button>
                 <div class="member-img-wrapper no-save">
                     <span class="member-badge">${safeBadge}</span>
-                    <img src="${safeImg}" alt="${safeName}" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
+                    <img src="${safeImg}" alt="char" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
                 </div>
                 <div class="member-name">${safeName}</div>
             </div>`;
@@ -350,20 +374,20 @@ function renderGangs(data) {
 
         container.innerHTML += `
             <div class="gang-card">
-                <button class="btn-delete" style="top:-10px; right:-10px; left:auto;" onclick="deleteGang('${gangName}')">✖</button>
+                <button class="btn-delete" style="top:-10px; right:-10px; left:auto;" onclick="deleteGang('${gangName.replace(/'/g, "\\'")}')">✖</button>
                 <div class="gang-header">
                     <h2 class="gang-name">${gangName}</h2>
                     <div class="gang-desc">${gDesc}</div>
                     <div class="gang-tags">${tagsHTML}</div>
                 </div>
                 <div class="members-grid">${membersHTML}</div>
-                <button class="btn-add-member" onclick="prepAddMember('${gangName}')">+ เพิ่มสมาชิกลงในแก๊ง</button>
+                <button class="btn-add-member" onclick="prepAddMember('${gangName.replace(/'/g, "\\'")}')">+ เพิ่มสมาชิกลงในแก๊ง</button>
             </div>
         `;
     });
 }
 
-// จัดการข้อมูล
+// ================= จัดการข้อมูล =================
 async function submitNewGang() {
     const gName = document.getElementById('g-name').value.trim();
     if(!gName) return alert("กรุณาใส่ชื่อแก๊ง");
@@ -416,16 +440,22 @@ async function sendRequest(payload, loadingMsg) {
     container.innerHTML = `<div class="loading-text">${loadingMsg}</div>`;
     
     try {
-        await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
-        loadMafiaData();
+        const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
+        const result = await response.json();
+        
+        if (result.status === "success") {
+            loadMafiaData();
+        } else {
+            throw new Error("API ส่งค่าตอบกลับมาล้มเหลว");
+        }
     } catch (e) { 
-        alert("เกิดข้อผิดพลาด"); 
+        alert("เกิดข้อผิดพลาดในการส่งข้อมูล"); 
         console.error(e); 
         container.innerHTML = oldHtml;
     }
 }
 
-// UI & Modals
+// ================= UI & Modals =================
 function switchTab(tabId, element) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
@@ -455,12 +485,10 @@ function openProfileModal(imgSrc, name, role, weapon, flaw, bio, credit) {
     document.getElementById('p-role').innerText = role;
     document.getElementById('p-weapon').innerText = weapon || "-";
     document.getElementById('p-flaw').innerText = flaw || "-";
-    document.getElementById('p-bio').innerText = bio || "-";
+    document.getElementById('p-bio').innerHTML = bio || "-"; // เปลี่ยนเป็น innerHTML เพื่อรองรับ <br>
     document.getElementById('p-credit').innerText = `เครดิตนักวาด: ${credit || "-"}`;
     openModal('profileModal');
 }
-
-window.onload = initializeData;
 </script>
 </body>
 </html>
