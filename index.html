@@ -24,12 +24,14 @@ body { background-color: var(--bg-base); background-image: radial-gradient(circl
 .back-to-bakery:hover { color: var(--white); border-color: var(--white); background: rgba(255,255,255,0.1); }
 .edit-mode-toggle { right: 15px; background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); }
 .edit-mode-toggle.active { background: var(--red-main); color: var(--white); border-color: var(--red-main); box-shadow: 0 0 10px var(--red-glow); }
-.edit-only-btn { display: none; }
-body.is-editing .edit-only-btn { display: inline-flex; }
 
-.btn-delete { position: absolute; top: -5px; left: -5px; background: var(--red-main); color: var(--white); border: 2px solid var(--bg-card); border-radius: 50%; width: 24px; height: 24px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 20; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.8); transition: 0.2s; }
+/* 🌟 แก้ไขบัคปุ่มหลุดโหมดแก้ไข 🌟 */
+.btn-add-gang, .btn-add-member, .btn-delete { display: none !important; } /* ซ่อนเป็นค่าเริ่มต้น */
+body.is-editing .btn-add-gang, body.is-editing .btn-add-member { display: flex !important; } /* โชว์แค่ตอน Edit */
+body.is-editing .btn-delete { display: flex !important; }
+
+.btn-delete { position: absolute; top: -5px; left: -5px; background: var(--red-main); color: var(--white); border: 2px solid var(--bg-card); border-radius: 50%; width: 24px; height: 24px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 20; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.8); transition: 0.2s; }
 .btn-delete:hover { background: #FF0000; transform: scale(1.1); }
-body.is-editing .btn-delete { display: flex; }
 
 header { width: 100%; text-align: center; padding: 60px 15px 20px; border-bottom: 1px solid rgba(201, 24, 24, 0.2); background: linear-gradient(180deg, rgba(18,18,18,0.9) 0%, rgba(5,5,5,0) 100%); position: relative; }
 h1 { font-size: 26px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
@@ -44,14 +46,14 @@ h1 span { color: var(--red-main); }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 /* Cards */
-.gang-card { background: var(--bg-card); border-radius: 8px; padding: 20px; margin-bottom: 25px; border: 1px solid #333; }
+.gang-card { background: var(--bg-card); border-radius: 8px; padding: 20px; margin-bottom: 25px; border: 1px solid #333; position: relative; }
 .gang-header { border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; position: relative; }
 .gang-name { font-size: 20px; color: var(--white); margin-bottom: 5px; }
 .gang-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
 .gang-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
 .tag { font-size: 10px; background: rgba(255,255,255,0.05); color: #bbb; padding: 4px 8px; border-radius: 12px; border: 1px solid #444; }
 
-.btn-add-gang, .btn-add-member { background: transparent; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.3s; width: 100%; justify-content: center; display: flex; }
+.btn-add-gang, .btn-add-member { background: transparent; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.3s; width: 100%; justify-content: center; }
 .btn-add-gang { border: 1px dashed var(--text-muted); color: var(--text-muted); margin-bottom: 20px; }
 .btn-add-gang:hover { border-color: var(--white); color: var(--white); }
 .btn-add-member { background: rgba(201, 24, 24, 0.1); border: 1px dashed var(--red-main); color: var(--red-main); margin-top: 15px; font-size: 12px; padding: 8px; }
@@ -126,7 +128,7 @@ h1 span { color: var(--red-main); }
     </div>
 
     <div id="gangs" class="page">
-      <button class="edit-only-btn btn-add-gang" onclick="openModal('addGangModal')">+ เพิ่มแก๊งใหม่</button>
+      <button class="btn-add-gang" onclick="openModal('addGangModal')">+ เพิ่มแก๊งใหม่</button>
       <div id="gangs-container"><div class="loading-text">กำลังซิงค์ข้อมูล...</div></div>
     </div>
   </div>
@@ -189,15 +191,14 @@ h1 span { color: var(--red-main); }
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbz7_u5Xd9uXGiBswifeqw5Q0hefHI_ckMJVwHGEFL6SdJJ4FHViQBKNM0OhvT6EnA9DDA/exec";
 
-// 🚨 สำคัญมาก: เปลี่ยนชื่อตรงนี้ให้ตรงกับหัวคอลัมน์ใน Sheet ฝั่งเบเกอรี่เป๊ะๆ
+// เช็คชื่อให้ตรงกับชีตเบเกอรี่
 const BAKERY_COL_NAME = "ชื่อขนม"; 
-const BAKERY_COL_IMG = "รูปภาพ"; // เช่น ถ้าในชีตตั้งว่า "ลิงก์รูป" ต้องแก้เป็น "ลิงก์รูป"
+const BAKERY_COL_IMG = "รูปภาพ"; 
 const BAKERY_COL_CREDIT = "เครดิต"; 
 
 let bakeryDataList = [];
 let currentAddingGang = "";
 
-// ================= จัดลำดับภาษา (English > Thai > TBA) =================
 function getLangPriority(str) {
     if (!str || str === "TBA") return 3;
     if (/^[a-zA-Z]/.test(str)) return 1;
@@ -211,61 +212,71 @@ function sortBakeryData(data) {
         let nameB = b[BAKERY_COL_NAME] || "TBA";
         let pA = getLangPriority(nameA);
         let pB = getLangPriority(nameB);
-        
         if (pA !== pB) return pA - pB;
         return nameA.localeCompare(nameB, 'th');
     });
 }
 
-// ================= โหลดข้อมูล =================
+// โหลดข้อมูลแบบป้องกันบัคค้าง
 async function initializeData() {
-    loadMafiaData();
+    loadMafiaData(); 
     try {
         const res = await fetch(API_URL + "?sheet=Bakery");
         let rawData = await res.json();
-        bakeryDataList = sortBakeryData(rawData); // โหลดและจัดเรียงไว้เลย
+        if(Array.isArray(rawData)) {
+            bakeryDataList = sortBakeryData(rawData);
+        }
     } catch(e) { console.error("โหลดข้อมูลเบเกอรี่ล้มเหลว", e); }
 }
 
 async function loadMafiaData() {
     const container = document.getElementById('gangs-container');
     container.innerHTML = '<div class="loading-text">กำลังซิงค์ข้อมูลจากฐานข้อมูลใต้ดิน...</div>';
+    
     try {
         const response = await fetch(API_URL + "?sheet=Mafia");
         const data = await response.json();
-        if(data.error) { container.innerHTML = `<div style="color:red; text-align:center;">${data.error}</div>`; return; }
+        
+        // เช็คเผื่อ API ส่ง Error มา
+        if(data.error) { 
+            container.innerHTML = `<div style="color:red; text-align:center; padding: 20px;">Error จากฐานข้อมูล: ${data.error}</div>`; 
+            return; 
+        }
+        
+        // เช็คเผื่อข้อมูลที่ได้มาไม่ใช่ Array
+        if(!Array.isArray(data)) {
+            container.innerHTML = `<div style="color:red; text-align:center; padding: 20px;">รูปแบบข้อมูลไม่ถูกต้อง กรุณาเช็ค Google Sheets</div>`;
+            return;
+        }
+
         renderGangs(data);
     } catch (error) {
-        container.innerHTML = `<div style="color:red; text-align:center;">การเชื่อมต่อล้มเหลว</div>`;
+        console.error(error);
+        container.innerHTML = `<div style="color:red; text-align:center; padding: 20px;">
+            การเชื่อมต่อล้มเหลว<br>
+            <small style="color:#888;">กรุณารีเฟรช หรือเช็คว่า Web App URL ถูกต้องหรือไม่</small>
+        </div>`;
     }
 }
 
-// ================= ระบบค้นหาตัวละคร (Autocomplete) =================
+// Autocomplete
 function filterCharacters() {
     const inputVal = document.getElementById('m-name-input').value.toLowerCase();
     const listContainer = document.getElementById('autocomplete-list');
     
     listContainer.innerHTML = '';
-    
-    // ถ้าไม่มีข้อมูลเบเกอรี่ ให้ซ่อนไว้
-    if (!bakeryDataList || bakeryDataList.length === 0) {
-        listContainer.style.display = 'none';
-        return;
-    }
+    if (!bakeryDataList || bakeryDataList.length === 0) { listContainer.style.display = 'none'; return; }
 
     const filtered = bakeryDataList.filter(item => {
         const name = item[BAKERY_COL_NAME] || "TBA";
         return name.toLowerCase().includes(inputVal);
     });
 
-    if (filtered.length === 0) {
-        listContainer.style.display = 'none';
-        return;
-    }
+    if (filtered.length === 0) { listContainer.style.display = 'none'; return; }
 
     filtered.forEach(item => {
         const name = item[BAKERY_COL_NAME] || "TBA";
-        const img = item[BAKERY_COL_IMG] || ""; // ถ้าไม่มีรูป ปล่อยว่างไว้ให้รูป placeholder ทำงาน
+        const img = item[BAKERY_COL_IMG] || ""; 
         const credit = item[BAKERY_COL_CREDIT] || "";
 
         const div = document.createElement('div');
@@ -276,7 +287,6 @@ function filterCharacters() {
             <span class="autocomplete-tag">Bakery</span>
         `;
         
-        // เมื่อคลิกเลือก ให้ดึงชื่อ รูป และเครดิต ไปใส่ในฟอร์มให้อัตโนมัติ
         div.onclick = function() {
             document.getElementById('m-name-input').value = name;
             document.getElementById('m-new-img').value = img;
@@ -289,14 +299,13 @@ function filterCharacters() {
     listContainer.style.display = 'block';
 }
 
-// ปิดลิสต์ค้นหาเมื่อคลิกที่อื่น
 document.addEventListener('click', function(e) {
     if (e.target.id !== 'm-name-input') {
         document.getElementById('autocomplete-list').style.display = 'none';
     }
 });
 
-// ================= เรนเดอร์หน้าจอ =================
+// เรนเดอร์หน้าจอแบบป้องกันบัค String Split
 function renderGangs(data) {
     const container = document.getElementById('gangs-container');
     container.innerHTML = ''; 
@@ -314,8 +323,10 @@ function renderGangs(data) {
         const infoRow = gangRows.find(item => item.NameMafia === "[GANG_INFO]");
         const members = gangRows.filter(item => item.NameMafia !== "[GANG_INFO]");
 
-        let gDesc = infoRow ? infoRow.GangDesc : "";
-        let gTags = infoRow && infoRow.GangTags ? infoRow.GangTags.split(',') : [];
+        let gDesc = infoRow && infoRow.GangDesc ? String(infoRow.GangDesc) : "";
+        
+        // 🌟 ป้องกันบัค Error หากข้อมูลในช่อง GangTags เป็นตัวเลขหรือค่าที่ split ไม่ได้ 🌟
+        let gTags = infoRow && infoRow.GangTags ? String(infoRow.GangTags).split(',') : [];
         let tagsHTML = gTags.map(tag => `<span class="tag">${tag.trim()}</span>`).join('');
 
         let membersHTML = members.map(item => {
@@ -346,13 +357,13 @@ function renderGangs(data) {
                     <div class="gang-tags">${tagsHTML}</div>
                 </div>
                 <div class="members-grid">${membersHTML}</div>
-                <button class="edit-only-btn btn-add-member" onclick="prepAddMember('${gangName}')">+ เพิ่มสมาชิกลงในแก๊ง</button>
+                <button class="btn-add-member" onclick="prepAddMember('${gangName}')">+ เพิ่มสมาชิกลงในแก๊ง</button>
             </div>
         `;
     });
 }
 
-// ================= จัดการข้อมูล =================
+// จัดการข้อมูล
 async function submitNewGang() {
     const gName = document.getElementById('g-name').value.trim();
     if(!gName) return alert("กรุณาใส่ชื่อแก๊ง");
@@ -381,11 +392,11 @@ async function submitNewMember() {
             NameMafia: charName,
             Role: document.getElementById('m-new-role').value || "ลูกน้อง",
             Badge: document.getElementById('m-new-badge').value || "NEW",
-            ImageURL: document.getElementById('m-new-img').value, // ดึงจากช่อง ImageURL แทน
+            ImageURL: document.getElementById('m-new-img').value,
             Weapon: document.getElementById('m-new-weapon').value,
             Flaw: document.getElementById('m-new-flaw').value,
             Bio: document.getElementById('m-new-bio').value,
-            Credit: document.getElementById('m-new-credit').value || "-" // ดึงจากช่อง Credit แทน
+            Credit: document.getElementById('m-new-credit').value || "-"
         }
     }, "กำลังเพิ่มสมาชิก...");
 }
@@ -395,20 +406,26 @@ async function deleteMember(name) {
     await sendRequest({ action: "delete", sheet: "Mafia", name: name }, "กำลังลบ...");
 }
 async function deleteGang(gangName) {
-    if(!confirm(`ลบแก๊ง "${gangName}" ?`)) return;
+    if(!confirm(`ลบแก๊ง "${gangName}" ? (หากลบแก๊ง คุณต้องลบลูกน้องออกทีละคนด้วยนะ)`)) return;
     await sendRequest({ action: "delete", sheet: "Mafia", name: "[GANG_INFO]" }, "กำลังลบ...");
 }
 
 async function sendRequest(payload, loadingMsg) {
-    document.body.style.cursor = 'wait';
+    const container = document.getElementById('gangs-container');
+    const oldHtml = container.innerHTML;
+    container.innerHTML = `<div class="loading-text">${loadingMsg}</div>`;
+    
     try {
         await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
         loadMafiaData();
-    } catch (e) { alert("เกิดข้อผิดพลาด"); console.error(e); }
-    document.body.style.cursor = 'default';
+    } catch (e) { 
+        alert("เกิดข้อผิดพลาด"); 
+        console.error(e); 
+        container.innerHTML = oldHtml;
+    }
 }
 
-// ================= UI & Modals =================
+// UI & Modals
 function switchTab(tabId, element) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
@@ -430,7 +447,6 @@ function openProfileModal(imgSrc, name, role, weapon, flaw, bio, credit) {
     let bgImgEl = document.getElementById('p-bg-img');
     let avatarEl = document.getElementById('p-avatar');
     
-    // ตั้งค่ารูปภาพ (ถ้าไม่มีจะใช้ภาพดำหรือ Error Fallback)
     bgImgEl.src = imgSrc;
     bgImgEl.style.display = imgSrc ? 'block' : 'none';
     avatarEl.src = imgSrc;
