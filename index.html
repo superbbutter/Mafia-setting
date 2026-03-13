@@ -9,13 +9,13 @@
 <style>
 :root {
     --bg-base: #050505; 
-    --bg-glass: rgba(15, 15, 15, 0.95);
+    --bg-dark: #111111; 
+    --bg-glass: rgba(18, 18, 18, 0.95);
     --red-main: #E50914; 
     --red-glow: rgba(229, 9, 20, 0.5);
     --text-main: #F5F5F5; 
     --text-muted: #888888; 
     --white: #FFFFFF;
-    --transition: 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mitr', sans-serif; scroll-behavior: smooth; }
@@ -31,13 +31,12 @@ body {
 .edit-only { display: none !important; }
 body.is-editing .edit-only { display: flex !important; }
 
-/* 🌟 Top Navigation */
+/* 🌟 Navigation */
 .top-btn { 
     position: absolute; top: 20px; padding: 10px 22px; border-radius: 40px; 
-    font-size: 12px; transition: var(--transition); z-index: 50; cursor: pointer; 
-    display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.1);
+    font-size: 12px; z-index: 50; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
     background: rgba(255,255,255,0.05); color: var(--text-main); backdrop-filter: blur(15px);
-    text-decoration: none;
+    text-decoration: none; transition: 0.3s;
 }
 .back-to-bakery { left: 20px; }
 .back-to-bakery:hover { background: var(--white); color: #000; }
@@ -52,25 +51,26 @@ h1 span { color: var(--red-main); text-shadow: 0 0 15px var(--red-glow); }
     width: fit-content; margin: 30px auto 0; display: flex; gap: 5px; 
     background: rgba(255,255,255,0.03); padding: 5px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.08);
 }
-.nav-item { padding: 10px 25px; color: var(--text-muted); font-size: 13px; cursor: pointer; border-radius: 35px; transition: var(--transition); }
+.nav-item { padding: 10px 25px; color: var(--text-muted); font-size: 13px; cursor: pointer; border-radius: 35px; transition: 0.3s; }
 .nav-item.active { background: var(--red-main); color: var(--white); box-shadow: 0 8px 15px var(--red-glow); }
 
 .container { width: 100%; max-width: 650px; padding: 30px 15px 100px; margin: 0 auto; }
-.page { display: none; animation: fadeIn 0.5s ease forwards; }
+.page { display: none; animation: fadeIn 0.4s ease forwards; }
 .page.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* 🌟 Hero Slogan (หน้าหลัก - ตัวหนังสือไม่ตกบรรทัด) */
+/* 🌟 Hero Slogan (Fix: ภาษาไทยไม่ขาดบรรทัด) */
 .hero-slogan {
-    font-size: clamp(1.3rem, 5.5vw, 1.8rem);
+    font-size: clamp(1.4rem, 6vw, 2.1rem);
     font-weight: 600;
-    line-height: 1.6;
+    line-height: 1.4;
     margin-bottom: 25px;
-    background: linear-gradient(180deg, #fff 0%, #888 100%);
+    background: linear-gradient(180deg, #fff 0%, #999 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-align: center;
-    word-break: keep-all; /* ล็อคคำไทย */
+    text-wrap: balance; /* ช่วยเกลี่ยคำไทยให้สมดุล */
+    display: block;
 }
 
 .directory-section { margin-top: 50px; padding-top: 35px; border-top: 1px solid rgba(255,255,255,0.05); }
@@ -78,19 +78,19 @@ h1 span { color: var(--red-main); text-shadow: 0 0 15px var(--red-glow); }
     background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); 
     color: var(--text-main); padding: 18px 25px; border-radius: 20px; 
     text-decoration: none; display: flex; align-items: center; justify-content: space-between; 
-    transition: var(--transition); margin-bottom: 12px; font-size: 14px;
+    transition: 0.3s; margin-bottom: 12px; font-size: 14px;
 }
 .warp-btn:hover { border-color: var(--red-main); background: rgba(229, 9, 20, 0.1); transform: translateX(8px); }
 
 /* 🌟 Modern Sliders (Syndicate Style) */
-input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; }
+input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; }
 input[type="range"]::-webkit-slider-runnable-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; }
 input[type="range"]::-webkit-slider-thumb { 
-    -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; 
-    background: var(--white); border: 2px solid var(--red-main); cursor: pointer; 
-    margin-top: -6px; box-shadow: 0 0 10px var(--red-glow); transition: 0.2s;
+    -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; 
+    background: var(--red-main); border: 2px solid #fff; 
+    margin-top: -7px; box-shadow: 0 0 12px var(--red-glow); transition: 0.2s;
 }
-input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.3); background: var(--red-main); border-color: #fff; }
+input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-shadow: 0 0 20px var(--red-main); }
 
 /* 🌟 Gang Cards & Grid */
 .gang-card { background: var(--bg-glass); border-radius: 30px; padding: 35px; margin-bottom: 45px; position: relative; border: 1px solid rgba(255,255,255,0.05); }
@@ -98,21 +98,21 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.3); backgr
 .gang-name { font-size: 26px; font-weight: 600; color: var(--white); }
 
 .members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 25px; }
-.member-item { position: relative; text-align: center; cursor: pointer; transition: 0.3s; }
+.member-item { position: relative; text-align: center; cursor: pointer; }
 .member-img-wrapper { 
     width: 100%; aspect-ratio: 1/1; border-radius: 22px; background: #000; 
     position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.08);
 }
 .member-img-wrapper img { 
-    width: 100.1%; height: 100.1%; object-fit: cover; /* ปลดล็อคให้เลื่อนแกน X/Y ได้จริง */
-    transition: transform 0.3s ease, object-position 0s; 
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.3s ease, object-position 0s; /* object-position ห้ามมี transition ไม่งั้นแกน X จะหน่วง */
 }
 
 /* 🌟 Controls */
 .btn-control { 
-    position: absolute; z-index: 40; background: rgba(255,255,255,0.1); 
+    position: absolute; z-index: 40; background: rgba(20, 20, 20, 0.8); 
     color: var(--white); border-radius: 50%; width: 34px; height: 34px; 
-    border: 1px solid rgba(255,255,255,0.2); cursor: pointer; display: flex; 
+    border: 1px solid rgba(255,255,255,0.15); cursor: pointer; display: flex; 
     align-items: center; justify-content: center; backdrop-filter: blur(10px);
 }
 .btn-control:hover { background: var(--white); color: #000; transform: scale(1.1); }
@@ -126,23 +126,27 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.3); backgr
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(25px); }
 .modal-content { background: #0a0a0a; width: 100%; max-width: 480px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.1); position: relative; max-height: 90vh; overflow-y: auto; padding: 35px; }
 .modal-content.profile { padding: 0; overflow: hidden; }
-.modal-close { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 38px; cursor: pointer; z-index: 110; opacity: 0.5; transition: 0.3s; }
-.modal-close:hover { opacity: 1; color: var(--red-main); }
+.modal-close { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 38px; cursor: pointer; z-index: 110; transition: 0.3s; }
+.modal-close:hover { color: var(--red-main); }
 
-/* Profile View */
-.modal-header-img { width: 100%; height: 220px; background: #000; position: relative; overflow: hidden; }
-.modal-header-img img { width: 120%; height: 120%; object-fit: cover; opacity: 0.4; filter: blur(30px); position: absolute; top: -10%; left: -10%; }
-.modal-body { padding: 35px; margin-top: -85px; position: relative; z-index: 2; }
+/* 🌟 Adjustment Preview (Fix: แกน X/Y) */
+.preview-box { 
+    width: 140px; height: 140px; border-radius: 30px; border: 3px solid var(--red-main); 
+    background: #000; margin: 0 auto 15px; position: relative; overflow: hidden;
+}
+#e-preview-img { 
+    width: 100%; height: 100%; object-fit: cover; 
+    min-width: 110%; min-height: 110%; /* หลอกให้รูปใหญ่กว่ากรอบเพื่อให้เลื่อนได้ทุกแกน */
+    transition: none !important; /* ปิด transition ทุกอย่างในโหมดแก้ */
+}
+
 .profile-avatar-wrap { width: 125px; height: 125px; border-radius: 25px; border: 4px solid #111; margin-bottom: 25px; position: relative; overflow: hidden; background: #000; }
-.profile-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
-
 .info-row { display: flex; gap: 18px; margin-bottom: 20px; }
 .info-icon { width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--red-main); flex-shrink: 0; }
 .info-content .label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; }
 .info-content .val { font-size: 15px; color: var(--text-main); margin-top: 4px; line-height: 1.5; }
 
 .form-input { width: 100%; padding: 15px 20px; margin-bottom: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 15px; outline: none; transition: 0.3s; }
-.form-input:focus { border-color: var(--red-main); }
 .btn-submit { width: 100%; background: var(--red-main); color: #fff; padding: 18px; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; }
 
 .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background-size: cover; background-position: center; mix-blend-mode: screen; opacity: 0.7; z-index: 10; }
@@ -169,7 +173,7 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.3); backgr
     <div id="setting" class="page active">
         <div class="gang-card" style="border-left: 5px solid var(--red-main); text-align: center;">
             <div class="hero-slogan">เบื้องหน้าคือความหอมหวาน<br>เบื้องหลังคือการนองเลือด</div>
-            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.8;">Archive restriction protocols active. Accessing confidential personnel directories.</p>
+            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.8;">Archive restriction protocols active. Accessing confidential personnel files.</p>
             <div class="directory-section">
                 <div style="font-size: 10px; color: var(--red-main); letter-spacing: 3px; margin-bottom: 20px; font-weight: 600; text-transform: uppercase;">Syndicate Directory</div>
                 <div id="warp-list"></div>
@@ -186,11 +190,11 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.3); backgr
   <div class="modal-overlay" id="editMemberModal" onclick="closeModal(event, 'editMemberModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'editMemberModal', true)">&times;</span>
-        <h2 style="margin-bottom: 25px; font-size: 18px; text-align: center; letter-spacing: 2px;">ADJUST ARCHIVE</h2>
+        <h2 style="margin-bottom: 25px; font-size: 18px; text-align: center; letter-spacing: 2px;">RE-CALIBRATE</h2>
         
         <div class="avatar-preview-container" style="text-align: center;">
-            <div style="width: 140px; height: 140px; border-radius: 30px; border: 3px solid var(--red-main); background: #000; margin: 0 auto 15px; position: relative; overflow: hidden;">
-                <img id="e-preview-img" src="" alt="preview" style="width: 100%; height: 100%; object-fit: cover; transition: none;">
+            <div class="preview-box">
+                <img id="e-preview-img" src="" alt="preview">
                 <div id="e-preview-watermark" class="watermark-overlay"></div>
             </div>
             <div style="font-size: 11px; color: #666; margin-bottom: 20px;">
@@ -199,36 +203,31 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.3); backgr
         </div>
 
         <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 25px; margin-bottom: 25px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 15px; font-size: 11px; color: #aaa;">
-                <span>🔍 Zoom</span><input type="range" id="e-zoom-slider" min="0.5" max="5" step="0.05" value="1" oninput="updatePreviewImageStyle('e')">
+            <div class="info-row" style="margin-bottom:15px; gap:10px; align-items:center; font-size:11px; color:#aaa;">
+                <span>🔍 Zoom</span><input type="range" id="e-zoom-slider" min="0.5" max="5" step="0.01" value="1" oninput="updatePreviewImageStyle('e')">
             </div>
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 15px; font-size: 11px; color: #aaa;">
+            <div class="info-row" style="margin-bottom:15px; gap:10px; align-items:center; font-size:11px; color:#aaa;">
                 <span>↔️ Pos X</span><input type="range" id="e-pos-x-slider" min="0" max="100" value="50" oninput="updatePreviewImageStyle('e')">
             </div>
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 15px; font-size: 11px; color: #aaa;">
+            <div class="info-row" style="gap:10px; align-items:center; font-size:11px; color:#aaa;">
                 <span>↕️ Pos Y</span><input type="range" id="e-pos-y-slider" min="0" max="100" value="50" oninput="updatePreviewImageStyle('e')">
             </div>
         </div>
 
         <input type="hidden" id="e-old-name">
         <input type="text" id="e-name-input" class="form-input" placeholder="Name">
-        <div style="display: flex; gap: 10px;">
-            <input type="text" id="e-new-role" class="form-input" placeholder="Role">
-            <input type="text" id="e-new-badge" class="form-input" placeholder="Rank">
-        </div>
+        <div style="display: flex; gap: 10px;"><input type="text" id="e-new-role" class="form-input" placeholder="Role"><input type="text" id="e-new-badge" class="form-input" placeholder="Rank"></div>
         <input type="text" id="e-new-img" class="form-input" placeholder="Image URL" oninput="updatePreviewImageStyle('e')">
+        
         <label style="display:flex; align-items:center; gap:10px; margin: 10px 0 20px; font-size:12px; cursor:pointer; color:#888;">
-            <input type="checkbox" id="e-new-watermark" onchange="updatePreviewWatermark('e')"> Apply Authentication Seal
+            <input type="checkbox" id="e-new-watermark" onchange="updatePreviewWatermark('e')"> Apply Seal (Watermark)
         </label>
         
         <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
             <input type="text" id="e-new-weapon" class="form-input" placeholder="Weapon">
             <input type="text" id="e-new-flaw" class="form-input" placeholder="Weakness">
             <textarea id="e-new-bio" class="form-input" placeholder="Bio history..." rows="3"></textarea>
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="e-new-credit" class="form-input" placeholder="Artist">
-                <input type="text" id="e-new-credit-link" class="form-input" placeholder="Artist Link">
-            </div>
+            <div style="display: flex; gap: 10px;"><input type="text" id="e-new-credit" class="form-input" placeholder="Artist"><input type="text" id="e-new-credit-link" class="form-input" placeholder="Artist Link"></div>
         </div>
         <button class="btn-submit" onclick="submitEditMember()">UPDATE RECORD</button>
     </div>
@@ -237,7 +236,9 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.3); backgr
   <div class="modal-overlay" id="profileModal" onclick="closeModal(event, 'profileModal')">
     <div class="modal-content profile" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'profileModal', true)">&times;</span>
-        <div class="modal-header-img"><img id="p-bg-img" src=""></div>
+        <div style="width:100%; height:220px; overflow:hidden; background:#000; position:relative;">
+            <img id="p-bg-img" src="" style="width:120%; height:120%; object-fit:cover; opacity:0.4; filter:blur(30px); position:absolute; top:-10%; left:-10%;">
+        </div>
         <div class="modal-body">
             <div class="profile-avatar-wrap">
                 <img id="p-avatar" src="">
@@ -246,27 +247,25 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.3); backgr
             <h2 id="p-name" style="font-size: 30px; font-weight: 600; color:#fff;"></h2>
             <div id="p-role" style="color:var(--red-main); font-size:14px; text-transform:uppercase; letter-spacing:2px; margin-bottom:30px;"></div>
             
-            <div id="profile-details-grid"></div>
+            <div id="profile-details"></div>
             
-            <div id="p-credit" style="margin-top:30px; font-size:10px; color:#444; text-align:right;"></div>
+            <div id="p-credit" style="margin-top:25px; font-size:10px; color:#444; text-align:right;"></div>
         </div>
     </div>
   </div>
 
   <div class="modal-overlay" id="addMemberModal" onclick="closeModal(event, 'addMemberModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <span class="modal-close" onclick="closeModal(event, 'addMemberModal', true)">&times;</span>
-        <h2 style="margin-bottom:20px; font-size:18px;">Personnel Recruitment</h2>
+        <h2 style="margin-bottom:20px; font-size:18px;">New Personnel</h2>
         <input type="text" id="m-name-input" class="form-input" placeholder="Search Character..." oninput="filterCharacters('m')">
         <div id="autocomplete-list-m"></div>
         <input type="text" id="m-new-img" class="form-input" placeholder="Image URL">
-        <button class="btn-submit" onclick="submitNewMember()">ESTABLISH ENTRY</button>
+        <button class="btn-submit" onclick="submitNewMember()">ESTABLISH</button>
     </div>
   </div>
 
   <div class="modal-overlay" id="addGangModal" onclick="closeModal(event, 'addGangModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <span class="modal-close" onclick="closeModal(event, 'addGangModal', true)">&times;</span>
         <h2 style="margin-bottom:15px;">New Faction</h2>
         <input type="text" id="g-name" class="form-input" placeholder="Faction Name">
         <textarea id="g-desc" class="form-input" placeholder="Description" rows="3"></textarea>
@@ -283,16 +282,16 @@ let currentAddingGang = "";
 let currentEditingGang = "";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const previewWM = document.getElementById('e-preview-watermark');
-    if(previewWM) previewWM.style.backgroundImage = `url('${WATERMARK_URL}')`;
+    const wm = document.getElementById('e-preview-watermark');
+    if(wm) wm.style.backgroundImage = `url('${WATERMARK_URL}')`;
     loadMafiaData();
     fetchBakeryData();
 });
 
-// --- CORE FUNCTIONS ---
+// --- API FETCH ---
 async function loadMafiaData() {
     const container = document.getElementById('gangs-container');
-    container.innerHTML = '<div style="text-align:center; padding:50px; opacity:0.3; font-size:12px; letter-spacing:3px;">SYNCHRONIZING ARCHIVES...</div>';
+    container.innerHTML = '<div style="text-align:center; padding:50px; opacity:0.3; font-size:12px;">SYNCHRONIZING...</div>';
     try {
         const res = await fetch(API_URL + "?sheet=Mafia");
         const data = await res.json();
@@ -315,7 +314,7 @@ function renderGangs(data) {
     const gangs = [...new Set(data.filter(i => i && i.Category === 'Gangs').map(i => i.GroupName))];
     
     gangs.forEach((gn, idx) => {
-        warpList.innerHTML += `<a href="#" class="warp-btn" onclick="warpToGang(${idx}); return false;">${gn} <span>ACCESS →</span></a>`;
+        warpList.innerHTML += `<a href="#" class="warp-btn" onclick="warpToGang(${idx}); return false;">${gn} <span>→</span></a>`;
         
         const rows = data.filter(i => i.GroupName === gn);
         const mems = rows.filter(i => i.NameMafia !== "[GANG_INFO]");
@@ -331,11 +330,11 @@ function renderGangs(data) {
                 <button class="btn-control edit-only btn-move-l" onclick="event.stopPropagation(); moveItem('${name}', -1)">←</button>
                 <button class="btn-control edit-only btn-move-r" onclick="event.stopPropagation(); moveItem('${name}', 1)">→</button>
                 <div class="member-img-wrapper">
-                    ${i.Badge ? `<span style="position:absolute; top:12px; right:12px; background:var(--red-main); color:white; font-size:9px; padding:4px 10px; border-radius:8px; z-index:15; font-weight:600;">${i.Badge}</span>` : ""}
+                    ${i.Badge ? `<span style="position:absolute; top:10px; right:10px; background:var(--red-main); color:white; font-size:9px; padding:3px 8px; border-radius:5px; z-index:15;">${i.Badge}</span>` : ""}
                     <img src="${formatImageUrl(i.ImageURL)}" style="object-position: ${i.PosX||50}% ${i.PosY||50}%; transform: scale(${i.ZoomLevel||1});">
                     ${isWM ? `<div class="watermark-overlay" style="background-image: url('${WATERMARK_URL}')"></div>` : ""}
                 </div>
-                <div style="font-size:14px; margin-top:15px; color:#ddd;">${i.NameMafia}</div>
+                <div style="font-size:14px; margin-top:10px; color:#ddd;">${i.NameMafia}</div>
             </div>`;
         }).join('');
 
@@ -343,9 +342,9 @@ function renderGangs(data) {
             <div class="gang-card" id="gang-${idx}">
                 <button class="btn-control edit-only btn-move-u" onclick="moveItem('[GANG_INFO]', -1, '${gn.replace(/'/g,"\\'")}')">↑</button>
                 <button class="btn-control edit-only btn-move-d" onclick="moveItem('[GANG_INFO]', 1, '${gn.replace(/'/g,"\\'")}')">↓</button>
-                <div class="gang-header"><h2 class="gang-name">${gn}</h2><p style="font-size:13px; color:var(--text-muted); margin-top:10px;">${info?.GangDesc || ""}</p></div>
+                <div class="gang-header"><h2 class="gang-name">${gn}</h2><p style="font-size:13px; color:var(--text-muted);">${info?.GangDesc || ""}</p></div>
                 <div class="members-grid">${memsHTML}</div>
-                <button class="btn-submit edit-only" style="margin-top:30px; background:transparent; border:1px dashed rgba(255,255,255,0.1);" onclick="prepAddMember('${gn.replace(/'/g,"\\'")}')">+ RECRUIT PERSONNEL</button>
+                <button class="btn-submit edit-only" style="margin-top:25px; background:transparent; border:1px dashed rgba(255,255,255,0.1);" onclick="prepAddMember('${gn.replace(/'/g,"\\'")}')">+ RECRUIT PERSONNEL</button>
             </div>`;
     });
 }
@@ -375,7 +374,7 @@ function handleMemberClick(e, img, name, role, badge, weapon, flaw, bio, cr, crL
     }
 }
 
-// 🎯 FIX: แกน X/Y เลื่อนตาม Slider ทันที
+// 🎯 FIX: ฟังก์ชันปรับตำแหน่งรูป (แกน X/Y ต้องขยับ)
 function updatePreviewImageStyle(prefix) {
     const url = document.getElementById(`${prefix}-new-img`).value;
     const zoom = document.getElementById(`${prefix}-zoom-slider`).value;
@@ -390,6 +389,7 @@ function updatePreviewImageStyle(prefix) {
 
     const img = document.getElementById(`${prefix}-preview-img`);
     img.src = formatImageUrl(url) || "https://via.placeholder.com/150/111/C91818?text=?";
+    // ใช้ object-position สำหรับเลื่อน X/Y และ transform สำหรับซูม
     img.style.objectPosition = `${x}% ${y}%`;
     img.style.transform = `scale(${zoom})`; 
 }
@@ -410,27 +410,23 @@ function openProfileModal(img, n, r, w, f, b, cr, crL, wm, z, x, y) {
     document.getElementById('p-name').innerText = n;
     document.getElementById('p-role').innerText = r;
     
-    const fields = [
+    const items = [
         { label: 'Weapon', val: w, icon: '⚔️' },
         { label: 'Weakness', val: f, icon: '⚠️' },
         { label: 'Record', val: b, icon: '📜' }
     ];
-
-    document.getElementById('profile-details-grid').innerHTML = fields.map(item => `
+    document.getElementById('profile-details').innerHTML = items.map(it => `
         <div class="info-row">
-            <div class="info-icon">${item.icon}</div>
-            <div class="info-content">
-                <div class="label">${item.label}</div>
-                <div class="val">${item.val || "-"}</div>
-            </div>
+            <div class="info-icon">${it.icon}</div>
+            <div class="info-content"><div class="label">${it.label}</div><div class="val">${it.val || "-"}</div></div>
         </div>
     `).join('');
 
-    document.getElementById('p-credit').innerHTML = `Artist: ${crL ? `<a href="${crL}" target="_blank" style="color:var(--red-main); text-decoration:none;">${cr}</a>` : cr}`;
+    document.getElementById('p-credit').innerHTML = `Artist: ${crL ? `<a href="${crL}" target="_blank" style="color:var(--red-main)">${cr}</a>` : cr}`;
     openModal('profileModal');
 }
 
-// --- LOGIC ACTIONS ---
+// --- CORE ---
 function switchTab(t, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(t).classList.add('active');
@@ -460,10 +456,8 @@ async function submitEditMember() {
 }
 
 async function submitNewMember() {
-    const name = document.getElementById('m-name-input').value;
-    if(!name) return;
     const data = {
-        Category: "Gangs", GroupName: currentAddingGang, NameMafia: name,
+        Category: "Gangs", GroupName: currentAddingGang, NameMafia: document.getElementById('m-name-input').value,
         ImageURL: document.getElementById('m-new-img').value, UseWatermark: "TRUE", ZoomLevel: 1, PosX: 50, PosY: 50
     };
     closeModal(null, 'addMemberModal', true);
@@ -471,9 +465,7 @@ async function submitNewMember() {
 }
 
 async function submitNewGang() {
-    const n = document.getElementById('g-name').value.trim();
-    if(!n) return;
-    const data = { Category: "Gangs", GroupName: n, GangDesc: document.getElementById('g-desc').value, NameMafia: "[GANG_INFO]" };
+    const data = { Category: "Gangs", GroupName: document.getElementById('g-name').value, GangDesc: document.getElementById('g-desc').value, NameMafia: "[GANG_INFO]" };
     closeModal(null, 'addGangModal', true);
     await sendRequest({ action: "add", sheet: "Mafia", data });
 }
@@ -484,7 +476,7 @@ async function deleteMember(n) { if(confirm(`Erase records for ${n}?`)) await se
 
 async function sendRequest(p) {
     document.body.style.opacity = "0.5";
-    try { await fetch(API_URL, { method: "POST", body: JSON.stringify(p) }); await loadMafiaData(); } catch(e) { alert("SYNC FAILED"); }
+    try { await fetch(API_URL, { method: "POST", body: JSON.stringify(p) }); await loadMafiaData(); } catch(e) { alert("ERROR"); }
     document.body.style.opacity = "1";
 }
 
@@ -498,8 +490,8 @@ function warpToGang(id) {
     switchTab('gangs', document.getElementById('tab-gangs'));
     setTimeout(() => { 
         const el = document.getElementById('gang-' + id);
-        if(el) window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
-    }, 300);
+        if(el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+    }, 200);
 }
 
 function filterCharacters(prefix) {
@@ -508,7 +500,7 @@ function filterCharacters(prefix) {
     list.innerHTML = ""; if (!input) return;
     bakeryData.filter(i => String(i["ชื่อขนม"]).toLowerCase().includes(input)).slice(0, 5).forEach(i => {
         const div = document.createElement("div"); 
-        div.style = "padding:12px; cursor:pointer; background:rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.05); font-size:12px;";
+        div.style = "padding:12px; cursor:pointer; background:rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.1); font-size:12px;";
         div.innerText = i["ชื่อขนม"];
         div.onclick = () => {
             document.getElementById(`${prefix}-name-input`).value = i["ชื่อขนม"];
