@@ -95,7 +95,7 @@ h1 span { color: var(--red-main); }
 
 /* Avatar Preview UI */
 .avatar-preview-box { width: 120px; height: 120px; border-radius: 50%; border: 2px solid #444; background: #000; margin: 0 auto 15px; position: relative; overflow: hidden; }
-.avatar-preview-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.1s, object-position 0.1s; transform-origin: center; }
+.avatar-preview-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.1s, object-position 0.1s; }
 .zoom-slider-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; font-size: 12px; color: var(--text-muted); background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px; }
 .slider-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 input[type="range"] { accent-color: var(--red-main); width: 100%; }
@@ -105,7 +105,7 @@ input[type="range"] { accent-color: var(--red-main); width: 100%; }
 .modal-header-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: blur(2px); transform-origin: center; }
 .modal-body { padding: 20px; margin-top: -40px; position: relative; z-index: 2; }
 .modal-avatar-wrapper { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--red-main); box-shadow: 0 0 15px #000; margin-bottom: 10px; background: #111; position: relative; overflow: hidden; }
-.modal-avatar { width: 100%; height: 100%; object-fit: cover; transform-origin: center; }
+.modal-avatar { width: 100%; height: 100%; object-fit: cover; }
 .modal-name { font-size: 22px; color: var(--white); margin-bottom: 2px; }
 .modal-role { font-size: 13px; color: var(--red-main); font-weight: 500; margin-bottom: 15px; }
 .modal-info-group { margin-bottom: 12px; }
@@ -218,7 +218,7 @@ input[type="range"] { accent-color: var(--red-main); width: 100%; }
         <h2 style="margin-bottom: 15px; font-size: 18px; color: var(--white);">แก้ไขข้อมูล <span id="edit-target-gang" style="color: var(--text-muted); font-size:12px;"></span></h2>
         
         <div class="avatar-preview-box">
-            <img id="e-preview-img" src="" alt="preview">
+            <img id="e-preview-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="preview">
             <div id="e-preview-watermark" class="watermark-overlay" style="display: block;"></div>
         </div>
         <div class="zoom-slider-container">
@@ -260,11 +260,13 @@ input[type="range"] { accent-color: var(--red-main); width: 100%; }
   <div class="modal-overlay" id="profileModal" onclick="closeModal(event, 'profileModal')">
     <div class="modal-content profile" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'profileModal', true)">&times;</span>
-        <div class="modal-header-img"><img id="p-bg-img" src="" alt="bg" onerror="this.style.display='none'"></div>
+        <div class="modal-header-img">
+            <img id="p-bg-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="bg">
+        </div>
         <div class="modal-body">
             
             <div class="modal-avatar-wrapper">
-                <img id="p-avatar" class="modal-avatar" src="" alt="avatar" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
+                <img id="p-avatar" class="modal-avatar" src="https://via.placeholder.com/150/111/C91818?text=?" alt="avatar" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
                 <div id="p-watermark" class="watermark-overlay" style="display: none;"></div>
             </div>
 
@@ -301,12 +303,14 @@ function formatImageUrl(url) {
     if (url.includes('drive.google.com') && driveMatch) { return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`; }
     return url.trim();
 }
+
 function getLangPriority(str) {
     if (!str || str === "TBA") return 3;
     if (/^[a-zA-Z]/.test(str)) return 1;
     if (/^[ก-๙]/.test(str)) return 2;
     return 3;
 }
+
 function sortBakeryData(data) {
     return data.sort((a, b) => {
         let nameA = a[BAKERY_COL_NAME] || "TBA"; let nameB = b[BAKERY_COL_NAME] || "TBA";
@@ -346,6 +350,7 @@ async function loadMafiaData() {
     }
 }
 
+// 🌟 ตัวแก้บัค: ซูมและเลื่อนรูปให้ถูกต้องด้วย transform-origin 🌟
 function updatePreviewImageStyle(prefix) {
     let url = document.getElementById(`${prefix}-new-img`).value;
     let scale = document.getElementById(`${prefix}-zoom-slider`).value;
@@ -354,9 +359,13 @@ function updatePreviewImageStyle(prefix) {
     
     let imgEl = document.getElementById(`${prefix}-preview-img`);
     imgEl.src = formatImageUrl(url) || "https://via.placeholder.com/150/111/C91818?text=?";
+    
+    // ตั้งค่า Scale และศูนย์กลางซูม
     imgEl.style.transform = `scale(${scale})`;
     imgEl.style.objectPosition = `${posX}% ${posY}%`;
+    imgEl.style.transformOrigin = `${posX}% ${posY}%`;
 }
+
 function updatePreviewWatermark(prefix) {
     let isChecked = document.getElementById(`${prefix}-new-watermark`).checked;
     document.getElementById(`${prefix}-preview-watermark`).style.display = isChecked ? "block" : "none";
@@ -384,7 +393,6 @@ function filterCharacters(prefix) {
 
         const div = document.createElement('div');
         div.className = 'autocomplete-item';
-        // 🌟 เอาคำว่า Bakery ออกตามคำขอ 🌟
         div.innerHTML = `<img src="${formattedImg}" class="autocomplete-thumb" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'"><span class="autocomplete-name">${name}</span>`;
         
         div.onclick = function() {
@@ -454,7 +462,7 @@ function renderGangs(data) {
                 <button class="btn-delete" onclick="event.stopPropagation(); deleteMember('${nameEscaped}')">✖</button>
                 <div class="member-img-wrapper no-save">
                     ${badgeHTML}
-                    <img src="${safeImg}" alt="char" style="transform: scale(${zoomLvl}); object-position: ${posX}% ${posY}%;" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
+                    <img src="${safeImg}" alt="char" style="transform: scale(${zoomLvl}); object-position: ${posX}% ${posY}%; transform-origin: ${posX}% ${posY}%;" onerror="this.src='https://via.placeholder.com/150/111/C91818?text=?'">
                     ${watermarkHTML}
                 </div>
                 <div class="member-name">${safeName}</div>
@@ -484,7 +492,7 @@ function handleMemberClick(event, imgSrc, name, role, badge, weapon, flaw, bio, 
     }
 }
 
-// ================= ฟอร์มแก้ไขตัวละคร (แก้บัคค่าหายแล้ว) =================
+// ================= ฟอร์มแก้ไขตัวละคร =================
 function prepEditMember(name, role, badge, weapon, flaw, bio, credit, creditLink, isWatermarkOn, zoomLvl, posX, posY, gangName, rawImgUrl) {
     currentEditingGang = gangName;
     document.getElementById('edit-target-gang').innerText = `(${gangName})`;
@@ -516,7 +524,6 @@ async function submitEditMember() {
     const newName = document.getElementById('e-name-input').value.trim();
     if(!newName) return alert("กรุณาพิมพ์ชื่อตัวละคร");
 
-    // 🌟 ดึงข้อมูลเข้าตัวแปรก่อนปิด Modal ป้องกันค่าหาย 🌟
     const roleVal = document.getElementById('e-new-role').value;
     const badgeVal = document.getElementById('e-new-badge').value;
     const imgVal = document.getElementById('e-new-img').value;
@@ -536,19 +543,10 @@ async function submitEditMember() {
         action: "edit", sheet: "Mafia", oldName: oldName,
         data: {
             Category: "Gangs", GroupName: currentEditingGang,
-            NameMafia: newName,
-            Role: roleVal,
-            Badge: badgeVal,
-            ImageURL: imgVal,
-            Weapon: weaponVal,
-            Flaw: flawVal,
-            Bio: bioVal,
-            Credit: creditVal,
-            CreditLink: creditLinkVal,
-            UseWatermark: useWatermarkVal,
-            ZoomLevel: zoomVal,
-            PosX: posXVal,
-            PosY: posYVal
+            NameMafia: newName, Role: roleVal, Badge: badgeVal,
+            ImageURL: imgVal, Weapon: weaponVal, Flaw: flawVal, Bio: bioVal,
+            Credit: creditVal, CreditLink: creditLinkVal,
+            UseWatermark: useWatermarkVal, ZoomLevel: zoomVal, PosX: posXVal, PosY: posYVal
         }
     }, "กำลังบันทึกข้อมูล...");
 }
@@ -648,7 +646,7 @@ function closeModal(event, modalId, force = false) {
         document.querySelectorAll(`#${modalId} input[type="text"], #${modalId} textarea`).forEach(el => el.value = '');
         let wmCheckboxM = document.getElementById('m-new-watermark'); if(wmCheckboxM) wmCheckboxM.checked = true; 
         let imgM = document.getElementById('m-preview-img'); if(imgM) imgM.src = "https://via.placeholder.com/150/111/C91818?text=?";
-        let imgE = document.getElementById('e-preview-img'); if(imgE) imgE.src = "";
+        let imgE = document.getElementById('e-preview-img'); if(imgE) imgE.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
     }
 }
 
@@ -657,12 +655,17 @@ function openProfileModal(imgSrc, name, role, weapon, flaw, bio, credit, creditL
     let avatarEl = document.getElementById('p-avatar');
     let watermarkEl = document.getElementById('p-watermark');
     
-    bgImgEl.src = imgSrc;
-    bgImgEl.style.display = imgSrc ? 'block' : 'none';
+    if(imgSrc && imgSrc !== "https://via.placeholder.com/150/111/C91818?text=?") {
+        bgImgEl.src = imgSrc;
+        bgImgEl.style.display = 'block';
+    } else {
+        bgImgEl.style.display = 'none';
+    }
     
     avatarEl.src = imgSrc;
     avatarEl.style.transform = `scale(${zoomLvl})`;
     avatarEl.style.objectPosition = `${posX}% ${posY}%`;
+    avatarEl.style.transformOrigin = `${posX}% ${posY}%`;
 
     if(isWatermarkOn) {
         watermarkEl.style.backgroundImage = `url('${WATERMARK_URL}')`;
