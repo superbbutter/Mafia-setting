@@ -9,14 +9,14 @@
 <style>
     :root {
         --bg-base: #050505; 
-        --bg-dark: #0a0a0a; 
-        --bg-glass: rgba(18, 18, 18, 0.98);
+        --bg-dark: #111111; 
+        --bg-glass: rgba(22, 22, 22, 0.85);
         --red-main: #E50914; 
         --red-glow: rgba(229, 9, 20, 0.5);
         --text-main: #F5F5F5; 
         --text-muted: #888888; 
         --white: #FFFFFF;
-        --border-glass: rgba(255, 255, 255, 0.08);
+        --border-glass: rgba(255, 255, 255, 0.1);
         --transition: 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
@@ -27,134 +27,143 @@
         background-image: radial-gradient(circle at 50% -20%, #2a0a0a 0%, var(--bg-base) 80%);
         background-attachment: fixed;
         color: var(--text-main); 
-        min-height: 100vh; overflow-x: hidden;
+        display: flex; flex-direction: column; align-items: center; min-height: 100vh; 
+        overflow-x: hidden;
     }
+
+    .no-save { -webkit-touch-callout: none; user-select: none; -webkit-user-drag: none; }
+    ::-webkit-scrollbar { display: none; } 
 
     .edit-only { display: none !important; }
     body.is-editing .edit-only { display: flex !important; }
 
+    .glass-panel { background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border-glass); }
+
     /* 🌟 Navigation */
     .top-btn { 
-        position: absolute; top: 20px; padding: 10px 24px; border-radius: 40px; 
-        font-size: 11px; z-index: 50; cursor: pointer; border: 1px solid var(--border-glass);
-        background: rgba(255,255,255,0.05); color: var(--text-main); backdrop-filter: blur(15px);
-        text-decoration: none; display: flex; align-items: center; gap: 8px; transition: var(--transition);
+        position: absolute; top: 20px; padding: 10px 22px; border-radius: 40px; 
+        font-size: 12px; transition: var(--transition); z-index: 50; cursor: pointer; 
+        display: flex; align-items: center; gap: 8px; border: 1px solid var(--border-glass);
+        background: rgba(255,255,255,0.05); color: var(--text-main); backdrop-filter: blur(10px);
+        text-decoration: none;
     }
     .back-to-bakery { left: 20px; }
-    .back-to-bakery:hover { background: var(--white); color: #000; }
-    .edit-mode-toggle { right: 20px; color: var(--red-main); border-color: var(--red-glow); }
-    .edit-mode-toggle.active { background: var(--red-main); color: var(--white); box-shadow: 0 0 30px var(--red-glow); border: none; }
+    .back-to-bakery:hover { background: var(--white); color: var(--bg-base); }
 
-    header { width: 100%; text-align: center; padding: 120px 20px 40px; }
-    h1 { font-size: clamp(24px, 8vw, 36px); font-weight: 600; text-transform: uppercase; letter-spacing: 6px; }
-    h1 span { color: var(--red-main); text-shadow: 0 0 20px var(--red-glow); }
+    .edit-mode-toggle { right: 20px; color: var(--red-main); border-color: rgba(229, 9, 20, 0.3); }
+    .edit-mode-toggle.active { background: var(--red-main); color: var(--white); box-shadow: 0 0 25px var(--red-glow); }
+
+    header { width: 100%; text-align: center; padding: 100px 20px 40px; }
+    h1 { font-size: clamp(24px, 7vw, 32px); font-weight: 600; text-transform: uppercase; letter-spacing: 6px; }
+    h1 span { color: var(--red-main); text-shadow: 0 0 15px var(--red-glow); }
 
     .nav-bar { 
-        width: fit-content; margin: 35px auto 0; display: flex; gap: 8px; 
-        background: rgba(255,255,255,0.02); padding: 8px; border-radius: 50px; 
-        border: 1px solid var(--border-glass); backdrop-filter: blur(25px);
+        width: 90%; max-width: 450px; display: flex; justify-content: center; gap: 8px; 
+        margin: 30px auto 0; background: rgba(255,255,255,0.03); padding: 6px; 
+        border-radius: 40px; border: 1px solid var(--border-glass); backdrop-filter: blur(25px);
     }
-    .nav-item { padding: 12px 30px; color: var(--text-muted); font-size: 14px; cursor: pointer; border-radius: 40px; transition: var(--transition); }
-    .nav-item.active { background: var(--red-main); color: var(--white); box-shadow: 0 10px 25px var(--red-glow); }
+    .nav-item { padding: 10px 30px; color: var(--text-muted); font-size: 13px; cursor: pointer; border-radius: 35px; transition: var(--transition); }
+    .nav-item.active { background: var(--red-main); color: var(--white); box-shadow: 0 8px 20px var(--red-glow); }
 
-    .container { width: 100%; max-width: 680px; padding: 40px 20px 100px; margin: 0 auto; }
-    .page { display: none; animation: fadeIn 0.8s ease; }
+    .container { width: 100%; max-width: 650px; padding: 40px 15px 100px; }
+    .page { display: none; animation: fadeIn 0.6s ease; }
     .page.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* 🌟 Hero Slogan (Original Layout) */
     .hero-slogan {
-        font-size: clamp(1.4rem, 6vw, 2.2rem); font-weight: 600; line-height: 1.5;
-        margin-bottom: 30px; text-align: center; text-wrap: balance; word-break: keep-all;
-        background: linear-gradient(180deg, #fff 0%, #aaa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        font-size: clamp(1.4rem, 6.5vw, 2rem); font-weight: 600; line-height: 1.4;
+        margin-bottom: 25px; background: linear-gradient(180deg, #ffffff 0%, #999999 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        letter-spacing: 1px; text-align: center;
     }
 
-    .directory-section { margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); }
+    .directory-section { margin-top: 50px; text-align: left; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 35px; }
     .warp-btn { 
         background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); 
-        color: var(--text-main); padding: 20px 28px; border-radius: 25px; 
+        color: var(--text-main); padding: 18px 25px; border-radius: 20px; 
         text-decoration: none; display: flex; align-items: center; justify-content: space-between; 
         transition: var(--transition); margin-bottom: 12px;
     }
-    .warp-btn:hover { border-color: var(--red-main); background: rgba(229, 9, 20, 0.1); transform: translateX(10px); }
+    .warp-btn:hover { border-color: var(--red-main); background: rgba(229, 9, 20, 0.1); transform: translateX(8px); }
 
-    /* 🌟 Sliders (Neon Style) */
-    input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; height: 35px; }
-    input[type="range"]::-webkit-slider-runnable-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; }
-    input[type="range"]::-webkit-slider-thumb { 
-        -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; 
-        background: var(--white); border: 2px solid var(--red-main); margin-top: -7px;
-        box-shadow: 0 0 15px var(--red-glow); transition: 0.2s;
-    }
-    input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.3); }
+    /* 🌟 Custom UI Elements */
+    input[type="range"] { -webkit-appearance: none; background: transparent; cursor: pointer; width: 100%; }
+    input[type="range"]::-webkit-slider-runnable-track { background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: var(--red-main); border: 2px solid #fff; margin-top: -6px; box-shadow: 0 0 10px var(--red-glow); }
 
-    /* 🌟 Toggle Switch (ลายน้ำ) */
-    .switch-ui { position: relative; display: inline-block; width: 44px; height: 22px; }
-    .switch-ui input { opacity: 0; width: 0; height: 0; }
-    .slider-ui { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 34px; border: 1px solid var(--border-glass); }
-    .slider-ui:before { position: absolute; content: ""; height: 14px; width: 14px; left: 4px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-    input:checked + .slider-ui { background-color: var(--red-main); box-shadow: 0 0 10px var(--red-glow); }
-    input:checked + .slider-ui:before { transform: translateX(20px); }
+    .custom-toggle { position: relative; display: inline-block; width: 40px; height: 20px; flex-shrink: 0; }
+    .custom-toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 34px; border: 1px solid var(--border-glass); }
+    .toggle-slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 4px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .toggle-slider { background-color: var(--red-main); box-shadow: 0 0 10px var(--red-glow); }
+    input:checked + .toggle-slider:before { transform: translateX(18px); }
 
-    /* 🌟 Cards & Grid */
-    .gang-card { background: var(--bg-glass); border-radius: 35px; padding: 40px; margin-bottom: 60px; position: relative; border: 1px solid var(--border-glass); }
-    .gang-header { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 30px; margin-bottom: 40px; position: relative; padding-right: 120px; }
-    .gang-name { font-size: 28px; font-weight: 600; color: var(--white); }
+    /* 🌟 Gang Cards & Original Image Logic */
+    .gang-card { border-radius: 30px; padding: 35px; margin-bottom: 45px; position: relative; }
+    .gang-header { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 25px; margin-bottom: 30px; position: relative; padding-right: 110px; }
+    .gang-name { font-size: 26px; font-weight: 600; color: var(--white); margin-bottom: 10px; }
 
-    .members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); gap: 30px; }
-    .member-item { position: relative; text-align: center; cursor: pointer; }
+    .members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 25px; }
+    .member-item { position: relative; text-align: center; cursor: pointer; transition: 0.3s; }
+    
     .member-img-wrapper { 
-        width: 100%; aspect-ratio: 1/1; border-radius: 25px; background: #000; 
-        position: relative; overflow: hidden; border: 1px solid var(--border-glass);
+        width: 100%; aspect-ratio: 1/1; border-radius: 22px; background: #000; 
+        position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
     }
-    /* 🎯 รูปหน้าหลักรองรับ Transform */
+    
+    /* 🎯 รูปกลับมาขนาด 100% ปกติ! */
     .member-img-wrapper img { 
-        width: 100%; height: 100%; object-fit: cover;
-        position: absolute; top: 50%; left: 50%;
+        width: 100%; height: 100%; object-fit: cover; 
         transition: transform 0.3s ease; 
     }
 
-    .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: screen; opacity: 0.7; z-index: 10; background-size: cover; background-position: center; }
+    .member-badge { position: absolute; top: 12px; right: 12px; background: var(--red-main); color: white; font-size: 9px; padding: 4px 10px; border-radius: 8px; z-index: 5; font-weight: 600; }
+    .member-name { font-size: 14px; color: var(--text-main); margin-top: 12px; font-weight: 400; }
+    .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background-size: cover; background-position: center; mix-blend-mode: screen; opacity: 0.7; z-index: 5; }
 
-    /* 🌟 Control Buttons (SVG Icons) */
-    .btn-control { position: absolute; z-index: 40; background: rgba(0,0,0,0.7); color: var(--white); border-radius: 50%; width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
-    .btn-delete { top: -12px; left: -12px; background: var(--red-main); border: none; }
+    /* 🌟 Control Buttons (Original SVG) */
+    .btn-control { position: absolute; z-index: 40; background: rgba(255,255,255,0.1); color: var(--white); border-radius: 50%; width: 34px; height: 34px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); transition: 0.2s; }
+    .btn-control:hover { background: var(--white); color: #000; transform: scale(1.1); }
+    .btn-delete { top: -12px; left: -12px; background: var(--red-main); border-color: var(--red-main); }
     .btn-move-l { bottom: 45px; left: 10px; }
     .btn-move-r { bottom: 45px; right: 10px; }
     .btn-move-u { top: 20px; right: 20px; }
     .btn-move-d { top: 20px; right: 65px; }
 
     /* 🌟 Modals & Inputs */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 100; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(25px); }
-    .modal-content { background: #0a0a0a; width: 100%; max-width: 500px; border-radius: 40px; border: 1px solid var(--border-glass); position: relative; max-height: 90vh; overflow-y: auto; padding: 40px; }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(25px); }
+    .modal-content { background: #0e0e0e; width: 100%; max-width: 480px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.1); position: relative; max-height: 90vh; overflow-y: auto; padding: 35px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
     .modal-content.profile { padding: 0; overflow: hidden; }
-    .modal-close { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 40px; cursor: pointer; z-index: 110; opacity: 0.5; }
+    .modal-close { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 38px; cursor: pointer; z-index: 110; line-height: 1; opacity: 0.5; }
+    .modal-close:hover { opacity: 1; color: var(--red-main); }
 
-    /* 🎯 พรีวิวการปรับรูปภาพ (บังคับกว้าง 200% เพื่อให้แกน X/Y เลื่อนได้ชัวร์ๆ) */
-    .preview-box { width: 160px; height: 160px; border-radius: 35px; border: 3px solid var(--red-main); background: #000; margin: 0 auto 15px; position: relative; overflow: hidden; }
-    #e-preview-img, #m-preview-img { 
-        width: 200%; height: 200%; object-fit: cover; 
-        position: absolute; top: 50%; left: 50%; transition: none !important; 
-    }
+    /* 🎯 Preview Area Normal Size */
+    .avatar-preview-box { width: 140px; height: 140px; border-radius: 30px; border: 3px solid var(--red-main); background: #000; margin: 0 auto 15px; position: relative; overflow: hidden; box-shadow: 0 0 20px var(--red-glow); }
+    .avatar-preview-box img { width: 100%; height: 100%; object-fit: cover; transition: none !important; }
 
-    .form-input { width: 100%; padding: 18px 25px; margin-bottom: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); color: #fff; border-radius: 18px; outline: none; transition: 0.3s; font-size: 14px; }
-    .form-input:focus { border-color: var(--red-main); box-shadow: 0 0 15px rgba(229, 9, 20, 0.2); background: rgba(255,255,255,0.05); }
-    .btn-submit { width: 100%; background: var(--red-main); color: #fff; padding: 20px; border: none; border-radius: 22px; font-weight: 600; cursor: pointer; transition: 0.3s; letter-spacing: 1px; margin-top: 10px; }
+    .form-input { width: 100%; padding: 15px 20px; margin-bottom: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 15px; outline: none; font-size: 14px; }
+    .btn-submit { width: 100%; background: var(--red-main); color: #fff; padding: 18px; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px; }
 
-    /* Profile View Icons */
-    .profile-avatar-wrap { width: 130px; height: 130px; border-radius: 30px; border: 5px solid #111; margin-bottom: 25px; position: relative; overflow: hidden; background: #000; }
-    .profile-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 50%; left: 50%; }
-    .info-row { display: flex; gap: 20px; margin-bottom: 22px; }
-    .info-icon { width: 46px; height: 46px; border-radius: 14px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--red-main); flex-shrink: 0; border: 1px solid var(--border-glass); }
+    /* Profile View Layout */
+    .modal-header-img { width: 100%; height: 220px; background: #000; position: relative; overflow: hidden; }
+    .modal-header-img img { width: 120%; height: 120%; object-fit: cover; opacity: 0.5; filter: blur(30px) saturate(1.5); position: absolute; top: -10%; left: -10%; }
+    .modal-body { padding: 35px; margin-top: -85px; position: relative; z-index: 2; }
+    .profile-avatar-wrap { width: 120px; height: 120px; border-radius: 25px; border: 4px solid #1a1a1a; margin-bottom: 25px; position: relative; overflow: hidden; background: #111; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+    .profile-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .info-row { display: flex; gap: 18px; margin-bottom: 22px; }
+    .info-icon { width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--red-main); flex-shrink: 0; }
     .info-content .label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; }
-    .info-content .val { font-size: 15px; color: var(--text-main); margin-top: 4px; line-height: 1.5; }
+    .info-content .val { font-size: 15px; color: var(--text-main); margin-top: 4px; }
 </style>
 </head>
 <body>
 
-<a href="index.html" class="top-btn">
+<a href="index.html" class="top-btn glass-panel">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Bakery
 </a>
-<button class="top-btn edit-mode-toggle" id="editToggleBtn" onclick="toggleEditMode()">
+<button class="top-btn edit-mode-toggle glass-panel" id="editToggleBtn" onclick="toggleEditMode()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit Database
 </button>
 
@@ -168,29 +177,31 @@
 
 <div class="container">
     <div id="setting" class="page active">
-        <div class="gang-card" style="border-left: 5px solid var(--red-main); text-align: center;">
+        <div class="gang-card glass-panel" style="border-left: 5px solid var(--red-main); text-align: center;">
             <div class="hero-slogan">เบื้องหน้าคือความหอมหวาน<br>เบื้องหลังคือการนองเลือด</div>
-            <p style="font-size: 14px; color: var(--text-muted); line-height: 2;">Database initialized. Syndicate faction files decrypted.</p>
+            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.8;">Restriction protocol in effect. Accessing confidential personnel files.</p>
             <div class="directory-section"><div id="warp-list"></div></div>
         </div>
     </div>
     <div id="gangs" class="page">
-        <button class="btn-submit edit-only" style="margin-bottom:30px; background:transparent; border:1px dashed rgba(255,255,255,0.2);" onclick="openModal('addGangModal')">+ Establish New Faction</button>
+        <button class="btn-submit edit-only glass-panel" style="background:transparent; border:1px dashed rgba(255,255,255,0.2); margin-bottom:30px;" onclick="openModal('addGangModal')">+ Establish New Faction</button>
         <div id="gangs-container"></div>
     </div>
 </div>
 
 <div class="modal-overlay" id="editMemberModal" onclick="closeModal(event, 'editMemberModal')">
-    <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-content glass-panel" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'editMemberModal', true)">&times;</span>
-        <h2 style="margin-bottom: 25px; font-size: 18px; text-align: center; letter-spacing: 2px;">RE-CALIBRATE</h2>
+        <h2 style="margin-bottom: 25px; font-size: 18px; text-align: center;">ADJUST ARCHIVE</h2>
         
-        <div class="preview-box"><img id="e-preview-img" src=""><div id="e-preview-watermark" class="watermark-overlay"></div></div>
-        <div style="text-align:center; font-size:11px; color:#888; margin-bottom:20px;">ZOOM: <b id="e-st-zoom" style="color:var(--red-main)">1.00</b> | X: <b id="e-st-x" style="color:var(--red-main)">50</b>% | Y: <b id="e-st-y" style="color:var(--red-main)">50</b>%</div>
-        
-        <div style="background:rgba(255,255,255,0.03); padding:20px; border-radius:25px; margin-bottom:25px;">
-            <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px;"><span style="font-size:11px; width:60px; color:#aaa;">🔍 Zoom</span><input type="range" id="e-zoom-slider" min="0.5" max="5" step="0.01" value="1" oninput="updatePreviewImageStyle('e')"></div>
-            <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px;"><span style="font-size:11px; width:60px; color:#aaa;">↔️ Pos X</span><input type="range" id="e-pos-x-slider" min="0" max="100" value="50" oninput="updatePreviewImageStyle('e')"></div>
+        <div class="avatar-preview-container" style="text-align: center;">
+            <div class="avatar-preview-box"><img id="e-preview-img" src=""><div id="e-preview-watermark" class="watermark-overlay"></div></div>
+            <div style="font-size:11px; color:#888; margin-bottom:20px;">ZOOM: <b id="e-st-zoom">1.00</b> | X: <b id="e-st-x">50</b>% | Y: <b id="e-st-y">50</b>%</div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.03); padding:20px; border-radius:25px; margin-bottom:25px; border:1px solid rgba(255,255,255,0.05);">
+            <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;"><span style="font-size:11px; width:60px; color:#aaa;">🔍 Zoom</span><input type="range" id="e-zoom-slider" min="0.5" max="5" step="0.01" value="1" oninput="updatePreviewImageStyle('e')"></div>
+            <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;"><span style="font-size:11px; width:60px; color:#aaa;">↔️ Pos X</span><input type="range" id="e-pos-x-slider" min="0" max="100" value="50" oninput="updatePreviewImageStyle('e')"></div>
             <div style="display:flex; align-items:center; gap:15px;"><span style="font-size:11px; width:60px; color:#aaa;">↕️ Pos Y</span><input type="range" id="e-pos-y-slider" min="0" max="100" value="50" oninput="updatePreviewImageStyle('e')"></div>
         </div>
 
@@ -199,73 +210,73 @@
         <div style="display:flex; gap:10px;"><input type="text" id="e-new-role" class="form-input" placeholder="Role"><input type="text" id="e-new-badge" class="form-input" placeholder="Rank"></div>
         <input type="text" id="e-new-img" class="form-input" placeholder="Image URL" oninput="updatePreviewImageStyle('e')">
         
-        <div style="display:flex; align-items:center; gap:15px; margin: 10px 0 25px; padding-left:10px;">
-            <label class="switch-ui"><input type="checkbox" id="e-new-watermark" onchange="updatePreviewWatermark('e')"><span class="slider-ui"></span></label>
-            <span style="font-size:13px; color:#888;">Authentication Seal</span>
-        </div>
-
+        <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px; cursor:pointer;">
+            <div class="custom-toggle"><input type="checkbox" id="e-new-watermark" onchange="updatePreviewWatermark('e')"><span class="toggle-slider"></span></div>
+            <span style="font-size:12px; color:#888;">Apply Seal</span>
+        </label>
+        
         <input type="text" id="e-new-weapon" class="form-input" placeholder="Primary Weapon">
         <input type="text" id="e-new-flaw" class="form-input" placeholder="Weakness">
         <textarea id="e-new-bio" class="form-input" placeholder="Biography archive..." rows="3"></textarea>
         <div style="display:flex; gap:10px;"><input type="text" id="e-new-credit" class="form-input" placeholder="Artist"><input type="text" id="e-new-credit-link" class="form-input" placeholder="Artist Link"></div>
-        
         <button class="btn-submit" onclick="submitEditMember()">SAVE CHANGES</button>
     </div>
 </div>
 
 <div class="modal-overlay" id="addMemberModal" onclick="closeModal(event, 'addMemberModal')">
-    <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-content glass-panel" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'addMemberModal', true)">&times;</span>
-        <h2 style="margin-bottom: 25px; font-size: 18px; text-align: center; letter-spacing: 2px;">RECRUIT PERSONNEL</h2>
+        <h2 style="margin-bottom: 25px; font-size: 18px; text-align: center;">RECRUIT PERSONNEL</h2>
         
-        <div class="preview-box"><img id="m-preview-img" src=""><div id="m-preview-watermark" class="watermark-overlay" style="display:block;"></div></div>
-        <div style="text-align:center; font-size:11px; color:#888; margin-bottom:20px;">ZOOM: <b id="m-st-zoom" style="color:var(--red-main)">1.00</b> | X: <b id="m-st-x" style="color:var(--red-main)">50</b>% | Y: <b id="m-st-y" style="color:var(--red-main)">50</b>%</div>
-        
-        <div style="background:rgba(255,255,255,0.03); padding:20px; border-radius:25px; margin-bottom:25px;">
+        <div class="avatar-preview-container" style="text-align: center;">
+            <div class="avatar-preview-box"><img id="m-preview-img" src=""><div id="m-preview-watermark" class="watermark-overlay" style="display:block;"></div></div>
+            <div style="font-size:11px; color:#888; margin-bottom:20px;">ZOOM: <b id="m-st-zoom">1.00</b> | X: <b id="m-st-x">50</b>% | Y: <b id="m-st-y">50</b>%</div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.03); padding:20px; border-radius:25px; margin-bottom:25px; border:1px solid rgba(255,255,255,0.05);">
             <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px;"><span style="font-size:11px; width:60px; color:#aaa;">🔍 Zoom</span><input type="range" id="m-zoom-slider" min="0.5" max="5" step="0.01" value="1" oninput="updatePreviewImageStyle('m')"></div>
             <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px;"><span style="font-size:11px; width:60px; color:#aaa;">↔️ Pos X</span><input type="range" id="m-pos-x-slider" min="0" max="100" value="50" oninput="updatePreviewImageStyle('m')"></div>
             <div style="display:flex; align-items:center; gap:15px;"><span style="font-size:11px; width:60px; color:#aaa;">↕️ Pos Y</span><input type="range" id="m-pos-y-slider" min="0" max="100" value="50" oninput="updatePreviewImageStyle('m')"></div>
         </div>
-        
+
         <input type="text" id="m-name-input" class="form-input" placeholder="Search Bakery Name..." oninput="filterCharacters('m')">
         <div id="autocomplete-list-m" style="background:rgba(255,255,255,0.05); border-radius:15px; margin-top:-10px; margin-bottom:15px; max-height:150px; overflow-y:auto;"></div>
         
         <div style="display:flex; gap:10px;"><input type="text" id="m-new-role" class="form-input" placeholder="Role"><input type="text" id="m-new-badge" class="form-input" placeholder="Rank"></div>
         <input type="text" id="m-new-img" class="form-input" placeholder="Image URL" oninput="updatePreviewImageStyle('m')">
         
-        <div style="display:flex; align-items:center; gap:15px; margin: 10px 0 20px; padding-left:10px;">
-            <label class="switch-ui"><input type="checkbox" id="m-new-watermark" checked onchange="updatePreviewWatermark('m')"><span class="slider-ui"></span></label>
-            <span style="font-size:13px; color:#888;">Apply Seal</span>
-        </div>
+        <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px; cursor:pointer;">
+            <div class="custom-toggle"><input type="checkbox" id="m-new-watermark" checked onchange="updatePreviewWatermark('m')"><span class="toggle-slider"></span></div>
+            <span style="font-size:12px; color:#888;">Apply Seal</span>
+        </label>
 
         <input type="text" id="m-new-weapon" class="form-input" placeholder="Primary Weapon">
         <input type="text" id="m-new-flaw" class="form-input" placeholder="Weakness">
-        <textarea id="m-new-bio" class="form-input" placeholder="Personnel record..." rows="2"></textarea>
+        <textarea id="m-new-bio" class="form-input" placeholder="Personnel Record..." rows="2"></textarea>
         <div style="display:flex; gap:10px;"><input type="text" id="m-new-credit" class="form-input" placeholder="Artist"><input type="text" id="m-new-credit-link" class="form-input" placeholder="Artist Link"></div>
-        
         <button class="btn-submit" onclick="submitNewMember()">ESTABLISH ENTRY</button>
     </div>
 </div>
 
 <div class="modal-overlay" id="profileModal" onclick="closeModal(event, 'profileModal')">
-    <div class="modal-content profile" onclick="event.stopPropagation()">
+    <div class="modal-content profile glass-panel" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'profileModal', true)">&times;</span>
-        <div style="width:100%; height:220px; position:relative; overflow:hidden;"><img id="p-bg-img" style="width:140%; height:140%; object-fit:cover; opacity:0.4; filter:blur(40px); position:absolute; top:-20%; left:-20%;"></div>
-        <div class="modal-body" style="padding: 40px; margin-top: -100px; position: relative; z-index: 2;">
+        <div class="modal-header-img"><img id="p-bg-img" src=""></div>
+        <div class="modal-body">
             <div class="profile-avatar-wrap"><img id="p-avatar" src=""><div id="p-watermark" class="watermark-overlay" style="display: none;"></div></div>
-            <h2 id="p-name" style="font-size:32px; font-weight:600;"></h2><div id="p-role" style="color:var(--red-main); font-size:14px; text-transform:uppercase; letter-spacing:2px; margin-bottom:30px;"></div>
+            <h2 id="p-name" style="font-size:30px; font-weight:600; color:#fff;"></h2><div id="p-role" style="color:var(--red-main); font-size:14px; text-transform:uppercase; letter-spacing:2px; margin-bottom:25px;"></div>
             <div id="p-content"></div>
-            <div id="p-credit" style="margin-top:25px; font-size:10px; opacity:0.5; text-align:right;"></div>
+            <div id="p-credit" style="margin-top:25px; font-size:10px; color:#555; text-align:right;"></div>
         </div>
     </div>
 </div>
 
 <div class="modal-overlay" id="addGangModal" onclick="closeModal(event, 'addGangModal')">
-    <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-content glass-panel" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeModal(event, 'addGangModal', true)">&times;</span>
-        <h2 style="margin-bottom:20px;">New Faction</h2>
+        <h2 style="margin-bottom:20px;">Establish Faction</h2>
         <input type="text" id="g-name" class="form-input" placeholder="Faction Name"><textarea id="g-desc" class="form-input" placeholder="Description" rows="3"></textarea>
-        <button class="btn-submit" onclick="submitNewGang()">CREATE FACTION</button>
+        <button class="btn-submit" onclick="submitNewGang()">CREATE</button>
     </div>
 </div>
 
@@ -284,44 +295,39 @@
         const container = document.getElementById('gangs-container'); container.innerHTML = '<div style="text-align:center; padding:50px; opacity:0.3; letter-spacing:3px;">SYNCHRONIZING...</div>';
         try { const res = await fetch(API_URL + "?sheet=Mafia"); const data = await res.json(); renderGangs(data); } catch (e) { container.innerHTML = "FAILED"; }
     }
-    
-    async function fetchBakeryData() { 
-        try { const res = await fetch(API_URL + "?sheet=Bakery"); bakeryData = await res.json(); } catch(e) {} 
-    }
+    async function fetchBakeryData() { try { const res = await fetch(API_URL + "?sheet=Bakery"); bakeryData = await res.json(); } catch(e) {} }
 
     function renderGangs(data) {
         const container = document.getElementById('gangs-container'); const warpList = document.getElementById('warp-list'); container.innerHTML = ''; warpList.innerHTML = '';
         const gangs = [...new Set(data.filter(i => i && i.Category === 'Gangs').map(i => i.GroupName))];
         
         gangs.forEach((gn, idx) => {
-            warpList.innerHTML += `<a href="#" class="warp-btn" onclick="warpToGang(${idx}); return false;">${gn} <span>→</span></a>`;
+            warpList.innerHTML += `<a href="#" class="warp-btn glass-panel" onclick="warpToGang(${idx}); return false;">${gn} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>`;
             const rows = data.filter(i => i.GroupName === gn); const mems = rows.filter(i => i.NameMafia !== "[GANG_INFO]"); const info = rows.find(i => i.NameMafia === "[GANG_INFO]");
             
             let memsHTML = mems.map(i => {
                 const name = i.NameMafia.replace(/'/g,"\\'"); const isWM = String(i.UseWatermark).toUpperCase() === "TRUE";
                 const args = `'${formatImageUrl(i.ImageURL)}','${name}','${(i.Role||"").replace(/'/g,"\\'")}','${(i.Badge||"").replace(/'/g,"\\'")}','${(i.Weapon||"").replace(/'/g,"\\'")}','${(i.Flaw||"").replace(/'/g,"\\'")}','${(i.Bio||"").replace(/'/g,"\\'").replace(/\n/g,"<br>")}','${(i.Credit||"").replace(/'/g,"\\'")}','${(i.CreditLink||"").replace(/'/g,"\\'")}',${isWM},${i.ZoomLevel||1},${i.PosX||50},${i.PosY||50},'${gn.replace(/'/g,"\\'")}','${i.ImageURL}'`;
-                
-                return `
-                <div class="member-item" onclick="handleMemberClick(event, ${args})">
+                return `<div class="member-item" onclick="handleMemberClick(event, ${args})">
                     <button class="btn-control edit-only btn-delete" onclick="event.stopPropagation(); deleteMember('${name}')">✖</button>
                     <button class="btn-control edit-only btn-move-l" onclick="event.stopPropagation(); moveItem('${name}', -1)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
                     <button class="btn-control edit-only btn-move-r" onclick="event.stopPropagation(); moveItem('${name}', 1)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
                     <div class="member-img-wrapper">
-                        ${i.Badge ? `<span style="position:absolute; top:10px; right:10px; background:var(--red-main); color:white; font-size:9px; padding:3px 8px; border-radius:5px; z-index:15;">${i.Badge}</span>` : ""}
-                        <img src="${formatImageUrl(i.ImageURL)}" style="transform: translate(calc(${i.PosX||50}% - 50%), calc(${i.PosY||50}% - 50%)) scale(${i.ZoomLevel||1});">
+                        ${i.Badge ? `<span class="member-badge">${i.Badge}</span>` : ""}
+                        <img src="${formatImageUrl(i.ImageURL)}" style="object-position: ${i.PosX||50}% ${i.PosY||50}%; transform-origin: ${i.PosX||50}% ${i.PosY||50}%; transform: scale(${i.ZoomLevel||1});">
                         ${isWM ? `<div class="watermark-overlay" style="background-image: url('${WATERMARK_URL}')"></div>` : ""}
                     </div>
-                    <div style="font-size:13px; margin-top:10px;">${i.NameMafia}</div>
+                    <div class="member-name">${i.NameMafia}</div>
                 </div>`;
             }).join('');
             
             container.innerHTML += `
-            <div class="gang-card" id="gang-${idx}">
+            <div class="gang-card glass-panel" id="gang-${idx}">
                 <button class="btn-control edit-only btn-move-u" onclick="moveItem('[GANG_INFO]', -1, '${gn.replace(/'/g,"\\'")}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg></button>
                 <button class="btn-control edit-only btn-move-d" onclick="moveItem('[GANG_INFO]', 1, '${gn.replace(/'/g,"\\'")}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></button>
-                <div class="gang-header"><h2 class="gang-name">${gn}</h2><p style="font-size:13px; opacity:0.6; margin-top:5px;">${info?.GangDesc || ""}</p></div>
+                <div class="gang-header"><h2 class="gang-name">${gn}</h2><p style="font-size:13px; opacity:0.6;">${info?.GangDesc || ""}</p></div>
                 <div class="members-grid">${memsHTML}</div>
-                <button class="btn-submit edit-only" style="margin-top:35px; background:transparent; border:1px dashed rgba(255,255,255,0.2);" onclick="prepAddMember('${gn.replace(/'/g,"\\'")}')">+ RECRUIT PERSONNEL</button>
+                <button class="btn-submit edit-only" style="margin-top:25px; background:transparent; border:1px dashed rgba(255,255,255,0.1);" onclick="prepAddMember('${gn.replace(/'/g,"\\'")}')">+ RECRUIT</button>
             </div>`;
         });
     }
@@ -329,29 +335,18 @@
     function handleMemberClick(e, img, name, role, badge, weapon, flaw, bio, cr, crL, wm, zoom, x, y, gn, rawImg) {
         if (document.body.classList.contains('is-editing')) {
             currentEditingGang = gn; 
-            document.getElementById('e-old-name').value = name; 
-            document.getElementById('e-name-input').value = name; 
-            document.getElementById('e-new-role').value = role; 
-            document.getElementById('e-new-badge').value = badge; 
-            document.getElementById('e-new-img').value = rawImg; 
-            document.getElementById('e-new-watermark').checked = wm; 
-            document.getElementById('e-new-weapon').value = weapon==='-'?'':weapon; 
-            document.getElementById('e-new-flaw').value = flaw==='-'?'':flaw; 
-            document.getElementById('e-new-bio').value = bio==='-'?'':bio.replace(/<br>/g, "\n"); 
-            document.getElementById('e-new-credit').value = cr==='-'?'':cr; 
+            document.getElementById('e-old-name').value = name; document.getElementById('e-name-input').value = name; 
+            document.getElementById('e-new-role').value = role; document.getElementById('e-new-badge').value = badge; 
+            document.getElementById('e-new-img').value = rawImg; document.getElementById('e-new-watermark').checked = wm; 
+            document.getElementById('e-new-weapon').value = weapon==='-'?'':weapon; document.getElementById('e-new-flaw').value = flaw==='-'?'':flaw; 
+            document.getElementById('e-new-bio').value = bio==='-'?'':bio.replace(/<br>/g, "\n"); document.getElementById('e-new-credit').value = cr==='-'?'':cr; 
             document.getElementById('e-new-credit-link').value = crL==='-'?'':crL;
-            
-            document.getElementById('e-zoom-slider').value = zoom; 
-            document.getElementById('e-pos-x-slider').value = x; 
-            document.getElementById('e-pos-y-slider').value = y; 
-            
+            document.getElementById('e-zoom-slider').value = zoom; document.getElementById('e-pos-x-slider').value = x; document.getElementById('e-pos-y-slider').value = y; 
             updatePreviewImageStyle('e'); updatePreviewWatermark('e'); openModal('editMemberModal');
-        } else { 
-            openProfileModal(img, name, role, weapon, flaw, bio, cr, crL, wm, zoom, x, y); 
-        }
+        } else { openProfileModal(img, name, role, weapon, flaw, bio, cr, crL, wm, zoom, x, y); }
     }
 
-    // 🎯 LOGIC FIX: แปลงพิกัด Slider ให้รูปขยับแบบอิสระ
+    // 🎯 THE HOLY GRAIL: แก้แกน X/Y ได้สมบูรณ์โดยที่รูปขนาดปกติ
     function updatePreviewImageStyle(p) {
         const url = document.getElementById(`${p}-new-img`).value; 
         const zoom = document.getElementById(`${p}-zoom-slider`)?.value || 1; 
@@ -367,27 +362,24 @@
         
         const img = document.getElementById(`${p}-preview-img`); 
         img.src = formatImageUrl(url) || "https://via.placeholder.com/150";
-        img.style.transform = `translate(calc(${x}% - 50%), calc(${y}% - 50%)) scale(${zoom})`; 
+        
+        // เมื่อซูม จุดกำเนิดจะย้ายตามพิกัด X/Y ทำให้ภาพขยับได้อิสระครับ!
+        img.style.objectPosition = `${x}% ${y}%`; 
+        img.style.transformOrigin = `${x}% ${y}%`;
+        img.style.transform = `scale(${zoom})`; 
     }
 
     function openProfileModal(img, n, r, w, f, b, cr, crL, wm, z, x, y) {
         document.getElementById('p-bg-img').src = img; 
         const av = document.getElementById('p-avatar'); 
-        av.src = img; av.style.transform = `translate(calc(${x}% - 50%), calc(${y}% - 50%)) scale(${z})`;
+        av.src = img; av.style.objectPosition = `${x}% ${y}%`; av.style.transformOrigin = `${x}% ${y}%`; av.style.transform = `scale(${z})`;
         
-        const wmk = document.getElementById('p-watermark'); 
-        wmk.style.backgroundImage = `url('${WATERMARK_URL}')`; wmk.style.display = wm ? 'block' : 'none';
-        document.getElementById('p-name').innerText = n; 
-        document.getElementById('p-role').innerText = r;
+        const wmk = document.getElementById('p-watermark'); wmk.style.backgroundImage = `url('${WATERMARK_URL}')`; wmk.style.display = wm ? 'block' : 'none';
+        document.getElementById('p-name').innerText = n; document.getElementById('p-role').innerText = r;
         
-        const items = [{l:'Weapon',v:w,i:'⚔️'},{l:'Weakness',v:f,i:'⚠️'},{l:'Record',v:b,i:'📜'}];
-        document.getElementById('p-content').innerHTML = items.map(it => `
-            <div class="info-row">
-                <div class="info-icon">${it.i}</div>
-                <div class="info-content"><div class="label">${it.l}</div><div class="val">${it.v || "-"}</div></div>
-            </div>
-        `).join('');
-        document.getElementById('p-credit').innerHTML = `Artist: ${crL ? `<a href="${crL}" target="_blank" style="color:var(--red-main); text-decoration:none;">${cr}</a>` : cr}`;
+        const items = [{l:'Weapon',v:w,i:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2L12 4.5M10 6.5L3 13.5l2.5 2.5 7-7M21 15.5l-2.5 2.5-4-4 2.5-2.5 4 4z"/></svg>'},{l:'Weakness',v:f,i:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'},{l:'Record',v:b,i:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'}];
+        document.getElementById('p-content').innerHTML = items.map(it => `<div class="info-row"><div class="info-icon">${it.i}</div><div class="info-content"><div class="label">${it.l}</div><div class="val">${it.v || "-"}</div></div></div>`).join('');
+        document.getElementById('p-credit').innerHTML = `Artist: ${crL ? `<a href="${crL}" target="_blank" style="color:var(--red-main);">${cr}</a>` : cr}`;
         openModal('profileModal');
     }
 
@@ -403,8 +395,7 @@
     }
     
     async function submitNewMember() {
-        const name = document.getElementById('m-name-input').value;
-        if(!name) return alert("Please enter a name");
+        const name = document.getElementById('m-name-input').value; if(!name) return alert("Please insert name");
         const d = { action: "add", sheet: "Mafia", data: { Category: "Gangs", GroupName: currentAddingGang, NameMafia: name, Role: document.getElementById('m-new-role').value || "-", Badge: document.getElementById('m-new-badge').value || "-", ImageURL: document.getElementById('m-new-img').value, UseWatermark: document.getElementById('m-new-watermark').checked ? "TRUE" : "FALSE", ZoomLevel: document.getElementById('m-zoom-slider').value || 1, PosX: document.getElementById('m-pos-x-slider').value || 50, PosY: document.getElementById('m-pos-y-slider').value || 50, Credit: document.getElementById('m-new-credit').value || "-", CreditLink: document.getElementById('m-new-credit-link').value || "-", Weapon: document.getElementById('m-new-weapon').value || "-", Flaw: document.getElementById('m-new-flaw').value || "-", Bio: document.getElementById('m-new-bio').value || "-" } };
         closeModal(null, 'addMemberModal', true); await sendRequest(d);
     }
@@ -416,36 +407,23 @@
     async function sendRequest(p) { document.body.style.opacity = "0.5"; try { await fetch(API_URL, { method: "POST", body: JSON.stringify(p) }); await loadMafiaData(); } catch(e) { alert("ERROR"); } document.body.style.opacity = "1"; }
     function formatImageUrl(url) { if (!url) return ""; const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/); return match ? `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000` : url; }
     function warpToGang(id) { switchTab('gangs', document.getElementById('tab-gangs')); setTimeout(() => { const el = document.getElementById('gang-' + id); if(el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' }); }, 300); }
-
+    
     function filterCharacters(p) {
-        const input = document.getElementById(`${p}-name-input`).value.toLowerCase(); 
-        const list = document.getElementById(`autocomplete-list-${p}`); 
-        list.innerHTML = ""; if (!input) return;
-        
+        const input = document.getElementById(`${p}-name-input`).value.toLowerCase(); const list = document.getElementById(`autocomplete-list-${p}`); list.innerHTML = ""; if (!input) return;
         bakeryData.filter(i => String(i["ชื่อขนม"]).toLowerCase().includes(input)).slice(0, 5).forEach(i => {
-            const div = document.createElement("div"); 
-            div.style = "padding:12px; cursor:pointer; border-bottom:1px solid rgba(255,255,255,0.05); font-size:13px; color:#fff;"; 
-            div.innerText = i["ชื่อขนม"];
-            
+            const div = document.createElement("div"); div.style = "padding:12px; cursor:pointer; background:rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.05); font-size:12px; color:#fff;"; div.innerText = i["ชื่อขนม"];
             div.onclick = () => {
-                // 🎯 ฟังก์ชันดึงข้อมูลจาก Bakery มาใส่ช่องกรอก (อยู่ครบ 100%)
-                document.getElementById(`${p}-name-input`).value = i["ชื่อขนม"]; 
-                document.getElementById(`${p}-new-img`).value = i["Link รูปตัวละคร"] || "";
-                document.getElementById(`${p}-new-weapon`).value = i["อาวุธ"] || ""; 
-                document.getElementById(`${p}-new-flaw`).value = i["จุดอ่อน"] || "";
-                document.getElementById(`${p}-new-bio`).value = i["ประวัติ"] || ""; 
-                document.getElementById(`${p}-new-credit`).value = i["ชื่อผู้วาด"] || "";
+                document.getElementById(`${p}-name-input`).value = i["ชื่อขนม"]; document.getElementById(`${p}-new-img`).value = i["Link รูปตัวละคร"] || "";
+                document.getElementById(`${p}-new-weapon`).value = i["อาวุธ"] || ""; document.getElementById(`${p}-new-flaw`).value = i["จุดอ่อน"] || "";
+                document.getElementById(`${p}-new-bio`).value = i["ประวัติ"] || ""; document.getElementById(`${p}-new-credit`).value = i["ชื่อผู้วาด"] || "";
                 document.getElementById(`${p}-new-credit-link`).value = i["Link ผู้วาด"] || ""; 
                 
-                // รีเซ็ตการซูมและตำแหน่งเมื่อเลือกรูปใหม่
                 if(document.getElementById(`${p}-zoom-slider`)) document.getElementById(`${p}-zoom-slider`).value = 1;
                 if(document.getElementById(`${p}-pos-x-slider`)) document.getElementById(`${p}-pos-x-slider`).value = 50;
                 if(document.getElementById(`${p}-pos-y-slider`)) document.getElementById(`${p}-pos-y-slider`).value = 50;
                 
-                updatePreviewImageStyle(p); 
-                list.innerHTML = "";
-            }; 
-            list.appendChild(div);
+                updatePreviewImageStyle(p); list.innerHTML = "";
+            }; list.appendChild(div);
         });
     }
 </script>
