@@ -39,7 +39,7 @@
 
     .glass-panel { background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border-glass); }
 
-    /* 🌟 Navigation */
+    /* Navigation */
     .top-btn { 
         position: absolute; top: 20px; padding: 10px 22px; border-radius: 40px; 
         font-size: 12px; transition: var(--transition); z-index: 50; cursor: pointer; 
@@ -70,7 +70,7 @@
     .page.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* 🌟 Hero Slogan */
+    /* Hero Slogan */
     .hero-slogan {
         font-size: clamp(1.4rem, 6.5vw, 2rem); font-weight: 600; line-height: 1.4;
         margin-bottom: 25px; background: linear-gradient(180deg, #ffffff 0%, #999999 100%);
@@ -87,7 +87,7 @@
     }
     .warp-btn:hover { border-color: var(--red-main); background: rgba(229, 9, 20, 0.1); transform: translateX(8px); }
 
-    /* 🌟 Custom UI Elements */
+    /* Custom UI Elements */
     input[type="range"] { -webkit-appearance: none; background: transparent; cursor: pointer; width: 100%; }
     input[type="range"]::-webkit-slider-runnable-track { background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px; }
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: var(--red-main); border: 2px solid #fff; margin-top: -6px; box-shadow: 0 0 10px var(--red-glow); }
@@ -99,22 +99,21 @@
     input:checked + .toggle-slider { background-color: var(--red-main); box-shadow: 0 0 10px var(--red-glow); }
     input:checked + .toggle-slider:before { transform: translateX(18px); }
 
-    /* 🌟 Gang Cards & Original Image Logic */
+    /* Gang Cards & Original Image Logic */
     .gang-card { border-radius: 30px; padding: 35px; margin-bottom: 45px; position: relative; }
-    .gang-header { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 25px; margin-bottom: 30px; position: relative; padding-right: 110px; }
+    .gang-header { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 25px; margin-bottom: 30px; position: relative; padding-right: 140px; }
     .gang-name { font-size: 26px; font-weight: 600; color: var(--white); margin-bottom: 10px; }
 
-    /* แท็กนิยามแก๊ง */
     .gang-tags { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
     .gang-tag { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-muted); padding: 4px 10px; border-radius: 12px; font-size: 11px; letter-spacing: 0.5px; }
 
-    /* ปรับเป็นจัตุรัสให้แสดงหลายคนในแถวเดียว (minmax 85px) */
     .members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 15px; }
     .member-item { position: relative; text-align: center; cursor: pointer; transition: 0.3s; }
     
     .member-img-wrapper { 
         width: 100%; aspect-ratio: 1/1; border-radius: 16px; background: #000; 
         position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+        isolation: isolate; -webkit-mask-image: -webkit-radial-gradient(white, black);
     }
     
     .member-img-wrapper img { 
@@ -122,12 +121,11 @@
         transition: transform 0.3s ease; 
     }
 
-    /* Badge ปรับให้อยู่มุมขวาบนของจัตุรัส */
     .member-badge { position: absolute; top: 6px; right: 6px; background: var(--red-main); color: white; font-size: 9px; padding: 3px 6px; border-radius: 6px; z-index: 5; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
     .member-name { font-size: 12px; color: var(--text-main); margin-top: 8px; font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background-size: cover; background-position: center; mix-blend-mode: screen; opacity: 0.7; z-index: 5; }
 
-    /* 🌟 Control Buttons */
+    /* Control Buttons */
     .btn-control { position: absolute; z-index: 40; background: rgba(255,255,255,0.1); color: var(--white); border-radius: 50%; width: 28px; height: 28px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); transition: 0.2s; }
     .btn-control:hover { background: var(--white); color: #000; transform: scale(1.1); }
     .btn-delete { top: -8px; left: -8px; background: var(--red-main); border-color: var(--red-main); }
@@ -135,15 +133,21 @@
     .btn-move-r { bottom: 35px; right: 5px; }
     .btn-move-u { top: 20px; right: 20px; width: 34px; height: 34px; }
     .btn-move-d { top: 20px; right: 65px; width: 34px; height: 34px; }
+    .btn-edit-gang { top: 20px; right: 110px; width: 34px; height: 34px; }
 
-    /* 🌟 Modals & Inputs */
+    /* Modals & Inputs */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(25px); }
     .modal-content { background: #0e0e0e; width: 100%; max-width: 480px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.1); position: relative; max-height: 90vh; overflow-y: auto; padding: 35px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
     .modal-content.profile { padding: 0; overflow: hidden; }
     .modal-close { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 38px; cursor: pointer; z-index: 110; line-height: 1; opacity: 0.5; }
     .modal-close:hover { opacity: 1; color: var(--red-main); }
 
-    .avatar-preview-box { width: 140px; height: 140px; border-radius: 30px; border: 3px solid var(--red-main); background: #000; margin: 0 auto 15px; position: relative; overflow: hidden; box-shadow: 0 0 20px var(--red-glow); }
+    .avatar-preview-box { 
+        width: 140px; height: 140px; border-radius: 30px; border: 3px solid var(--red-main); 
+        background: #000; margin: 0 auto 15px; position: relative; overflow: hidden; 
+        box-shadow: 0 0 20px var(--red-glow); 
+        isolation: isolate; -webkit-mask-image: -webkit-radial-gradient(white, black);
+    }
     .avatar-preview-box img { width: 100%; height: 100%; object-fit: cover; transition: none !important; }
 
     .form-input { width: 100%; padding: 15px 20px; margin-bottom: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 15px; outline: none; font-size: 14px; }
@@ -222,7 +226,7 @@
         <input type="text" id="e-new-weapon" class="form-input" placeholder="Primary Weapon">
         <input type="text" id="e-new-flaw" class="form-input" placeholder="Weakness">
         <textarea id="e-new-bio" class="form-input" placeholder="Biography archive..." rows="3"></textarea>
-        <div style="display:flex; gap:10px;"><input type="text" id="e-new-credit" class="form-input" placeholder="Artist"><input type="text" id="e-new-credit-link" class="form-input" placeholder="Artist Link"></div>
+        <div style="display:flex; gap:10px;"><input type="text" id="e-new-credit" class="form-input" placeholder="นักวาด"><input type="text" id="e-new-credit-link" class="form-input" placeholder="ลิ้งค์นักวาด"></div>
         <button class="btn-submit" onclick="submitEditMember()">SAVE CHANGES</button>
     </div>
 </div>
@@ -243,8 +247,8 @@
             <div style="display:flex; align-items:center; gap:15px;"><span style="font-size:11px; width:60px; color:#aaa;">↕️ Pos Y</span><input type="range" id="m-pos-y-slider" min="0" max="100" value="50" oninput="updatePreviewImageStyle('m')"></div>
         </div>
 
-        <input type="text" id="m-name-input" class="form-input" placeholder="Search Bakery Name..." oninput="filterCharacters('m')">
-        <div id="autocomplete-list-m" style="background:rgba(255,255,255,0.05); border-radius:15px; margin-top:-10px; margin-bottom:15px; max-height:150px; overflow-y:auto;"></div>
+        <input type="text" id="m-name-input" class="form-input" placeholder="Search Bakery Name..." onfocus="filterCharacters('m')" oninput="filterCharacters('m')">
+        <div id="autocomplete-list-m" style="background:rgba(255,255,255,0.05); border-radius:15px; margin-top:-10px; margin-bottom:15px; max-height:180px; overflow-y:auto;"></div>
         
         <div style="display:flex; gap:10px;"><input type="text" id="m-new-role" class="form-input" placeholder="Role"><input type="text" id="m-new-badge" class="form-input" placeholder="Rank"></div>
         <input type="text" id="m-new-img" class="form-input" placeholder="Image URL" oninput="updatePreviewImageStyle('m')">
@@ -257,7 +261,7 @@
         <input type="text" id="m-new-weapon" class="form-input" placeholder="Primary Weapon">
         <input type="text" id="m-new-flaw" class="form-input" placeholder="Weakness">
         <textarea id="m-new-bio" class="form-input" placeholder="Personnel Record..." rows="2"></textarea>
-        <div style="display:flex; gap:10px;"><input type="text" id="m-new-credit" class="form-input" placeholder="Artist"><input type="text" id="m-new-credit-link" class="form-input" placeholder="Artist Link"></div>
+        <div style="display:flex; gap:10px;"><input type="text" id="m-new-credit" class="form-input" placeholder="นักวาด"><input type="text" id="m-new-credit-link" class="form-input" placeholder="ลิ้งค์นักวาด"></div>
         <button class="btn-submit" onclick="submitNewMember()">ESTABLISH ENTRY</button>
     </div>
 </div>
@@ -286,10 +290,25 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="editGangModal" onclick="closeModal(event, 'editGangModal')">
+    <div class="modal-content glass-panel" onclick="event.stopPropagation()">
+        <span class="modal-close" onclick="closeModal(event, 'editGangModal', true)">&times;</span>
+        <h2 style="margin-bottom:20px;">Edit Faction</h2>
+        <input type="hidden" id="eg-old-name">
+        <input type="text" id="eg-name" class="form-input" placeholder="Faction Name" disabled style="opacity: 0.5; cursor: not-allowed;" title="ไม่สามารถแก้ชื่อได้เพื่อป้องกันข้อมูลสมาชิกหลุดกลุ่ม">
+        <input type="text" id="eg-tags" class="form-input" placeholder="Tags (เช่น สายข่าวกรอง, รับจ้าง)">
+        <textarea id="eg-desc" class="form-input" placeholder="Description" rows="3"></textarea>
+        <button class="btn-submit" onclick="submitEditGang()">SAVE CHANGES</button>
+    </div>
+</div>
+
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbz7_u5Xd9uXGiBswifeqw5Q0hefHI_ckMJVwHGEFL6SdJJ4FHViQBKNM0OhvT6EnA9DDA/exec";
     const WATERMARK_URL = "https://drive.google.com/thumbnail?id=1e3zyO1VT4FCB020UAEmq5fOThW2R38SL&sz=w1000";
-    let bakeryData = []; let currentAddingGang = ""; let currentEditingGang = "";
+    let bakeryData = []; 
+    let currentMafiaData = []; 
+    let currentAddingGang = ""; 
+    let currentEditingGang = "";
 
     document.addEventListener("DOMContentLoaded", () => {
         const wm_e = document.getElementById('e-preview-watermark'); const wm_m = document.getElementById('m-preview-watermark');
@@ -299,7 +318,12 @@
 
     async function loadMafiaData() {
         const container = document.getElementById('gangs-container'); container.innerHTML = '<div style="text-align:center; padding:50px; opacity:0.3; letter-spacing:3px;">SYNCHRONIZING...</div>';
-        try { const res = await fetch(API_URL + "?sheet=Mafia"); const data = await res.json(); renderGangs(data); } catch (e) { container.innerHTML = "FAILED"; }
+        try { 
+            const res = await fetch(API_URL + "?sheet=Mafia"); 
+            const data = await res.json(); 
+            currentMafiaData = data;
+            renderGangs(data); 
+        } catch (e) { container.innerHTML = "FAILED"; }
     }
     async function fetchBakeryData() { try { const res = await fetch(API_URL + "?sheet=Bakery"); bakeryData = await res.json(); } catch(e) {} }
 
@@ -336,6 +360,7 @@
             
             container.innerHTML += `
             <div class="gang-card glass-panel" id="gang-${idx}">
+                <button class="btn-control edit-only btn-edit-gang" onclick="prepEditGang('${gn.replace(/'/g,"\\'")}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>
                 <button class="btn-control edit-only btn-move-u" onclick="moveItem('[GANG_INFO]', -1, '${gn.replace(/'/g,"\\'")}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg></button>
                 <button class="btn-control edit-only btn-move-d" onclick="moveItem('[GANG_INFO]', 1, '${gn.replace(/'/g,"\\'")}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></button>
                 <div class="gang-header">
@@ -394,7 +419,9 @@
         
         const items = [{l:'Weapon',v:w,i:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2L12 4.5M10 6.5L3 13.5l2.5 2.5 7-7M21 15.5l-2.5 2.5-4-4 2.5-2.5 4 4z"/></svg>'},{l:'Weakness',v:f,i:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'},{l:'Record',v:b,i:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'}];
         document.getElementById('p-content').innerHTML = items.map(it => `<div class="info-row"><div class="info-icon">${it.i}</div><div class="info-content"><div class="label">${it.l}</div><div class="val">${it.v || "-"}</div></div></div>`).join('');
-        document.getElementById('p-credit').innerHTML = `Artist: ${crL ? `<a href="${crL}" target="_blank" style="color:var(--red-main);">${cr}</a>` : cr}`;
+        
+        /* 🎯 แก้ไขคำแสดงผลใน Profile Modal เป็น "นักวาด: " */
+        document.getElementById('p-credit').innerHTML = `นักวาด: ${crL ? `<a href="${crL}" target="_blank" style="color:var(--red-main);">${cr}</a>` : cr}`;
         openModal('profileModal');
     }
 
@@ -404,6 +431,35 @@
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(e, id, f = false) { if (f || (e && e.target.id === id)) { document.getElementById(id).style.display = 'none'; } }
     
+    function prepAddMember(gn) { currentAddingGang = gn; openModal('addMemberModal'); }
+
+    function prepEditGang(gn) {
+        const info = currentMafiaData.find(i => i.GroupName === gn && i.NameMafia === "[GANG_INFO]");
+        document.getElementById('eg-old-name').value = gn;
+        document.getElementById('eg-name').value = gn;
+        document.getElementById('eg-desc').value = info?.GangDesc || "";
+        document.getElementById('eg-tags').value = info?.GangTags || "";
+        openModal('editGangModal');
+    }
+
+    async function submitEditGang() {
+        const gn = document.getElementById('eg-old-name').value;
+        const d = { 
+            action: "edit", 
+            sheet: "Mafia", 
+            oldName: "[GANG_INFO]", 
+            data: { 
+                Category: "Gangs", 
+                GroupName: gn,
+                NameMafia: "[GANG_INFO]",
+                GangDesc: document.getElementById('eg-desc').value,
+                GangTags: document.getElementById('eg-tags').value
+            } 
+        };
+        closeModal(null, 'editGangModal', true); 
+        await sendRequest(d);
+    }
+
     async function submitEditMember() {
         const d = { action: "edit", sheet: "Mafia", oldName: document.getElementById('e-old-name').value, data: { Category: "Gangs", GroupName: currentEditingGang, NameMafia: document.getElementById('e-name-input').value, Role: document.getElementById('e-new-role').value, Badge: document.getElementById('e-new-badge').value, ImageURL: document.getElementById('e-new-img').value, UseWatermark: document.getElementById('e-new-watermark').checked ? "TRUE" : "FALSE", ZoomLevel: document.getElementById('e-zoom-slider').value, PosX: document.getElementById('e-pos-x-slider').value, PosY: document.getElementById('e-pos-y-slider').value, Credit: document.getElementById('e-new-credit').value || "-", CreditLink: document.getElementById('e-new-credit-link').value || "-", Weapon: document.getElementById('e-new-weapon').value || "-", Flaw: document.getElementById('e-new-flaw').value || "-", Bio: document.getElementById('e-new-bio').value || "-" } };
         closeModal(null, 'editMemberModal', true); await sendRequest(d);
@@ -420,7 +476,6 @@
         closeModal(null, 'addGangModal', true); await sendRequest(d); 
     }
     
-    function prepAddMember(gn) { currentAddingGang = gn; openModal('addMemberModal'); }
     async function moveItem(n, d, gn = "") { await sendRequest({ action: "move", sheet: "Mafia", name: n, direction: d, groupName: gn }); }
     async function deleteMember(n) { if(confirm(`Erase records for ${n}?`)) await sendRequest({ action: "delete", sheet: "Mafia", name: n }); }
     async function sendRequest(p) { document.body.style.opacity = "0.5"; try { await fetch(API_URL, { method: "POST", body: JSON.stringify(p) }); await loadMafiaData(); } catch(e) { alert("ERROR"); } document.body.style.opacity = "1"; }
@@ -428,13 +483,34 @@
     function warpToGang(id) { switchTab('gangs', document.getElementById('tab-gangs')); setTimeout(() => { const el = document.getElementById('gang-' + id); if(el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' }); }, 300); }
     
     function filterCharacters(p) {
-        const input = document.getElementById(`${p}-name-input`).value.toLowerCase(); const list = document.getElementById(`autocomplete-list-${p}`); list.innerHTML = ""; if (!input) return;
-        bakeryData.filter(i => String(i["ชื่อขนม"]).toLowerCase().includes(input)).slice(0, 5).forEach(i => {
-            const div = document.createElement("div"); div.style = "padding:12px; cursor:pointer; background:rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.05); font-size:12px; color:#fff;"; div.innerText = i["ชื่อขนม"];
+        const input = document.getElementById(`${p}-name-input`).value.toLowerCase(); 
+        const list = document.getElementById(`autocomplete-list-${p}`); 
+        list.innerHTML = ""; 
+        
+        let filtered = bakeryData;
+        if (input) {
+            filtered = bakeryData.filter(i => String(i["ชื่อขนม"]).toLowerCase().includes(input));
+        }
+
+        filtered.slice(0, 30).forEach(i => {
+            const div = document.createElement("div"); 
+            div.style = "display:flex; align-items:center; gap:12px; padding:10px 15px; cursor:pointer; border-bottom:1px solid rgba(255,255,255,0.05); transition:0.2s;";
+            div.onmouseover = () => div.style.background = "rgba(229, 9, 20, 0.2)";
+            div.onmouseout = () => div.style.background = "transparent";
+            
+            const imgUrl = formatImageUrl(i["Link รูปตัวละคร"]);
+            const imgHTML = imgUrl ? `<img src="${imgUrl}" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">` : `<div style="width:36px; height:36px; border-radius:8px; background:#222;"></div>`;
+            
+            /* 🎯 แก้ไขคำแสดงผลใน Autocomplete list เป็น "นักวาด: " */
+            div.innerHTML = `${imgHTML} <div style="font-size:13px; color:#fff; display:flex; flex-direction:column;"><span>${i["ชื่อขนม"]}</span><span style="font-size:10px; color:#888;">นักวาด: ${i["ชื่อผู้วาด"] || "-"}</span></div>`;
+            
             div.onclick = () => {
-                document.getElementById(`${p}-name-input`).value = i["ชื่อขนม"]; document.getElementById(`${p}-new-img`).value = i["Link รูปตัวละคร"] || "";
-                document.getElementById(`${p}-new-weapon`).value = i["อาวุธ"] || ""; document.getElementById(`${p}-new-flaw`).value = i["จุดอ่อน"] || "";
-                document.getElementById(`${p}-new-bio`).value = i["ประวัติ"] || ""; document.getElementById(`${p}-new-credit`).value = i["ชื่อผู้วาด"] || "";
+                document.getElementById(`${p}-name-input`).value = i["ชื่อขนม"]; 
+                document.getElementById(`${p}-new-img`).value = i["Link รูปตัวละคร"] || "";
+                document.getElementById(`${p}-new-weapon`).value = i["อาวุธ"] || ""; 
+                document.getElementById(`${p}-new-flaw`).value = i["จุดอ่อน"] || "";
+                document.getElementById(`${p}-new-bio`).value = i["ประวัติ"] || ""; 
+                document.getElementById(`${p}-new-credit`).value = i["ชื่อผู้วาด"] || "";
                 document.getElementById(`${p}-new-credit-link`).value = i["Link ผู้วาด"] || ""; 
                 
                 if(document.getElementById(`${p}-zoom-slider`)) document.getElementById(`${p}-zoom-slider`).value = 1;
@@ -442,7 +518,8 @@
                 if(document.getElementById(`${p}-pos-y-slider`)) document.getElementById(`${p}-pos-y-slider`).value = 50;
                 
                 updatePreviewImageStyle(p); list.innerHTML = "";
-            }; list.appendChild(div);
+            }; 
+            list.appendChild(div);
         });
     }
 </script>
